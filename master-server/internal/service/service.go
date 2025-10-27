@@ -1,0 +1,55 @@
+package service
+
+import (
+	"github.com/The-Promised-Neverland/master-server/internal/models"
+	"github.com/The-Promised-Neverland/master-server/internal/ws"
+)
+
+type Service struct {
+	Hub *ws.Hub
+}
+
+func NewService(Hub *ws.Hub) *Service {
+	return &Service{
+		Hub: Hub,
+	}
+}
+
+func (s *Service) GetAllAgents() []*models.AgentInfo {
+	s.Hub.Mutex.RLock()
+	defer s.Hub.Mutex.RUnlock()
+	agents := make([]*models.AgentInfo, 0, len(s.Hub.Agents))
+	for id, agent := range s.Hub.Agents {
+		info := &models.AgentInfo{
+			AgentID:  id,
+			OS:       agent.OS,
+			LastSeen: agent.LastSeen,
+		}
+		agents = append(agents, info)
+	}
+	return agents
+}
+
+func (s *Service) TriggerAgentforMetrics(agentID string) error {
+	req := models.Message{
+		Type: "master_metrics_request",
+	}
+	return s.Hub.SendToAgent(agentID, req)
+}
+
+func (s *Service) GetAgent(agentID string) *models.AgentInfo {
+	s.Hub.Mutex.RLock()
+	defer s.Hub.Mutex.RUnlock()
+	agent := s.Hub.Agents[agentID]
+	return &models.AgentInfo{
+		AgentID:  agentID,
+		OS:       agent.OS,
+		LastSeen: agent.LastSeen,
+	}
+}
+
+func (s *Service) RestartAgent(agentID string) {
+}
+
+func (s *Service) UninstallAgent(agentID string) {
+}
