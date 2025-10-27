@@ -1,0 +1,289 @@
+{"time":"2025-10-27T12:24:11.4139153+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:11.4151203+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:11.4151203+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:16.8833223+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:16.8833223+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:16.8840124+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:22.84093+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:22.84093+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:22.84093+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:28.8171531+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:28.8171531+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:28.8171531+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:34.7405557+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:34.7405557+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:34.7411847+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:40.6867694+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:40.6867694+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:40.6867694+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:46.7009156+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:46.7009156+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:46.7009156+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:52.6252321+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:52.6258571+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:52.6258571+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:58.0840568+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:24:58.0840568+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:24:58.0840568+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:03.9985203+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:03.9985203+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:03.9985203+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:10.0161749+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:10.0161749+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:10.0161749+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:15.9590075+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:15.9590075+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:15.9590075+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:21.9407201+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:21.9407201+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:21.9407201+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:27.8239819+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:27.8239819+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:27.8239819+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:33.7795818+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:33.7795818+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:33.7795818+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:39.7116856+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:39.7123085+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:39.7123085+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:45.7753799+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:45.7753799+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:45.7753799+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:51.255833+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:51.255833+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:51.255833+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:57.3224886+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:25:57.3224886+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:25:57.3231052+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:02.7774671+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:02.7774671+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:02.7774671+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:08.6667302+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:08.6667302+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:08.6667302+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:14.6711321+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:14.6711321+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:14.6711321+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:20.1294397+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:20.1294397+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:20.1294397+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:25.5504105+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:25.5509152+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:25.5509152+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:31.5446977+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:31.5446977+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:31.5446977+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:37.5125844+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:37.5125844+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:37.5125844+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:43.4117+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:43.4117+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:43.4122048+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:49.3863028+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:49.3863028+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:49.3868088+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:54.8030401+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:26:54.8038368+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:26:54.8038368+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:27:00.7693255+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:27:00.7693255+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:27:00.7693255+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:27:06.8071116+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:27:06.8071116+05:30","level":"ERROR","msg":"❌ Connection error","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:27:06.8071116+05:30","level":"ERROR","msg":"❌ Failed to connect to master:","err":"websocket: bad handshake"}
+{"time":"2025-10-27T12:27:46.1586017+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:27:46.1596337+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:27:46.1596337+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:27:51.1553547+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:28:06.1560704+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:28:06.1560704+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:28:06.1560704+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:28:06.1560704+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:28:07.0718822+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:28:07.0718822+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:28:07.0718822+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:28:12.1742292+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:28:17.1731881+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:28:27.1743726+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:28:27.1743726+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:28:27.1743726+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:28:27.1743726+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:28:28.1234702+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:28:28.1234702+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:28:28.1234702+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:28:33.2219222+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:28:48.2251097+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:28:48.2251097+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:28:48.2251097+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:28:48.2251097+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:28:49.3260778+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:28:49.3260778+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:28:49.3260778+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:28:54.4257145+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:28:59.4237817+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:29:09.4241509+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:29:09.4241509+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:29:09.4241509+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:29:09.4241509+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:29:10.4884326+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:29:10.4884326+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:29:10.4884326+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:29:15.5897849+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:29:20.588124+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:29:30.5889355+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:29:30.5889355+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:29:30.5889355+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:29:30.5889355+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:29:31.975979+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:29:31.975979+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:29:31.975979+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:29:37.0643465+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:29:42.0630046+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:29:52.0641781+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:29:52.0641781+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:29:52.0641781+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:29:52.0646963+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:29:53.1282616+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:29:53.1282616+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:29:53.1282616+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:29:58.218501+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:30:13.2227053+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:30:13.2227053+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:30:13.2227053+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:30:13.2232358+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:30:14.2577839+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:30:14.2577839+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:30:14.2577839+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:30:19.3552357+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:30:34.3550531+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:30:34.3550531+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:30:34.3555836+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:30:34.3550531+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:30:35.2919277+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:30:35.292454+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:30:35.292454+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:30:40.3932392+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:30:45.3931486+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:30:55.3939314+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:30:55.3955139+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:30:55.3939314+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:30:55.3939314+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:30:56.4134921+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:30:56.414539+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:30:56.414539+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:31:01.5000564+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:31:06.4998929+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:31:16.5024631+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:31:16.5024631+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:31:16.504148+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T12:31:16.5024631+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T12:31:17.527275+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:31:17.527275+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:31:17.527275+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:31:22.6274138+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:31:27.6264635+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:31:36.5315252+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:42:38.8216481+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:42:38.8230119+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:42:38.8230119+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:43:28.7835505+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:44:18.784996+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:45:08.7844496+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:45:58.783894+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:46:48.7842809+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:47:38.7843275+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:48:28.7837219+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:48:39.204361+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine for shutdown initiation"}
+{"time":"2025-10-27T12:48:44.7213618+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:48:44.7218803+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:48:44.7224058+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:49:26.9146405+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine for shutdown initiation"}
+{"time":"2025-10-27T12:49:26.9146405+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T12:49:26.9153696+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T12:55:15.3782131+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:55:15.3792451+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T12:55:15.3792451+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T12:55:15.476603+05:30","level":"INFO","msg":"I have been triggered"}
+{"time":"2025-10-27T12:55:16.4341488+05:30","level":"ERROR","msg":"❌ Handler error","type":"master_metrics_request","err":"unexpected status code: 404"}
+{"time":"2025-10-27T12:56:05.4782539+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:56:55.4786591+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:57:14.7747687+05:30","level":"INFO","msg":"I have been triggered"}
+{"time":"2025-10-27T12:57:15.2610006+05:30","level":"ERROR","msg":"❌ Handler error","type":"master_metrics_request","err":"unexpected status code: 404"}
+{"time":"2025-10-27T12:57:45.4772597+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:58:35.4808975+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T12:59:25.4801182+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:00:15.4781429+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:01:05.4761366+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:01:55.4780207+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:02:53.6294113+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine for shutdown initiation"}
+{"time":"2025-10-27T13:02:53.6294113+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T13:02:53.6302336+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T13:02:59.7253294+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:02:59.7259612+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:02:59.7264961+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T13:03:17.0125527+05:30","level":"INFO","msg":"I have been triggered"}
+{"time":"2025-10-27T13:03:49.722525+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:04:39.7258506+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:05:29.7212766+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:06:19.7209163+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:07:09.7216346+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:07:59.7282784+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:08:49.7205093+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:09:39.7248345+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:10:29.7225927+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:11:19.722531+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:12:09.7219452+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:12:59.722793+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:13:39.0187033+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T13:13:39.0187033+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T13:13:39.0187033+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T13:13:39.0187033+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T13:13:40.19948+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:13:40.2004796+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:13:40.2004796+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T13:13:41.3303129+05:30","level":"INFO","msg":"I have been triggered"}
+{"time":"2025-10-27T13:14:30.1924591+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:14:52.2736967+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T13:14:52.2736967+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine for shutdown initiation"}
+{"time":"2025-10-27T13:14:52.2736967+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T13:14:57.7428564+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:14:57.7441699+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:14:57.7441699+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T13:15:47.8406975+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:16:12.5851467+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine for shutdown initiation"}
+{"time":"2025-10-27T13:16:12.5851467+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T13:16:12.5851467+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T13:23:29.3502178+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:23:29.3507246+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:23:29.3512662+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T13:24:19.3472794+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:25:09.3478191+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:25:59.347291+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:26:49.3458771+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:27:39.3440213+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:28:29.3460876+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:29:19.3488835+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:30:09.3469618+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:30:59.3436425+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:31:49.3461599+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:32:39.3493838+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:33:29.3602942+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:34:19.3465899+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:35:09.3550522+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:35:59.345704+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:36:49.3467346+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:37:39.3450718+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:38:29.3455576+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:39:19.347598+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:40:09.3420874+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:40:59.342326+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:41:49.3424541+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:42:39.3428934+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-10-27T13:43:07.3749273+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-10-27T13:43:07.3749273+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-10-27T13:43:07.3749273+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-10-27T13:43:07.3749273+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-10-27T13:43:31.4671558+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:43:31.4681571+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?id=6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-10-27T13:43:31.4681571+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-10-27T13:44:21.4569544+05:30","level":"INFO","msg":"🏓 Received ping from master"}

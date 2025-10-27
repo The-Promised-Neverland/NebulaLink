@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/The-Promised-Neverland/master-server/internal/models"
@@ -25,9 +26,13 @@ func (h *Handler) ReceiveAgentMetrics(c *gin.Context) {
 	h.Mutex.Lock()
 	ch, exists := h.PendingRequests[agentID]
 	if exists {
-		ch <- metrics
-		close(ch)
+		select {
+		case ch <- metrics:
+		default:
+			fmt.Printf("Recieve Timeout")
+		}
 		delete(h.PendingRequests, agentID)
+		close(ch)
 	}
 	h.Mutex.Unlock()
 	c.JSON(http.StatusOK, gin.H{"success": true})

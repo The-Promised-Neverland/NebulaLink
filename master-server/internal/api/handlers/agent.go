@@ -30,12 +30,6 @@ func (h *Handler) GetAgent(c *gin.Context) {
 func (h *Handler) GetAgentMetrics(c *gin.Context) {
 	agentID := c.Param("id")
 	responseCh := make(chan interface{}, 1)
-	defer func() {
-		h.Mutex.Lock()
-		delete(h.PendingRequests, agentID)
-		h.Mutex.Unlock()
-		close(responseCh)
-	}()
 	h.Mutex.Lock()
 	h.PendingRequests[agentID] = responseCh
 	h.Mutex.Unlock()
@@ -52,6 +46,9 @@ func (h *Handler) GetAgentMetrics(c *gin.Context) {
 		c.JSON(http.StatusOK, resp)
 	case <-time.After(30 * time.Second):
 		c.JSON(http.StatusGatewayTimeout, gin.H{"error": "agent timeout"})
+		h.Mutex.Lock()
+		delete(h.PendingRequests, agentID)
+		h.Mutex.Unlock()
 	}
 }
 
