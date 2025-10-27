@@ -4,45 +4,8 @@ A distributed, cross-platform monitoring system built in Go that enables central
 
 ## Architecture Overview
 
-```mermaid
-graph TB
-    subgraph "Agent Hosts (Cross-Platform)"
-        A1["Agent A1<br/>(Windows)"]
-        A2["Agent A2<br/>(Linux)"]
-        A3["Agent A3<br/>(macOS)"]
-    end
+<img width="1568" height="555" alt="image" src="https://github.com/user-attachments/assets/2703ac74-47e4-4252-88f0-bf2e3705934d" />
 
-    subgraph "Master Server"
-        M["Master Node"]
-        API["REST API"]
-    end
-
-    subgraph "Agent Capabilities"
-        S1["System Metrics<br/>CPU, Disk, Memory, Uptime"]
-        S2["Heartbeat<br/>(5 min interval)"]
-        S3["Local Log Files<br/>(Rotated)"]
-    end
-
-    A1 <-->|"WebSocket<br/>(Bidirectional)"| M
-    A2 <-->|"WebSocket<br/>(Bidirectional)"| M
-    A3 <-->|"WebSocket<br/>(Bidirectional)"| M
-
-    A1 -.->|"Callback Response<br/>(REST POST)"| API
-    A2 -.->|"Callback Response<br/>(REST POST)"| API
-    A3 -.->|"Callback Response<br/>(REST POST)"| API
-
-    API --> M
-
-    A1 --> S1
-    A1 --> S2
-    A1 --> S3
-
-    style M fill:#4a90e2,stroke:#2e5c8a,color:#fff
-    style API fill:#50c878,stroke:#2d7a4a,color:#fff
-    style A1 fill:#ff6b6b,stroke:#c92a2a,color:#fff
-    style A2 fill:#ff6b6b,stroke:#c92a2a,color:#fff
-    style A3 fill:#ff6b6b,stroke:#c92a2a,color:#fff
-```
 
 ## 🏗️ System Architecture
 
