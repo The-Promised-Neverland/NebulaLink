@@ -88,5 +88,6 @@ func (h *Hub) WritePump(id string, agent *AgentConnection) {
 func (h *Hub) dispatchPump(agent *AgentConnection) {
 	for msg := range agent.IncomingCh {
 		h.Handler(msg.Type, msg.Payload)
+		h.SendToFrontend(msg)
 	}
 }

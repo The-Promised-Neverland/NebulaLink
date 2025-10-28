@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"encoding/json"
 	"fmt"
 	"sync"
 	"time"
@@ -19,9 +20,10 @@ type AgentConnection struct {
 }
 
 type Hub struct {
-	Agents  map[string]*AgentConnection
-	Mutex   sync.RWMutex
-	Handler func(msgType string, payload any)
+	Agents       map[string]*AgentConnection
+	Mutex        sync.RWMutex
+	Handler      func(msgType string, payload any)
+	FrontendConn *websocket.Conn
 }
 
 // NewHub initializes the hub
@@ -61,6 +63,50 @@ func (h *Hub) RegisterConnection(id string, conn *websocket.Conn) {
 	go h.ReadPump(id, agent)
 	go h.WritePump(id, agent)
 	go h.dispatchPump(agent)
+}
+
+func (h *Hub) RegisterFrontend(conn *websocket.Conn) {
+	h.Mutex.Lock()
+	defer h.Mutex.Unlock()
+	if h.FrontendConn != nil {
+		h.FrontendConn.Close()
+	}
+	h.FrontendConn = conn
+	go h.readFrontend(conn)
+}
+
+func (h *Hub) readFrontend(conn *websocket.Conn) {
+	defer conn.Close()
+	for {
+		_, msgBytes, err := conn.ReadMessage()
+		if err != nil {
+			fmt.Printf("Frontend disconnected: %v\n", err)
+			return
+		}
+		var msg models.Message
+		if err := json.Unmarshal(msgBytes, &msg); err != nil {
+			fmt.Printf("Failed to unmarshal frontend message: %v\n", err)
+			continue
+		}
+		if agentID, ok := msg.Payload.(map[string]interface{})["agent_id"].(string); ok {
+			h.SendToAgent(agentID, msg)
+		}
+	}
+}
+
+func (h *Hub) SendToFrontend(msg models.Message) error {
+	h.Mutex.RLock()
+	frontend := h.FrontendConn
+	h.Mutex.RUnlock()
+
+	if frontend == nil {
+		return fmt.Errorf("frontend not connected")
+	}
+	data, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+	return frontend.WriteMessage(websocket.TextMessage, data)
 }
 
 // SendToAgent sends a message to a specific agent

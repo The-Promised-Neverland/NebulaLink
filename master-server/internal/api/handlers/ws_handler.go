@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+
 	"github.com/The-Promised-Neverland/master-server/internal/ws"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -18,6 +19,7 @@ func NewWebSocketHandler(hub *ws.Hub) *WebSocketHandler {
 
 func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 	agentID := c.Query("id")
+	role := c.Query("role")
 	if agentID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing agent ID"})
 		return
@@ -30,5 +32,15 @@ func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 		fmt.Printf("❌ Failed to upgrade WebSocket for agent %s: %v\n", agentID, err)
 		return
 	}
-	wsh.Hub.RegisterConnection(agentID, conn)
+	switch role {
+	case "frontend":
+		wsh.Hub.RegisterFrontend(conn)
+	default:
+		if agentID == "" {
+			conn.WriteMessage(websocket.TextMessage, []byte(`{"error":"Missing agent ID"}`))
+			conn.Close()
+			return
+		}
+		wsh.Hub.RegisterConnection(agentID, conn)
+	}
 }
