@@ -19,9 +19,9 @@ func (h *Hub) ReadPump(c *Connection) {
 			fmt.Printf("Agent %s disconnected\n", c.Role)
 		}
 	}()
-	c.Conn.SetReadLimit(maxMessageSize)
-	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
-	h.handlePong(c)
+	// c.Conn.SetReadLimit(maxMessageSize)
+	// c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+	// h.handlePong(c)
 	for {
 		select {
 		case <-c.DisconnectCh:
@@ -34,7 +34,7 @@ func (h *Hub) ReadPump(c *Connection) {
 				}
 				return
 			}
-			c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+			// c.Conn.SetReadDeadline(time.Now().Add(pongWait))
 			h.Mutex.Lock()
 			c.LastSeen = time.Now()
 			h.Mutex.Unlock()
@@ -61,7 +61,7 @@ func (h *Hub) WritePump(c *Connection) {
 			if !ok {
 				return
 			}
-			c.Conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			// c.Conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 			data, err := json.Marshal(msg)
 			if err != nil {
 				fmt.Printf("Failed to marshal message for %s: %v\n", c.Role, err)
@@ -73,11 +73,11 @@ func (h *Hub) WritePump(c *Connection) {
 			}
 
 		case <-ticker.C:
-			c.Conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
-			if err := h.sendPingToAgent(c); err != nil {
-				fmt.Printf("⚠️ Ping failed for %s: %v\n", c.Role, err)
-				return
-			}
+			// c.Conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+			// if err := h.sendPingToAgent(c); err != nil {
+			// 	fmt.Printf("⚠️ Ping failed for %s: %v\n", c.Role, err)
+			// 	return
+			// }
 
 		case <-c.DisconnectCh:
 			return

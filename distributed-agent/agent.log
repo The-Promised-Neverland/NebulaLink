@@ -11647,3 +11647,14 @@
 {"time":"2025-11-01T20:43:02.6750491+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":22.083333333333332,"memory_usage":77,"disk_usage":96.85969335327795,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":27091}}
 {"time":"2025-11-01T20:43:12.674812+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":22.278645833357587,"memory_usage":77,"disk_usage":96.86040332642833,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":27101}}
 {"time":"2025-11-01T20:43:22.6750482+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":18.046875,"memory_usage":73,"disk_usage":96.86378679222305,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":27111}}
+{"time":"2025-11-01T21:53:19.3470158+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-01T21:53:20.3600396+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-01T21:53:20.3600396+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-01T21:53:20.3600396+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-01T21:53:30.3608777+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":17.301770592763667,"memory_usage":66,"disk_usage":51.43819915444746,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":31319}}
+{"time":"2025-11-01T21:53:40.3603969+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":21.750455847877053,"memory_usage":66,"disk_usage":51.43819915444746,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":31329}}
+{"time":"2025-11-01T21:53:50.3604364+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":17.5214787815673,"memory_usage":66,"disk_usage":51.43819915444746,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":31339}}
+{"time":"2025-11-01T21:54:00.3603365+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":19.947916666666668,"memory_usage":67,"disk_usage":51.43819915444746,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":31349}}
+{"time":"2025-11-01T21:54:10.3574956+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-11-01T21:54:10.3605018+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":18.854166666666668,"memory_usage":64,"disk_usage":51.43819915444746,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":31359}}
+{"time":"2025-11-01T21:54:20.3602118+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":20.013020833333332,"memory_usage":64,"disk_usage":51.43819915444746,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":31369}}
