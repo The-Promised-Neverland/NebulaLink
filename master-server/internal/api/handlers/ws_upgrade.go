@@ -29,6 +29,6 @@ func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 		fmt.Printf("❌ Failed to upgrade WebSocket: %v\n", err)
 		return
 	}
-	fmt.Print("role recieved -> ", role);
-	wsh.Hub.Register(role,conn)
+	fmt.Print("role recieved -> ", role)
+	wsh.Hub.Register(role, conn)
 }
