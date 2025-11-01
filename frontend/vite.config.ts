@@ -11,7 +11,6 @@ export default defineConfig(({ mode }) => ({
   },
   preview: {
     allowedHosts: ["nebulalink.onrender.com"],
-    // ✅ Convert to number explicitly for type safety
     port: Number(process.env.PORT) || 10000,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
