@@ -18,8 +18,8 @@ func NewService(Hub *ws.Hub) *Service {
 func (s *Service) GetAllAgents() []*models.AgentInfo {
 	s.Hub.Mutex.RLock()
 	defer s.Hub.Mutex.RUnlock()
-	agents := make([]*models.AgentInfo, 0, len(s.Hub.Agents))
-	for id, agent := range s.Hub.Agents {
+	agents := make([]*models.AgentInfo, 0, len(s.Hub.Connections))
+	for id, agent := range s.Hub.Connections {
 		info := &models.AgentInfo{
 			AgentID:  id,
 			OS:       agent.OS,
@@ -30,17 +30,18 @@ func (s *Service) GetAllAgents() []*models.AgentInfo {
 	return agents
 }
 
-func (s *Service) TriggerAgentforMetrics(agentID string) error {
+func (s *Service) TriggerAgentforMetrics(agentID string) {
 	req := models.Message{
 		Type: "master_metrics_request",
+		Payload: nil,
 	}
-	return s.Hub.SendToAgent(agentID, req)
+	s.Hub.Send(agentID, req)
 }
 
 func (s *Service) GetAgent(agentID string) *models.AgentInfo {
 	s.Hub.Mutex.RLock()
 	defer s.Hub.Mutex.RUnlock()
-	agent := s.Hub.Agents[agentID]
+	agent := s.Hub.Connections[agentID]
 	return &models.AgentInfo{
 		AgentID:  agentID,
 		OS:       agent.OS,

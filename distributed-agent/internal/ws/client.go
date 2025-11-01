@@ -41,6 +41,7 @@ func (a *Agent) RegisterHandler(msgType string, handler func(msg *any) error) {
 func (a *Agent) Connect() error {
 	baseURL := a.Config.MasterServerConn()
 	wsURL := utils.BuildWebSocketURL(baseURL, a.Config.AgentID())
+	logger.Log.Info(wsURL)
 	conn, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
 	logger.Log.Info("🔄 Attempting connection", "url", wsURL)
 	if err != nil {

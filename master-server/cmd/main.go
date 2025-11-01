@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,16 +14,14 @@ import (
 
 func main() {
 	system.InitStartTime()
-	hub := ws.NewHub(func(msgType string, payload any) {
-		fmt.Println("Received message:", msgType, payload)
-	})
+	hub := ws.NewHub()
 	svc := service.NewService(hub)
 	handler := handlers.NewHandler(svc)
 	wsHandler := handlers.NewWebSocketHandler(hub)
 	router := routers.NewRouter(hub, handler, wsHandler).SetupRouter()
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8430"
 	}
 	addr := ":" + port
 	log.Printf("Server started at %s\n", addr)

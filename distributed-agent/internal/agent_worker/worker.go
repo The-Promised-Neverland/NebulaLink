@@ -7,6 +7,7 @@ import (
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/The-Promised-Neverland/agent/internal/service"
 	"github.com/The-Promised-Neverland/agent/internal/ws"
+	"github.com/The-Promised-Neverland/agent/pkg/logger"
 )
 
 type ServiceProvider interface {
@@ -29,6 +30,7 @@ func NewAgentWorker(agent *ws.Agent, provider *service.Service, Config *config.C
 
 func (w *AgentWorker) SendHeartbeat() error {
 	metrics := w.Service.GetHostMetrics()
+	logger.Log.Info("Sending Heartbeat", metrics);
 	msg := models.Message{
 		Type: models.AgentMsgHeartbeat,
 		Payload: models.Metrics{

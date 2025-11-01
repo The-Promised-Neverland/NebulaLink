@@ -51,7 +51,7 @@ func (rtr *Router) SetupRouter() *gin.Engine {
 			internal.POST("/metrics/:id", rtr.Handler.ReceiveAgentMetrics) // Agent posts to this
 		}
 	}
-	router.GET("/ws", rtr.WSHandler.UpgradeHandler) // websocket handler
+	router.GET("/ws", rtr.WSHandler.UpgradeHandler) // Upgrade to websocket request
 
 	return router
 }

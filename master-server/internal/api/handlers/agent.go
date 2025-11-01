@@ -33,10 +33,7 @@ func (h *Handler) GetAgentMetrics(c *gin.Context) {
 	h.Mutex.Lock()
 	h.PendingRequests[agentID] = responseCh
 	h.Mutex.Unlock()
-	if err := h.Service.TriggerAgentforMetrics(agentID); err != nil {
-		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "failed to reach agent"})
-		return
-	}
+	h.Service.TriggerAgentforMetrics(agentID);
 	select {
 	case agentMetrics := <-responseCh:
 		resp := models.Message{

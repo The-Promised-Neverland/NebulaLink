@@ -28,7 +28,7 @@ func AgentExistenceMiddleware(hub *ws.Hub) gin.HandlerFunc {
 			return
 		}
 		hub.Mutex.RLock()
-		_, exists := hub.Agents[agentID]
+		_, exists := hub.Connections[agentID]
 		hub.Mutex.RUnlock()
 		if !exists {
 			c.JSON(404, gin.H{

@@ -12,7 +12,7 @@ const (
 	pingPeriod = 50 * time.Second
 )
 
-func (h *Hub) sendPingToAgent(agent *AgentConnection) error {
+func (h *Hub) sendPingToAgent(agent *Connection) error {
 	if agent.Conn == nil {
 		return fmt.Errorf("connection is nil")
 	}
@@ -23,7 +23,7 @@ func (h *Hub) sendPingToAgent(agent *AgentConnection) error {
 	return nil
 }
 
-func (h *Hub) handlePong(agent *AgentConnection) {
+func (h *Hub) handlePong(agent *Connection) {
 	if agent.Conn == nil {
 		return
 	}
