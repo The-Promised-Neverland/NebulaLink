@@ -68,22 +68,16 @@ export const TaskControls = ({
               <SelectValue placeholder="Choose an agent" />
             </SelectTrigger>
             <SelectContent className="bg-popover border-primary/30">
-  {agents.length === 0 ? (
-    <SelectItem disabled value="none">No agents available</SelectItem>
-  ) : (
-    agents
-      .filter(agent => agent.agent_id && agent.agent_id.trim() !== "") // ✅ filter out blanks
-      .map(agent => (
-        <SelectItem
-          key={agent.agent_id}
-          value={agent.agent_id}
-          className="text-foreground hover:bg-primary/10 font-mono"
-        >
-          {agent.agent_id} ({agent.status})
-        </SelectItem>
-      ))
-  )}
-</SelectContent>
+              {agents.map((agent) => (
+                <SelectItem
+                  key={agent.agent_id}
+                  value={agent.agent_id}
+                  className="text-foreground hover:bg-primary/10 font-mono"
+                >
+                  {agent.agent_id} ({agent.status})
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
 

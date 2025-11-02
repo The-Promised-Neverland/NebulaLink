@@ -30,7 +30,7 @@ export const useAgentWebSocket = ({
         case 'agents_list':
           if (message.payload) {
             const agentsList: Agent[] = message.payload.map((agent: any) => ({
-              agent_id: agent?.agent_id,
+              agent_id: agent.agent_id,
               agent_os: agent.agent_os,
               agent_last_seen: agent.agent_last_seen,
               status: 'online',
@@ -44,16 +44,16 @@ export const useAgentWebSocket = ({
 
         case 'agent_connected':
           if (message.payload) {
-            addLog(`Agent ${message.payload?.agent_id} connected`, 'success');
+            addLog(`Agent ${message.payload.agent_id} connected`, 'success');
           }
           break;
 
         case 'agent_disconnected':
           if (message.payload) {
-            const agentId = message.payload?.agent_id;
+            const agentId = message.payload.agent_id;
             setAgents(prev =>
               prev.map(agent =>
-                agent?.agent_id === agentId
+                agent.agent_id === agentId
                   ? { ...agent, status: 'offline' as const }
                   : agent
               )
@@ -67,14 +67,14 @@ export const useAgentWebSocket = ({
             const metrics: AgentMetrics = message.payload;
             setAgents(prev =>
               prev.map(agent =>
-                agent?.agent_id === metrics?.agent_id
+                agent.agent_id === metrics.agent_id
                   ? { ...agent, metrics, uptime: metrics.uptime }
                   : agent
               )
             );
 
             // Add to metrics history for charts
-            if (selectedAgentId === metrics?.agent_id) {
+            if (selectedAgentId === metrics.agent_id) {
               setMetricsHistory(prev => [
                 ...prev.slice(-19),
                 {
@@ -85,7 +85,7 @@ export const useAgentWebSocket = ({
                 },
               ]);
             }
-            addLog(`Metrics updated for ${metrics?.agent_id}`, 'info');
+            addLog(`Metrics updated for ${metrics.agent_id}`, 'info');
           }
           break;
 
@@ -96,12 +96,12 @@ export const useAgentWebSocket = ({
             const now = new Date().toISOString();
 
             setAgents(prev => {
-              const existingAgent = prev.find(agent => agent?.agent_id === agentId);
+              const existingAgent = prev.find(agent => agent.agent_id === agentId);
 
               if (existingAgent) {
                 // Update existing agent
                 return prev.map(agent =>
-                  agent?.agent_id === agentId
+                  agent.agent_id === agentId
                     ? {
                       ...agent,
                       status: 'online' as const,
@@ -146,7 +146,7 @@ export const useAgentWebSocket = ({
             });
 
             // Add to metrics history for charts
-            if (!selectedAgentId || selectedAgentId === agentId || agentId === '') {
+            if (selectedAgentId === agentId) {
               setMetricsHistory(prev => [
                 ...prev.slice(-19),
                 {
@@ -162,7 +162,7 @@ export const useAgentWebSocket = ({
 
         case 'task_status':
           if (message.payload) {
-            addLog(`Task ${message.payload.task_name} on ${message.payload?.agent_id}: ${message.payload.status}`, 'success');
+            addLog(`Task ${message.payload.task_name} on ${message.payload.agent_id}: ${message.payload.status}`, 'success');
             toast({
               title: "Task Status",
               description: `${message.payload.task_name}: ${message.payload.status}`,

@@ -8,7 +8,6 @@ export const useWebSocket = () => {
   const [eventLogs, setEventLogs] = useState<EventLog[]>([]);
   const ws = useRef<WebSocket | null>(null);
   const reconnectTimeout = useRef<NodeJS.Timeout>();
-  const pingInterval = useRef<NodeJS.Timeout>();
   const messageHandlers = useRef<Map<string, (data: any) => void>>(new Map());
 
   const addLog = useCallback((message: string, type: EventLog['type'] = 'info') => {
@@ -18,7 +17,7 @@ export const useWebSocket = () => {
       message,
       type,
     };
-    setEventLogs(prev => [log, ...prev].slice(0, 100));
+    setEventLogs(prev => [log, ...prev].slice(0, 100)); // Keep last 100 logs
   }, []);
 
   const connect = useCallback(() => {
@@ -26,51 +25,43 @@ export const useWebSocket = () => {
       ws.current = new WebSocket(WS_URL);
 
       ws.current.onopen = () => {
-        console.log('✅ WebSocket connected');
+        console.log('WebSocket connected');
         setIsConnected(true);
         addLog('Connected to master server', 'success');
-
-        // Start sending ping messages
-        pingInterval.current = setInterval(() => {
-          if (ws.current?.readyState === WebSocket.OPEN) {
-            ws.current.send(JSON.stringify({ type: 'ping' }));
-            console.log('➡️ Sent ping');
-          }
-        }, 25000);
       };
 
       ws.current.onmessage = (event) => {
         try {
           const message: WSMessage = JSON.parse(event.data);
-          console.log('📩 Received message:', message);
+          console.log('Received message:', message);
 
-          messageHandlers.current.forEach((handler) => handler(message));
+          // Call registered handlers
+          messageHandlers.current.forEach((handler) => {
+            handler(message);
+          });
         } catch (error) {
-          console.error('❌ Error parsing message:', error);
+          console.error('Error parsing message:', error);
         }
       };
 
       ws.current.onerror = (error) => {
-        console.error('⚠️ WebSocket error:', error);
+        console.error('WebSocket error:', error);
         addLog('WebSocket error occurred', 'error');
       };
 
       ws.current.onclose = () => {
-        console.log('🔌 WebSocket disconnected');
+        console.log('WebSocket disconnected');
         setIsConnected(false);
         addLog('Disconnected from master server', 'warning');
 
-        // Stop pings
-        if (pingInterval.current) clearInterval(pingInterval.current);
-
-        // Reconnect after 5s
+        // Attempt to reconnect after 5 seconds
         reconnectTimeout.current = setTimeout(() => {
           addLog('Attempting to reconnect...', 'info');
           connect();
         }, 5000);
       };
     } catch (error) {
-      console.error('❌ Error creating WebSocket:', error);
+      console.error('Error creating WebSocket:', error);
       addLog('Failed to connect to server', 'error');
     }
   }, [addLog]);
@@ -78,25 +69,30 @@ export const useWebSocket = () => {
   const sendMessage = useCallback((message: WSMessage) => {
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
       ws.current.send(JSON.stringify(message));
-      console.log('📤 Sent message:', message);
+      console.log('Sent message:', message);
     } else {
-      console.error('⚠️ WebSocket not connected');
+      console.error('WebSocket is not connected');
       addLog('Cannot send message: Not connected', 'error');
     }
   }, [addLog]);
 
   const registerHandler = useCallback((id: string, handler: (data: any) => void) => {
     messageHandlers.current.set(id, handler);
-    return () => messageHandlers.current.delete(id);
+    return () => {
+      messageHandlers.current.delete(id);
+    };
   }, []);
 
   useEffect(() => {
     connect();
 
     return () => {
-      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
-      if (pingInterval.current) clearInterval(pingInterval.current);
-      ws.current?.close();
+      if (reconnectTimeout.current) {
+        clearTimeout(reconnectTimeout.current);
+      }
+      if (ws.current) {
+        ws.current.close();
+      }
     };
   }, [connect]);
 
