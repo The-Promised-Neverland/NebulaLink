@@ -52,14 +52,14 @@ export const AgentTable = ({ agents, onSelectAgent, selectedAgentId }: AgentTabl
                 <TableRow
                   key={agent.agent_id}
                   className={`border-primary/10 hover:bg-primary/5 hover:border-glow transition-all duration-300 cursor-pointer ${
-                    selectedAgentId === agent.agent_id ? 'bg-primary/10 border-glow' : ''
+                    selectedAgentId === agent?.agent_id ? 'bg-primary/10 border-glow' : ''
                   }`}
-                  onClick={() => onSelectAgent(agent.agent_id)}
+                  onClick={() => onSelectAgent(agent?.agent_id)}
                 >
                   <TableCell>
                     <StatusIndicator status={agent.status} size="sm" />
                   </TableCell>
-                  <TableCell className="font-mono text-primary-bright font-semibold">{agent.agent_id}</TableCell>
+                  <TableCell className="font-mono text-primary-bright font-semibold">{agent?.agent_id}</TableCell>
                   <TableCell className="text-foreground font-medium">{agent.agent_os}</TableCell>
                   <TableCell className="font-mono text-foreground tabular-nums">
                     {formatUptime(agent.uptime)}
@@ -83,7 +83,7 @@ export const AgentTable = ({ agents, onSelectAgent, selectedAgentId }: AgentTabl
                       className="text-primary hover:text-primary hover:bg-primary/10"
                       onClick={(e) => {
                         e.stopPropagation();
-                        onSelectAgent(agent.agent_id);
+                        onSelectAgent(agent?.agent_id);
                       }}
                     >
                       <Activity className="w-4 h-4" />
