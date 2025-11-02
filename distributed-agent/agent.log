@@ -14161,3 +14161,163 @@
 {"time":"2025-11-02T20:51:13.3159054+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":12.213541666666666,"memory_usage":65,"disk_usage":77.45904876442074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24203}}
 {"time":"2025-11-02T20:51:13.6208713+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine for shutdown initiation"}
 {"time":"2025-11-02T20:51:13.6208713+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T20:54:28.8470202+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:54:29.9065001+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:54:29.9065001+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:54:29.9065001+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T20:54:34.9077854+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":9.793814433020662,"memory_usage":68,"disk_usage":77.45911400908176,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24404}}
+{"time":"2025-11-02T20:54:39.9067986+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.222655235126006,"memory_usage":68,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24409}}
+{"time":"2025-11-02T20:54:44.9070242+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":11.195001301744337,"memory_usage":69,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24414}}
+{"time":"2025-11-02T20:54:49.9069996+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.258148631029988,"memory_usage":68,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24419}}
+{"time":"2025-11-02T20:54:54.906797+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.81404421326398,"memory_usage":68,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24424}}
+{"time":"2025-11-02T20:54:59.9070847+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.229166666666666,"memory_usage":68,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24429}}
+{"time":"2025-11-02T20:55:04.9069223+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":15.104166666666666,"memory_usage":68,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24434}}
+{"time":"2025-11-02T20:55:09.9070436+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.984374999951493,"memory_usage":66,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24439}}
+{"time":"2025-11-02T20:55:14.9070234+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.059467918622849,"memory_usage":65,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24444}}
+{"time":"2025-11-02T20:55:19.8995966+05:30","level":"INFO","msg":"🏓 Received ping from master"}
+{"time":"2025-11-02T20:55:19.9072627+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.4776274713839745,"memory_usage":65,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24449}}
+{"time":"2025-11-02T20:55:24.9065785+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.204379562043796,"memory_usage":65,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24454}}
+{"time":"2025-11-02T20:55:29.9069241+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.480749219562956,"memory_usage":65,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24459}}
+{"time":"2025-11-02T20:55:34.9066061+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.2490221642764014,"memory_usage":65,"disk_usage":77.45911531397499,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24464}}
+{"time":"2025-11-02T20:55:35.1942319+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:55:35.1942319+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-11-02T20:55:35.1942319+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T20:55:35.1942319+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-11-02T20:55:35.1942319+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T20:55:36.1207607+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:55:36.1222716+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:55:36.1222716+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T20:55:41.1227284+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.2384937238493725,"memory_usage":65,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24470}}
+{"time":"2025-11-02T20:55:46.1228306+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.794163626889005,"memory_usage":65,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24475}}
+{"time":"2025-11-02T20:55:51.1226013+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.35235861350013,"memory_usage":65,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24480}}
+{"time":"2025-11-02T20:55:56.1229823+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":3.228325956782088,"memory_usage":65,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24485}}
+{"time":"2025-11-02T20:56:01.1223971+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.163413999479573,"memory_usage":65,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24490}}
+{"time":"2025-11-02T20:56:06.1226449+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.544224765868887,"memory_usage":65,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24495}}
+{"time":"2025-11-02T20:56:11.122664+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.24804177545692,"memory_usage":65,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24500}}
+{"time":"2025-11-02T20:56:16.122763+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.571465764123927,"memory_usage":66,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24505}}
+{"time":"2025-11-02T20:56:21.1226454+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":10.457856399583768,"memory_usage":67,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24510}}
+{"time":"2025-11-02T20:56:26.1226847+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.968750000048506,"memory_usage":67,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24515}}
+{"time":"2025-11-02T20:56:31.1224662+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.828251237946311,"memory_usage":67,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24520}}
+{"time":"2025-11-02T20:56:36.1223868+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.322916666666667,"memory_usage":67,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24525}}
+{"time":"2025-11-02T20:56:41.1223447+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.894558708669617,"memory_usage":67,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24530}}
+{"time":"2025-11-02T20:56:41.4193327+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-11-02T20:56:41.4193327+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T20:56:41.4193327+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:56:41.4193327+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-11-02T20:56:41.4193327+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T20:56:42.3789423+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:56:42.3789423+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:56:42.3789423+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T20:56:47.3791363+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.778864156438528,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24537}}
+{"time":"2025-11-02T20:56:52.3795173+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.458333333333334,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24542}}
+{"time":"2025-11-02T20:56:57.3794837+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.161458333333333,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24547}}
+{"time":"2025-11-02T20:57:02.379328+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.882168925915989,"memory_usage":69,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24552}}
+{"time":"2025-11-02T20:57:07.3794802+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.868523821921374,"memory_usage":69,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24557}}
+{"time":"2025-11-02T20:57:12.3790415+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":3.434816549570648,"memory_usage":69,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24562}}
+{"time":"2025-11-02T20:57:17.3793127+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.973958333333333,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24567}}
+{"time":"2025-11-02T20:57:22.3792423+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":3.4375000000000004,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24572}}
+{"time":"2025-11-02T20:57:27.3789762+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.204379562043796,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24577}}
+{"time":"2025-11-02T20:57:32.3797056+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.162330905306972,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24582}}
+{"time":"2025-11-02T20:57:37.3790313+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.902839281062777,"memory_usage":69,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24587}}
+{"time":"2025-11-02T20:57:42.3792487+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.404582140067691,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24592}}
+{"time":"2025-11-02T20:57:47.379125+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.760416666666667,"memory_usage":68,"disk_usage":77.45911792376144,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24597}}
+{"time":"2025-11-02T20:57:47.6663853+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-11-02T20:57:47.6663853+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T20:57:47.6663853+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T20:57:47.6663853+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:57:47.6663853+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-11-02T20:57:48.6234054+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:57:48.6249141+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:57:48.6249141+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T20:57:53.6254744+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.229166666666667,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24603}}
+{"time":"2025-11-02T20:57:58.6258898+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.062630480167014,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24608}}
+{"time":"2025-11-02T20:58:03.6250252+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.453125,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24613}}
+{"time":"2025-11-02T20:58:08.6252203+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.578124999999999,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24618}}
+{"time":"2025-11-02T20:58:13.6253414+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.044450220951391,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24623}}
+{"time":"2025-11-02T20:58:18.6250741+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.415256443682964,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24628}}
+{"time":"2025-11-02T20:58:23.6251362+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.526590198123045,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24633}}
+{"time":"2025-11-02T20:58:28.6252936+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.406249999999999,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24638}}
+{"time":"2025-11-02T20:58:33.625064+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.919875130072841,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24643}}
+{"time":"2025-11-02T20:58:38.6252157+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.258148631029988,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24648}}
+{"time":"2025-11-02T20:58:43.6255409+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.918075422626788,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24653}}
+{"time":"2025-11-02T20:58:48.6250073+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.942708333333333,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24658}}
+{"time":"2025-11-02T20:58:53.6250592+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":3.883242116236643,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24663}}
+{"time":"2025-11-02T20:58:53.9142462+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-11-02T20:58:53.9142462+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T20:58:53.9142462+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T20:58:53.9142462+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:58:53.9142462+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-11-02T20:58:54.9781822+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:58:54.978706+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T20:58:54.978706+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T20:58:59.9787912+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.461538461500253,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24669}}
+{"time":"2025-11-02T20:59:04.9790557+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.5,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24674}}
+{"time":"2025-11-02T20:59:09.9792381+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.682291666666667,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24679}}
+{"time":"2025-11-02T20:59:14.9796587+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":9.140625,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24684}}
+{"time":"2025-11-02T20:59:19.978959+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.697916666666666,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24689}}
+{"time":"2025-11-02T20:59:24.978902+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.614583333333333,"memory_usage":69,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24694}}
+{"time":"2025-11-02T20:59:29.9792693+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.90625,"memory_usage":70,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24699}}
+{"time":"2025-11-02T20:59:34.9788849+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.135416666666666,"memory_usage":70,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24704}}
+{"time":"2025-11-02T20:59:39.9789875+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.739583333333333,"memory_usage":70,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24709}}
+{"time":"2025-11-02T20:59:44.9790109+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.317708333333334,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24714}}
+{"time":"2025-11-02T20:59:49.9788648+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.755208333333333,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24719}}
+{"time":"2025-11-02T20:59:54.9788855+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.755208333333333,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24724}}
+{"time":"2025-11-02T20:59:59.9791217+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.583333333333333,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24729}}
+{"time":"2025-11-02T21:00:00.2693216+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-11-02T21:00:00.2693216+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T21:00:00.2693216+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:00:00.2693216+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T21:00:00.2693216+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-11-02T21:00:01.3131072+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:00:01.3131072+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:00:01.3131072+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T21:00:06.3138807+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.972262173823711,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24736}}
+{"time":"2025-11-02T21:00:11.3141193+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.603381014304291,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24741}}
+{"time":"2025-11-02T21:00:16.314147+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.796663190872332,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24746}}
+{"time":"2025-11-02T21:00:21.3143144+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":3.6979166666666665,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24751}}
+{"time":"2025-11-02T21:00:26.3141665+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.338541666666666,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24756}}
+{"time":"2025-11-02T21:00:31.3142555+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.009365244536941,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24761}}
+{"time":"2025-11-02T21:00:36.3140944+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.3166536356528535,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24766}}
+{"time":"2025-11-02T21:00:41.314255+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.460015629070071,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24771}}
+{"time":"2025-11-02T21:00:46.3148058+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.271142336716107,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24776}}
+{"time":"2025-11-02T21:00:51.3140923+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.200989325647939,"memory_usage":62,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24781}}
+{"time":"2025-11-02T21:00:56.3140945+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":6.380208333333333,"memory_usage":62,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24786}}
+{"time":"2025-11-02T21:01:01.314347+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":5.052083333333333,"memory_usage":62,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24791}}
+{"time":"2025-11-02T21:01:06.3142545+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":4.869791666666667,"memory_usage":63,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24796}}
+{"time":"2025-11-02T21:01:06.6077666+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-11-02T21:01:06.6077666+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:01:06.6077666+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T21:01:06.6077666+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T21:01:06.6077666+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-11-02T21:01:07.5770988+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:01:07.5770988+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:01:07.5770988+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T21:01:12.5774979+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.386600083229297,"memory_usage":62,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24802}}
+{"time":"2025-11-02T21:01:17.577362+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":26.313052522100882,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24807}}
+{"time":"2025-11-02T21:01:22.5779809+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.828125,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24812}}
+{"time":"2025-11-02T21:01:27.577905+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.461518392903731,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24817}}
+{"time":"2025-11-02T21:01:32.5775103+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.543891638496032,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24822}}
+{"time":"2025-11-02T21:01:37.5771886+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.200989325696433,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24827}}
+{"time":"2025-11-02T21:01:42.5779706+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.2444733420026,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24832}}
+{"time":"2025-11-02T21:01:47.5772865+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.730348776678814,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24837}}
+{"time":"2025-11-02T21:01:52.5772308+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.278893816853639,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24842}}
+{"time":"2025-11-02T21:01:57.57722+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":7.460358721081361,"memory_usage":65,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24847}}
+{"time":"2025-11-02T21:02:02.5774036+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":3.755868544600939,"memory_usage":65,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24852}}
+{"time":"2025-11-02T21:02:07.5773821+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":8.272632674297608,"memory_usage":64,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24857}}
+{"time":"2025-11-02T21:02:12.5771835+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":39.942678478374155,"memory_usage":65,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24862}}
+{"time":"2025-11-02T21:02:12.8684105+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2025-11-02T21:02:12.8684105+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T21:02:12.8684105+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T21:02:12.8684105+05:30","level":"INFO","msg":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:02:12.8684105+05:30","level":"INFO","msg":"🔴 Read pump stopped"}
+{"time":"2025-11-02T21:02:13.8739907+05:30","level":"INFO","msg":"🔄 Attempting connection","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:02:13.8739907+05:30","level":"INFO","msg":"✅ Connected to master","url":"wss://distributed-master-server.onrender.com/ws?role=agent:6c67059e51e0feffc6a53ed66b2383cf02bb4efcff611f68333e647b5d3d1158"}
+{"time":"2025-11-02T21:02:13.8754989+05:30","level":"INFO","msg":"✅ All pumps started"}
+{"time":"2025-11-02T21:02:18.8759992+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":18.874172185430464,"memory_usage":65,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24868}}
+{"time":"2025-11-02T21:02:23.8757591+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":21.64760914760915,"memory_usage":66,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24873}}
+{"time":"2025-11-02T21:02:28.8757105+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":20.182291666666664,"memory_usage":66,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24878}}
+{"time":"2025-11-02T21:02:33.8756809+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":18.177083333333332,"memory_usage":67,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24883}}
+{"time":"2025-11-02T21:02:38.8817003+05:30","level":"INFO","msg":"Sending Heartbeat","!BADKEY":{"cpu_usage":27.057291666666668,"memory_usage":68,"disk_usage":77.45912575312074,"hostname":"DESKTOP-89QV50I","os":"windows","uptime":24888}}
+{"time":"2025-11-02T21:02:38.9695962+05:30","level":"INFO","msg":"🔴 Dispatch pump stopped"}
+{"time":"2025-11-02T21:02:38.9695962+05:30","level":"INFO","msg":"🔴 Write pump stopped"}
+{"time":"2025-11-02T21:02:38.9695962+05:30","level":"INFO","msg":"💔 Stopping heartbeat goroutine for shutdown initiation"}
