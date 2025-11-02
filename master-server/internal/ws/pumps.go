@@ -63,14 +63,6 @@ func (h *Hub) WritePump(c *Connection) {
 				fmt.Printf("⚠️ Send failed to %s: %v\n", c.Role, err)
 				return
 			}
-		case <-ticker.C:
-			if c.Role != "frontend" {
-				c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
-				if err := h.sendPingToAgent(c); err != nil {
-					fmt.Printf("⚠️ Ping failed for %s: %v\n", c.Role, err)
-					return
-				}
-			}
 		case <-c.Ctx.Done():
 			return
 		}

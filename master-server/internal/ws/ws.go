@@ -27,27 +27,22 @@ func NewHub() *Hub {
 	return hub
 }
 
-// RegisterConnection registers or reconnects an agent
-func (h *Hub) Register(id string, conn *websocket.Conn) {
+// Registers or Re-connects an agent
+func (h *Hub) Connect(role string, conn *websocket.Conn) {
 	h.Mutex.Lock()
-
-	if existing, exists := h.Connections[id]; exists {
-		fmt.Printf("♻️ Reconnecting: %s (closing old connection)\n", id)
-		// Just close the old WebSocket, don't touch channels
+	defer h.Mutex.Unlock()
+	if existing, exists := h.Connections[role]; exists {
+		fmt.Printf("♻️ Reconnecting: %s (closing old connection)\n", role)
 		if existing.Conn != nil {
+			existing.Cancel()
 			existing.Conn.Close()
 		}
-		// Let the old goroutines die naturally when they detect closed conn
-		// Remove from map
-		delete(h.Connections, id)
+		delete(h.Connections, role)
 	} else {
-		fmt.Printf("✨ New connection: %s\n", id)
+		fmt.Printf("✨ New connection: %s\n", role)
 	}
-
-	connection := NewConnection(id, conn)
-	h.Connections[id] = connection
-	h.Mutex.Unlock()
-
+	connection := NewConnection(role, conn)
+	h.Connections[role] = connection
 	go h.ReadPump(connection)
 	go h.WritePump(connection)
 	go h.ProcessorPump(connection)

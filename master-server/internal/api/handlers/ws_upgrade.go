@@ -30,5 +30,5 @@ func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 		return
 	}
 	fmt.Print("role recieved -> ", role)
-	wsh.Hub.Register(role, conn)
+	wsh.Hub.Connect(role, conn)
 }
