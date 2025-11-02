@@ -1,6 +1,3 @@
-//go:build !windows
-// +build !windows
-
 package utils
 
 import (
@@ -9,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"runtime"
+	"syscall"
 	"time"
 )
 
@@ -17,13 +16,12 @@ func RunCommand(name string, args ...string) (string, error) {
 	var out bytes.Buffer
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
 	cmd := exec.CommandContext(ctx, name, args...)
 	cmd.Stdout = &out
 	cmd.Stderr = &out
-
-	applySysProcAttr(cmd)
-
+	if runtime.GOOS == "windows" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	}
 	if err := cmd.Start(); err != nil {
 		return "", fmt.Errorf("failed to start command %s: %w", name, err)
 	}
@@ -35,6 +33,3 @@ func RunCommand(name string, args ...string) (string, error) {
 	}
 	return out.String(), err
 }
-
-// applySysProcAttr does nothing on Linux or macOS.
-func applySysProcAttr(cmd *exec.Cmd) {}

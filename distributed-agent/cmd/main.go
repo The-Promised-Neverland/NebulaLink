@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/The-Promised-Neverland/agent/internal/config"
@@ -32,4 +34,11 @@ func main() {
 	if err := manager.Run(); err != nil {
 		logger.Log.Error("❌ Service failed", "err", err)
 	}
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Service running fine ✅")
+	})
+
+	port := "10000" // Render uses this by default, but you can also use os.Getenv("PORT")
+	fmt.Println("Listening on port", port)
+	http.ListenAndServe(":"+port, nil)
 }
