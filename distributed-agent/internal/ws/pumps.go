@@ -9,20 +9,17 @@ import (
 )
 
 const (
-	// Master sends pings every 10 seconds
-	readDeadline = 15 * time.Second
+	readDeadline = 70 * time.Second
 )
 
 // connectionMonitor checks if we're receiving pings from master
 func (a *Agent) connectionMonitor() {
-	for {
-		a.Conn.SetReadDeadline(time.Now().Add(readDeadline))
-		a.Conn.SetPingHandler(func(string) error {
-			logger.Log.Info("🏓 Received ping from master")
-			a.Conn.SetReadDeadline(time.Now().Add(readDeadline))
-			return nil
-		})
-	}
+    a.Conn.SetReadDeadline(time.Now().Add(readDeadline))
+    a.Conn.SetPingHandler(func(string) error {
+        logger.Log.Info("🏓 Received ping from master")
+        a.Conn.SetReadDeadline(time.Now().Add(readDeadline))
+        return nil
+    })
 }
 
 // readPump handles incoming messages from master

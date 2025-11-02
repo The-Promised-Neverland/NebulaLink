@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	pongWait   = 60 * time.Second
-	pingPeriod = 50 * time.Second
+	pongWait       = 60 * time.Second
+	pingPeriod     = 50 * time.Second
+	writeWait      = 10 * time.Second
 )
 
 func (h *Hub) sendPingToAgent(agent *Connection) error {

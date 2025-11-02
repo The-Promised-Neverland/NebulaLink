@@ -3,6 +3,7 @@ package ws
 import (
 	"fmt"
 	"sync"
+	"time"
 
 	ws_mssg_processor "github.com/The-Promised-Neverland/master-server/internal/api/processors"
 	"github.com/The-Promised-Neverland/master-server/internal/models"
@@ -25,10 +26,11 @@ func NewHub() *Hub {
 	go hub.routeMessages()
 	return hub
 }
+
 // RegisterConnection registers or reconnects an agent
 func (h *Hub) Register(id string, conn *websocket.Conn) {
 	h.Mutex.Lock()
-	
+
 	if existing, exists := h.Connections[id]; exists {
 		fmt.Printf("♻️ Reconnecting: %s (closing old connection)\n", id)
 		// Just close the old WebSocket, don't touch channels
@@ -72,8 +74,14 @@ func (h *Hub) Send(id string, msg models.Message) {
 }
 
 func (h *Hub) closeConnection(c *Connection) {
-	close(c.DisconnectCh)
+	c.Cancel()
 	if c.Conn != nil {
-		c.Conn.Close()
+		_ = c.Conn.Close()
 	}
+	h.Mutex.Lock()
+	c.LastSeen = time.Now()
+	delete(h.Connections, c.Role)
+	h.Mutex.Unlock()
+
+	fmt.Printf("🔴 Disconnected: %s (Last seen %v)\n", c.Role, c.LastSeen)
 }
