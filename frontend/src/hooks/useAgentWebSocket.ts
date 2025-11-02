@@ -146,7 +146,7 @@ export const useAgentWebSocket = ({
             });
 
             // Add to metrics history for charts
-            if (selectedAgentId === agentId) {
+            if (selectedAgentId === agentId || agentId==="") {
               setMetricsHistory(prev => [
                 ...prev.slice(-19),
                 {
