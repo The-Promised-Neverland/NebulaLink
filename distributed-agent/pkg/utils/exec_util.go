@@ -20,7 +20,7 @@ func RunCommand(name string, args ...string) (string, error) {
 	cmd.Stdout = &out
 	cmd.Stderr = &out
 	if runtime.GOOS == "windows" {
-		cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+		cmd.SysProcAttr = &syscall.SysProcAttr{}
 	}
 	if err := cmd.Start(); err != nil {
 		return "", fmt.Errorf("failed to start command %s: %w", name, err)
