@@ -30,7 +30,7 @@ func NewAgentWorker(agent *ws.Agent, provider *service.Service, Config *config.C
 
 func (w *AgentWorker) SendHeartbeat() error {
 	metrics := w.Service.GetHostMetrics()
-	logger.Log.Info("Sending Heartbeat", metrics);
+	logger.Log.Info("Sending Heartbeat", "metrics", metrics);
 	msg := models.Message{
 		Type: models.AgentMsgHeartbeat,
 		Payload: models.Metrics{

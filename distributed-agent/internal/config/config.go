@@ -2,6 +2,8 @@ package config
 
 import (
 	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
 	"time"
 
@@ -16,7 +18,23 @@ type Config struct {
 	serviceName        string
 	serviceDisplayName string
 	serviceDescription string
-	heartbeatTimer     time.Duration // stored as duration for convenience
+	heartbeatTimer     time.Duration
+	binaryPath         string
+}
+
+func defaultBinaryPath() string {
+	switch runtime.GOOS {
+	case "windows":
+		return filepath.Join(
+			os.Getenv("ProgramFiles"),
+			"NebulaLink",
+			"agent.exe",
+		)
+	case "darwin", "linux":
+		return "/usr/local/bin/nebulalink-agent"
+	default:
+		return ""
+	}
 }
 
 func New() *Config {
@@ -44,7 +62,7 @@ func New() *Config {
 		heartbeatSec = 10
 	}
 
-	return &Config{
+	cfg := &Config{
 		agentID:            idcommands.GenerateAgentID(),
 		masterServerConn:   masterURL,
 		serviceName:        serviceName,
@@ -52,6 +70,8 @@ func New() *Config {
 		serviceDescription: serviceDescription,
 		heartbeatTimer:     time.Duration(heartbeatSec) * time.Second,
 	}
+	cfg.binaryPath = defaultBinaryPath()
+	return cfg
 }
 
 // Getter methods (immutable from outside)
@@ -78,4 +98,8 @@ func (c *Config) ServiceDescription() string {
 
 func (c *Config) HeartbeatTimer() time.Duration {
 	return c.heartbeatTimer
+}
+
+func (c *Config) BinaryPath() string {
+	return c.binaryPath
 }

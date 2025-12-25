@@ -34,16 +34,13 @@ func (h *Handlers) RequestMetrics() error {
 }
 
 func (h *Handlers) AssignTask(msg *any) error {
-	// TODO: Extract task details from msg.Payload and execute
-	return nil
-}
-
-func (h *Handlers) UninstallAgent() error {
-	// return h.Service.UninstallAgent(models.MasterMsgAgentUninstall)
 	return nil
 }
 
 func (h *Handlers) RestartAgent() error {
-	// return  h.Service.RestartAgent()
-	return nil
+	return h.Controller.Restart()
+}
+
+func (h *Handlers) UninstallAgent() error {
+	return h.Controller.Uninstall()
 }

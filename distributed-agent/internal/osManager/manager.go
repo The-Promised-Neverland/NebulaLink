@@ -1,8 +1,10 @@
 package osManager
 
 import (
+	"fmt"
+	"runtime"
+
 	"github.com/The-Promised-Neverland/agent/internal/config"
-	"github.com/The-Promised-Neverland/agent/pkg/logger"
 	"github.com/The-Promised-Neverland/agent/pkg/policy"
 	kardianos "github.com/kardianos/service"
 )
@@ -28,20 +30,33 @@ func (m *AgentOSManager) newService() (kardianos.Service, error) {
 }
 
 func (m *AgentOSManager) Install() error {
-	s, err := m.newService()
+	p, err := policy.NewServicePolicy(m.cfg)
 	if err != nil {
 		return err
 	}
-	if err := s.Install(); err != nil {
-		return err
+	switch runtime.GOOS {
+	case "windows":
+		s, err := m.newService()
+		if err != nil {
+			return err
+		}
+		if err := s.Install(); err != nil {
+			return err
+		}
+		_ = p.ConfigureAutoStart()
+		_ = p.ConfigureRestartPolicy()
+		return s.Start()
+	case "linux", "darwin":
+		if err := p.ConfigureAutoStart(); err != nil {
+			return err
+		}
+		if err := p.ConfigureRestartPolicy(); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return fmt.Errorf("unsupported OS: %s", runtime.GOOS)
 	}
-	policy.ConfigureAutoStart()
-	policy.ConfigureRestartPolicy()
-	if err := s.Start(); err != nil {
-		logger.Log.Error("❌ Failed to start service after install:", "err", err)
-		return err
-	}
-	return nil
 }
 
 func (m *AgentOSManager) Uninstall() error {
@@ -61,7 +76,10 @@ func (m *AgentOSManager) Restart() error {
 	return s.Restart()
 }
 
-func (m *AgentOSManager) Run() error {
+func (m *AgentOSManager) Start() error {
+	if runtime.GOOS != "windows" {
+		return fmt.Errorf("Run() is Windows-only")
+	}
 	s, err := m.newService()
 	if err != nil {
 		return err

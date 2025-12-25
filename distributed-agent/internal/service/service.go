@@ -8,19 +8,10 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
-type OSManager interface {
-	Restart() error
-	Uninstall() error
-}
+type Service struct{}
 
-type Service struct {
-	osMgr OSManager
-}
-
-func NewService(osMgr OSManager) *Service {
-	return &Service{
-		osMgr: osMgr,
-	}
+func NewService() *Service {
+	return &Service{}
 }
 
 func (s *Service) GetHostMetrics() *models.HostMetrics {
@@ -37,12 +28,4 @@ func (s *Service) GetHostMetrics() *models.HostMetrics {
 		OS:          hostInfo.OS,
 		Uptime:      hostInfo.Uptime,
 	}
-}
-
-func (s *Service) RestartAgent() error {
-	return s.osMgr.Restart()
-}
-
-func (s *Service) UninstallAgent(initiator string) error {
-	return s.osMgr.Uninstall()
 }

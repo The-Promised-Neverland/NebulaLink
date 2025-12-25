@@ -23,18 +23,17 @@ func GenerateAgentID() string {
 			machineGUID = "unknown-machine"
 		}
 	}
-	
+
 	macAddr, err := getPrimaryMACAddress()
 	if err != nil {
 		log.Printf("⚠️ Failed to get MAC address: %v", err)
 		macAddr = "no-network"
 	}
-	
+
 	combined := fmt.Sprintf("%s:%s", machineGUID, macAddr)
 	hash := sha256.Sum256([]byte(combined))
 	agentID := fmt.Sprintf("%x", hash)
-	
-	log.Printf("✅ Generated Agent ID: %s (from %s:%s)", agentID[:16], machineGUID, macAddr)
+
 	return agentID
 }
 
@@ -70,12 +69,12 @@ func getMachineGUIDWindows() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to query machine GUID: %w", err)
 	}
-	
+
 	machineGUID := strings.TrimSpace(output)
 	if machineGUID == "" {
 		return "", fmt.Errorf("machine GUID is empty")
 	}
-	
+
 	return machineGUID, nil
 }
 
@@ -86,7 +85,7 @@ func getMachineGUIDLinux() (string, error) {
 		"/etc/machine-id",
 		"/var/lib/dbus/machine-id",
 	}
-	
+
 	for _, path := range paths {
 		data, err := ioutil.ReadFile(path)
 		if err == nil {
@@ -97,7 +96,7 @@ func getMachineGUIDLinux() (string, error) {
 			}
 		}
 	}
-	
+
 	// Try DMI product UUID (requires root on some systems)
 	data, err := ioutil.ReadFile("/sys/class/dmi/id/product_uuid")
 	if err == nil {
@@ -107,7 +106,7 @@ func getMachineGUIDLinux() (string, error) {
 			return productUUID, nil
 		}
 	}
-	
+
 	// Try reading boot ID (changes on reboot, but better than nothing)
 	data, err = ioutil.ReadFile("/proc/sys/kernel/random/boot_id")
 	if err == nil {
@@ -117,14 +116,14 @@ func getMachineGUIDLinux() (string, error) {
 			return bootID, nil
 		}
 	}
-	
+
 	// Last resort: use hostname
 	hostname, err := getHostname()
 	if err == nil && hostname != "" {
 		log.Printf("⚠️ Using hostname as machine ID: %s", hostname)
 		return hostname, nil
 	}
-	
+
 	return "", fmt.Errorf("could not determine machine ID from any source")
 }
 
@@ -134,7 +133,7 @@ func getMachineGUIDDarwin() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to query hardware UUID: %w", err)
 	}
-	
+
 	// Extract UUID from output
 	lines := strings.Split(output, "\n")
 	for _, line := range lines {
@@ -145,7 +144,7 @@ func getMachineGUIDDarwin() (string, error) {
 			}
 		}
 	}
-	
+
 	return "", fmt.Errorf("IOPlatformUUID not found in output")
 }
 
@@ -172,12 +171,12 @@ func getMACAddressWindows() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to get MAC address: %w", err)
 	}
-	
+
 	macAddr := strings.TrimSpace(output)
 	if macAddr == "" {
 		return "", fmt.Errorf("no active network adapter found")
 	}
-	
+
 	return macAddr, nil
 }
 
@@ -191,7 +190,7 @@ func getMACAddressLinux() (string, error) {
 			if iface.Flags&net.FlagLoopback != 0 || iface.Flags&net.FlagUp == 0 {
 				continue
 			}
-			
+
 			// Get MAC address
 			if iface.HardwareAddr != nil && len(iface.HardwareAddr) > 0 {
 				mac := iface.HardwareAddr.String()
@@ -202,7 +201,7 @@ func getMACAddressLinux() (string, error) {
 			}
 		}
 	}
-	
+
 	// Method 2: Try to read from sysfs for default route interface
 	routeOutput, err := utils.RunCommand("sh", "-c", "ip route show default | awk '{print $5}' | head -n1")
 	if err == nil {
@@ -219,7 +218,7 @@ func getMACAddressLinux() (string, error) {
 			}
 		}
 	}
-	
+
 	// Method 3: Get first non-loopback interface from sysfs
 	output, err := utils.RunCommand("sh", "-c", "ls /sys/class/net | grep -v lo | head -n1")
 	if err == nil {
@@ -236,7 +235,7 @@ func getMACAddressLinux() (string, error) {
 			}
 		}
 	}
-	
+
 	return "", fmt.Errorf("no active network interface found")
 }
 
@@ -247,13 +246,13 @@ func getMACAddressDarwin() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	for _, iface := range interfaces {
 		// Skip loopback and down interfaces
 		if iface.Flags&net.FlagLoopback != 0 || iface.Flags&net.FlagUp == 0 {
 			continue
 		}
-		
+
 		// Get MAC address
 		if iface.HardwareAddr != nil && len(iface.HardwareAddr) > 0 {
 			mac := iface.HardwareAddr.String()
@@ -262,6 +261,6 @@ func getMACAddressDarwin() (string, error) {
 			}
 		}
 	}
-	
+
 	return "", fmt.Errorf("no active network interface found")
 }
