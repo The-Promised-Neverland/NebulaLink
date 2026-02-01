@@ -22,7 +22,7 @@ func NewProcessor() *Processor {
 	}
 }
 
-// source format: "agent:ID" or "frontend"
+// Delegates message based on actor
 func (p *Processor) ProcessMessage(source string, msg *models.Message) {
 	fmt.Print("Recieved msg", msg, " from ", source);
 	if strings.HasPrefix(source, "agent:") {
@@ -32,14 +32,16 @@ func (p *Processor) ProcessMessage(source string, msg *models.Message) {
 	}
 }
 
+// Handles agentic tasks
 func (p *Processor) handleAgentMessage(msg *models.Message) {
 	switch msg.Type {
-	case "agent_metrics", "task_result":
+	case "agent_metrics", "task_result", "agent_directory_snapshot":
 		p.OutgoingCh <- RoutedMessage{Target: "frontend", Message: *msg}
 	default:
 	}
 }
 
+// Handles frontend tasks
 func (p *Processor) handleFrontendMessage(msg *models.Message) {
 	// TODO
 }

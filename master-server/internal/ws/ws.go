@@ -27,19 +27,19 @@ func NewHub() *Hub {
 	return hub
 }
 
-// Registers or Re-connects an agent
+// Registers or re-connects an agent
 func (h *Hub) Connect(role string, conn *websocket.Conn) {
 	h.Mutex.Lock()
 	defer h.Mutex.Unlock()
 	if existing, exists := h.Connections[role]; exists {
-		fmt.Printf("♻️ Reconnecting: %s (closing old connection)\n", role)
+		fmt.Printf("Reconnecting: %s (closing old connection)\n", role)
 		if existing.Conn != nil {
 			existing.Cancel()
 			existing.Conn.Close()
 		}
 		delete(h.Connections, role)
 	} else {
-		fmt.Printf("✨ New connection: %s\n", role)
+		fmt.Printf("New connection: %s\n", role)
 	}
 	connection := NewConnection(role, conn)
 	h.Connections[role] = connection
@@ -78,5 +78,5 @@ func (h *Hub) closeConnection(c *Connection) {
 	delete(h.Connections, c.Role)
 	h.Mutex.Unlock()
 
-	fmt.Printf("🔴 Disconnected: %s (Last seen %v)\n", c.Role, c.LastSeen)
+	fmt.Printf("Disconnected: %s (Last seen %v)\n", c.Role, c.LastSeen)
 }
