@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Deploy whenever you push to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Setup SSH
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      # Step 3: Deploy to EC2
+      - name: SSH and Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@18.61.91.119 << 'EOF'
+            cd /home/ec2-user/your-app-folder
+            git reset --hard
+            git pull origin main
+            docker-compose down
+            docker-compose up -d --build
+          EOF
