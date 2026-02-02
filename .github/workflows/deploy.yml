@@ -27,56 +27,16 @@ jobs:
           ELASTIC_IP: ${{ secrets.ELASTIC_IP }}
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${EC2_HOST} ELASTIC_IP="${ELASTIC_IP}" bash << 'DEPLOY_SCRIPT'
-            set -e
-            set -x  # Enable debug output
-            
-            echo "Starting deployment..."
-            echo "ELASTIC_IP: ${ELASTIC_IP}"
-            
-            # Navigate to project directory
-            cd /home/ec2-user/nebula-project || {
-              echo "ERROR: Project directory not found!"
-              exit 1
-            }
-            
-            # Pull latest code
-            echo "Pulling latest code..."
+            cd /home/ec2-user/nebula-project/NebulaLink
             git reset --hard
             git pull origin main
-            
-            # Export environment variables for docker-compose
-            # Frontend build-time variables (for nebula-watcher)
             export VITE_API_BASE_URL="http://${ELASTIC_IP}:8081"
             export VITE_WS_URL="ws://${ELASTIC_IP}:8081/ws"
-            # WebSocket settings (matching master-server: ping every 30s, pong timeout 60s)
             export VITE_WS_PING_INTERVAL="30000"
             export VITE_WS_PONG_TIMEOUT="60000"
             export VITE_WS_RECONNECT_DELAY="3000"
             export VITE_WS_MAX_RECONNECT_ATTEMPTS="10"
             export VITE_WS_ROLE="frontend"
-            
-            # Master-server runtime variables (already set in docker-compose.yml)
-            export PORT=80
-            export LOG_LEVEL=info
-            
-            echo "Environment variables set:"
-            echo "VITE_API_BASE_URL=${VITE_API_BASE_URL}"
-            echo "VITE_WS_URL=${VITE_WS_URL}"
-            
-            # Check docker-compose
-            echo "Checking docker-compose..."
-            docker-compose --version || {
-              echo "ERROR: docker-compose not found!"
-              exit 1
-            }
-            
-            # Build and deploy
-            echo "Stopping existing containers..."
-            docker-compose down || true
-            
-            echo "Building and starting containers..."
+            docker-compose down
             docker-compose up -d --build
-            
-            echo "Deployment completed successfully!"
-            docker-compose ps
           DEPLOY_SCRIPT
