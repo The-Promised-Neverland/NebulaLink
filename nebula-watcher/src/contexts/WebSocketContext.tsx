@@ -74,40 +74,48 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       switch (message.type) {
         case "agent_metrics": {
           const payload = message.payload as MetricsPayload;
+          
+          // Extract agent ID - might be in format "agent:ID" or just "ID"
+          let agentId = payload.agent_id;
+          if (agentId.startsWith("agent:")) {
+            agentId = agentId.substring(6); // Remove "agent:" prefix
+          }
+          
           console.log("[WebSocket] Processing agent_metrics:", {
-            agent_id: payload.agent_id,
+            original_agent_id: payload.agent_id,
+            normalized_agent_id: agentId,
             metrics: payload.host_metrics,
             timestamp: payload.timestamp
           });
           
-          // Always store metrics
+          // Always store metrics with normalized ID
           setMetrics((prev) => {
             const updated = new Map(prev);
-            updated.set(payload.agent_id, payload);
-            console.log(`[WebSocket] Stored metrics for ${payload.agent_id}, total metrics: ${updated.size}`);
+            updated.set(agentId, payload);
+            console.log(`[WebSocket] Stored metrics for ${agentId}, total metrics: ${updated.size}`);
             return updated;
           });
           
           // Update agent - create if doesn't exist
           setAgents((prev) => {
             const updated = new Map(prev);
-            const existing = updated.get(payload.agent_id);
+            const existing = updated.get(agentId);
             const now = Date.now();
             
             if (existing) {
               // Update existing agent
-              updated.set(payload.agent_id, {
+              updated.set(agentId, {
                 ...existing,
                 isOnline: true,
                 metrics: payload.host_metrics,
                 lastMetricsUpdate: now,
                 agent_last_seen: new Date().toISOString(),
               });
-              console.log(`[WebSocket] Updated agent ${payload.agent_id} with metrics`);
+              console.log(`[WebSocket] Updated agent ${agentId} with metrics`);
             } else {
               // Create new agent entry from metrics
-              updated.set(payload.agent_id, {
-                agent_id: payload.agent_id,
+              updated.set(agentId, {
+                agent_id: agentId,
                 agent_name: undefined, // Will be updated from API
                 agent_os: payload.host_metrics.os,
                 agent_last_seen: new Date().toISOString(),
@@ -115,7 +123,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
                 metrics: payload.host_metrics,
                 lastMetricsUpdate: now,
               });
-              console.log(`[WebSocket] Created new agent entry for ${payload.agent_id}`);
+              console.log(`[WebSocket] Created new agent entry for ${agentId}`);
             }
             
             return updated;
@@ -124,16 +132,24 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         }
         case "agent_directory_snapshot": {
           const payload = message.payload as DirectorySnapshot;
+          
+          // Extract agent ID - might be in format "agent:ID" or just "ID"
+          let agentId = payload.agent_id;
+          if (agentId.startsWith("agent:")) {
+            agentId = agentId.substring(6); // Remove "agent:" prefix
+          }
+          
           console.log("[WebSocket] Processing directory snapshot:", {
-            agent_id: payload.agent_id,
+            original_agent_id: payload.agent_id,
+            normalized_agent_id: agentId,
             fileCount: payload.directory?.total_files,
             totalSize: payload.directory?.total_size,
             timestamp: payload.timestamp
           });
           setSnapshots((prev) => {
             const updated = new Map(prev);
-            updated.set(payload.agent_id, payload);
-            console.log(`[WebSocket] Stored snapshot for ${payload.agent_id}, total snapshots: ${updated.size}`);
+            updated.set(agentId, payload);
+            console.log(`[WebSocket] Stored snapshot for ${agentId}, total snapshots: ${updated.size}`);
             return updated;
           });
           break;
