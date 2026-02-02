@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM golang:1.21-alpine AS build
+FROM golang:1.23-alpine AS build
 
 WORKDIR /app
 
@@ -21,10 +21,14 @@ FROM alpine:latest
 
 WORKDIR /app
 
+# Create non-root user
+RUN addgroup -g 1000 appuser && \
+    adduser -D -u 1000 -G appuser appuser
+
 # Copy binary from build stage
 COPY --from=build /app/server .
 
 EXPOSE 80
-USER 1000:1000
+USER appuser
 
 CMD ["./server"]
