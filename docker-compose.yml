@@ -9,6 +9,7 @@ services:
       - app-network
     environment:
       - LOG_LEVEL=info   # master has no env for now
+      - PORT=80 
     restart: unless-stopped
 
   frontend:
