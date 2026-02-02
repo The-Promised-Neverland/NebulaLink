@@ -24,14 +24,23 @@ jobs:
       - name: Deploy to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST || secrets.ELASTIC_IP }}
-          EC2_USER: ${{ secrets.EC2_USER || 'ec2-user' }}
           ELASTIC_IP: ${{ secrets.ELASTIC_IP }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} bash -s << EOF
+          ssh -o StrictHostKeyChecking=no ec2-user@${EC2_HOST} ELASTIC_IP="${ELASTIC_IP}" bash << 'DEPLOY_SCRIPT'
             set -e
-            cd /home/ec2-user/nebula-project
+            set -x  # Enable debug output
+            
+            echo "Starting deployment..."
+            echo "ELASTIC_IP: ${ELASTIC_IP}"
+            
+            # Navigate to project directory
+            cd /home/ec2-user/nebula-project || {
+              echo "ERROR: Project directory not found!"
+              exit 1
+            }
             
             # Pull latest code
+            echo "Pulling latest code..."
             git reset --hard
             git pull origin main
             
@@ -50,7 +59,24 @@ jobs:
             export PORT=80
             export LOG_LEVEL=info
             
+            echo "Environment variables set:"
+            echo "VITE_API_BASE_URL=${VITE_API_BASE_URL}"
+            echo "VITE_WS_URL=${VITE_WS_URL}"
+            
+            # Check docker-compose
+            echo "Checking docker-compose..."
+            docker-compose --version || {
+              echo "ERROR: docker-compose not found!"
+              exit 1
+            }
+            
             # Build and deploy
-            docker-compose down
+            echo "Stopping existing containers..."
+            docker-compose down || true
+            
+            echo "Building and starting containers..."
             docker-compose up -d --build
-          EOF
+            
+            echo "Deployment completed successfully!"
+            docker-compose ps
+          DEPLOY_SCRIPT
