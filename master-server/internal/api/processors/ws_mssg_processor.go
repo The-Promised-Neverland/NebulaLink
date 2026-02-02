@@ -1,9 +1,6 @@
 package ws_mssg_processor
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/The-Promised-Neverland/master-server/internal/models"
 )
 
@@ -24,11 +21,10 @@ func NewProcessor() *Processor {
 
 // Delegates message based on actor
 func (p *Processor) ProcessMessage(source string, msg *models.Message) {
-	fmt.Print("Recieved msg", msg, " from ", source);
-	if strings.HasPrefix(source, "agent:") {
-		p.handleAgentMessage(msg)
-	} else if source == "frontend" {
+	if source == "frontend" {
 		p.handleFrontendMessage(msg)
+	} else {
+		p.handleAgentMessage(msg)
 	}
 }
 
@@ -45,4 +41,3 @@ func (p *Processor) handleAgentMessage(msg *models.Message) {
 func (p *Processor) handleFrontendMessage(msg *models.Message) {
 	// TODO
 }
-
