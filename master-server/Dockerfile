@@ -3,28 +3,29 @@ FROM golang:1.21-alpine AS build
 
 WORKDIR /app
 
-# Install git if modules need it
-RUN apk add --no-cache git bash
-
-# Cache dependencies
+# Copy go modules first (cache dependencies)
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy backend source
+# Copy source code (without binaries)
 COPY . .
 
-# Build the binary
-RUN go build -o server ./cmd
+# Build binary in /app/bin
+RUN mkdir -p /app/bin && go build -o /app/bin/server ./cmd
 
 # Stage 2: Runtime
 FROM alpine:latest
 
 WORKDIR /app
 
-# Copy binary from build stage
-COPY --from=build /app/server .
+# Copy only the binary
+COPY --from=build /app/bin/server .
 
+# Expose backend port
 EXPOSE 80
+
+# Run as non-root
 USER 1000:1000
 
+# Start backend
 CMD ["./server"]
