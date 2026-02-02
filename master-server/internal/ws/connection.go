@@ -24,8 +24,8 @@ func NewConnection(name string, id string, conn *websocket.Conn) *Connection {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &Connection{
 		Name:       name,
-		Conn:       conn,
 		Id:         id,
+		Conn:       conn,
 		LastSeen:   time.Now(),
 		SendCh:     make(chan models.Message, 100),
 		IncomingCh: make(chan models.Message, 500),

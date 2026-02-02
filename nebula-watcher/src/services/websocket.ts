@@ -23,7 +23,7 @@ class WebSocketService {
     this.isIntentionalClose = false;
     this.setStatus("connecting");
 
-    const wsUrl = `${env.wsUrl}?role=${env.wsRole}`;
+    const wsUrl = `${env.wsUrl}?name=frontend&id=frontend`;
     
     try {
       this.ws = new WebSocket(wsUrl);

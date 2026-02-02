@@ -30,7 +30,6 @@ func NewHub() *Hub {
 // Registers or re-connects an agent
 func (h *Hub) Connect(name string, id string, conn *websocket.Conn) {
 	h.Mutex.Lock()
-	defer h.Mutex.Unlock()
 	if existing, exists := h.Connections[id]; exists {
 		fmt.Printf("Reconnecting: %s (closing old connection)\n", id)
 		if existing.Conn != nil {
@@ -43,9 +42,13 @@ func (h *Hub) Connect(name string, id string, conn *websocket.Conn) {
 	}
 	connection := NewConnection(name, id, conn)
 	h.Connections[id] = connection
+	h.Mutex.Unlock()
 	go h.ReadPump(connection)
 	go h.WritePump(connection)
 	go h.ProcessorPump(connection)
+	if name == "frontend" {
+		h.sendAgentListToFrontend()
+	}
 }
 
 func (h *Hub) routeMessages() {
@@ -78,4 +81,28 @@ func (h *Hub) closeConnection(c *Connection) {
 	delete(h.Connections, c.Id)
 	h.Mutex.Unlock()
 	fmt.Printf("Disconnected: %s (Last seen %v)\n", c.Id, c.LastSeen)
+}
+
+// sendAgentListToFrontend sends the current agent list to the frontend
+func (h *Hub) sendAgentListToFrontend() {
+	h.Mutex.RLock()
+	agents := make([]*models.AgentInfo, 0, len(h.Connections))
+	for id, agent := range h.Connections {
+		if id == "frontend" || id == "" {
+			continue
+		}
+		info := &models.AgentInfo{
+			AgentID:  id,
+			Name:     agent.Name,
+			OS:       agent.OS,
+			LastSeen: agent.LastSeen,
+		}
+		agents = append(agents, info)
+	}
+	h.Mutex.RUnlock()
+	msg := models.Message{
+		Type:    "agent_list",
+		Payload: agents,
+	}
+	h.Send("frontend", msg)
 }

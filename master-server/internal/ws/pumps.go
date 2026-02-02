@@ -88,6 +88,6 @@ func (h *Hub) WritePump(c *Connection) {
 
 func (h *Hub) ProcessorPump(c *Connection) {
 	for msg := range c.IncomingCh {
-		h.MssgProcessor.ProcessMessage(c.Id, &msg)
+		h.MssgProcessor.ProcessMessage(c.Name, &msg)
 	}
 }

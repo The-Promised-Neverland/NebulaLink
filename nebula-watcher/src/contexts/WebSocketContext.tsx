@@ -154,6 +154,13 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           });
           break;
         }
+        case "agent_list": {
+          const agentList = message.payload as AgentInfo[];
+          console.log("[WebSocket] Received agent_list update:", agentList);
+          // Update agent list directly from WebSocket (real-time update)
+          updateAgentList(agentList);
+          break;
+        }
         default:
           console.log("[WebSocket] Unhandled message type:", message.type);
       }
