@@ -56,7 +56,8 @@ func parseAgentName() string {
 }
 
 func handleCLI(manager *daemon.DaemonManager) {
-	switch os.Args[1] {
+	command := os.Args[1]
+	switch command {
 	case "install":
 		must(manager.Install())
 	case "uninstall":
@@ -66,7 +67,7 @@ func handleCLI(manager *daemon.DaemonManager) {
 	case "stop":
 		must(manager.StopService())
 	default:
-		log.Fatal("unknown command")
+		log.Fatalf("unknown command: %s", command)
 	}
 }
 

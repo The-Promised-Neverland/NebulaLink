@@ -56,9 +56,14 @@ export function AgentCard({ agent }: AgentCardProps) {
             </div>
             
             <div>
-              <h3 className="font-mono text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                {agent.agent_id}
+              <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                {agent.agent_name || agent.agent_id}
               </h3>
+              {agent.agent_name && (
+                <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                  {agent.agent_id}
+                </p>
+              )}
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-lg">{osIcons[agent.agent_os] || "💻"}</span>
                 <span className="text-sm text-muted-foreground">{agent.agent_os}</span>

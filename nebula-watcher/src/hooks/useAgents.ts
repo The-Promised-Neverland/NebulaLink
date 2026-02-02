@@ -19,6 +19,7 @@ export function useAgents() {
   // Update WebSocket context when API data changes
   useEffect(() => {
     if (query.data) {
+      console.log("[useAgents] API returned agents:", query.data);
       updateAgentList(query.data);
     }
   }, [query.data, updateAgentList]);

@@ -9,6 +9,7 @@ export interface Message<T = unknown> {
 // Agent Information
 export interface AgentInfo {
   agent_id: string;           // Format: "agent:123"
+  agent_name?: string;        // Optional agent name
   agent_os: string;           // "Windows", "Linux", "darwin"
   agent_last_seen: string;    // ISO 8601 timestamp
 }

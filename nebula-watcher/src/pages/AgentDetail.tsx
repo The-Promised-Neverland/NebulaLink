@@ -120,7 +120,10 @@ export default function AgentDetail() {
                 agent.isOnline ? "bg-success glow-success" : "bg-destructive"
               )} />
               <div>
-                <h1 className="text-xl font-semibold font-mono">{agent.agent_id}</h1>
+                <h1 className="text-xl font-semibold">{agent.agent_name || agent.agent_id}</h1>
+                {agent.agent_name && (
+                  <p className="text-sm font-mono text-muted-foreground">{agent.agent_id}</p>
+                )}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span>{osIcons[agent.agent_os] || "💻"}</span>
                   <span>{agent.agent_os}</span>
