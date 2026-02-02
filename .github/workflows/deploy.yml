@@ -12,7 +12,7 @@ jobs:
     steps:
       # Step 1: Checkout code
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Setup SSH
       - name: Setup SSH key
@@ -21,12 +21,36 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
       # Step 3: Deploy to EC2
-      - name: SSH and Deploy
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST || secrets.ELASTIC_IP }}
+          EC2_USER: ${{ secrets.EC2_USER || 'ec2-user' }}
+          ELASTIC_IP: ${{ secrets.ELASTIC_IP }}
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@18.61.91.119 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} bash -s << EOF
+            set -e
             cd /home/ec2-user/nebula-project
+            
+            # Pull latest code
             git reset --hard
             git pull origin main
+            
+            # Export environment variables for docker-compose
+            # Frontend build-time variables (for nebula-watcher)
+            export VITE_API_BASE_URL="http://${ELASTIC_IP}:8081"
+            export VITE_WS_URL="ws://${ELASTIC_IP}:8081/ws"
+            # WebSocket settings (matching master-server: ping every 30s, pong timeout 60s)
+            export VITE_WS_PING_INTERVAL="30000"
+            export VITE_WS_PONG_TIMEOUT="60000"
+            export VITE_WS_RECONNECT_DELAY="3000"
+            export VITE_WS_MAX_RECONNECT_ATTEMPTS="10"
+            export VITE_WS_ROLE="frontend"
+            
+            # Master-server runtime variables (already set in docker-compose.yml)
+            export PORT=80
+            export LOG_LEVEL=info
+            
+            # Build and deploy
             docker-compose down
             docker-compose up -d --build
           EOF

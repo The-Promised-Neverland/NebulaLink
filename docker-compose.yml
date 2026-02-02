@@ -8,7 +8,7 @@ services:
     networks:
       - app-network
     environment:
-      - LOG_LEVEL=info   # master has no env for now
+      - LOG_LEVEL=info
       - PORT=80 
     restart: unless-stopped
 
@@ -16,8 +16,13 @@ services:
     build:
       context: ./nebula-watcher
       args:
-        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://16.112.43.203}
-        - VITE_WS_URL=${VITE_WS_URL:-ws://16.112.43.203/ws}
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_WS_URL=${VITE_WS_URL}
+        - VITE_WS_PING_INTERVAL=${VITE_WS_PING_INTERVAL:-30000}
+        - VITE_WS_PONG_TIMEOUT=${VITE_WS_PONG_TIMEOUT:-60000}
+        - VITE_WS_RECONNECT_DELAY=${VITE_WS_RECONNECT_DELAY:-3000}
+        - VITE_WS_MAX_RECONNECT_ATTEMPTS=${VITE_WS_MAX_RECONNECT_ATTEMPTS:-10}
+        - VITE_WS_ROLE=${VITE_WS_ROLE:-frontend}
     ports:
       - "8080:80"
     networks:
