@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -30,18 +31,25 @@ func NewHub() *Hub {
 // Registers or re-connects an agent
 func (h *Hub) Connect(name string, id string, conn *websocket.Conn) {
 	h.Mutex.Lock()
+	var connection *Connection
 	if existing, exists := h.Connections[id]; exists {
-		fmt.Printf("Reconnecting: %s (closing old connection)\n", id)
+		fmt.Printf("Reconnecting: %s\n", id)
 		if existing.Conn != nil {
 			existing.Cancel()
 			existing.Conn.Close()
 		}
-		delete(h.Connections, id)
+		existing.Conn = conn
+		existing.LastSeen = time.Now()
+		existing.Name = name
+		ctx, cancel := context.WithCancel(context.Background())
+		existing.Ctx = ctx
+		existing.Cancel = cancel
+		connection = existing
 	} else {
 		fmt.Printf("New connection: %s\n", id)
+		connection = NewConnection(name, id, conn)
+		h.Connections[id] = connection
 	}
-	connection := NewConnection(name, id, conn)
-	h.Connections[id] = connection
 	h.Mutex.Unlock()
 	go h.ReadPump(connection)
 	go h.WritePump(connection)
@@ -78,6 +86,7 @@ func (h *Hub) closeConnection(c *Connection) {
 	}
 	h.Mutex.Lock()
 	c.LastSeen = time.Now()
+	c.Conn = nil
 	isAgent := c.Id != "frontend" && c.Id != ""
 	h.Mutex.Unlock()
 	if isAgent {
@@ -89,9 +98,6 @@ func (h *Hub) closeConnection(c *Connection) {
 		}
 		h.Send("frontend", msg)
 	}
-	h.Mutex.Lock()
-	delete(h.Connections, c.Id)
-	h.Mutex.Unlock()
 	fmt.Printf("Disconnected: %s (Last seen %v)\n", c.Id, c.LastSeen)
 }
 

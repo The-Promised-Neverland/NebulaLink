@@ -32,9 +32,7 @@ func NewWatcher(watchPath string, filterConfig FilterConfig, appCtx context.Cont
 	if err != nil {
 		return nil, err
 	}
-
 	ctx, cancel := context.WithCancel(appCtx)
-
 	return &Watcher{
 		watchPath:     watchPath,
 		filterConfig:  filterConfig,

@@ -49,6 +49,9 @@ func (s *Service) GetAgent(agentID string) *models.AgentInfo {
 	s.Hub.Mutex.RLock()
 	defer s.Hub.Mutex.RUnlock()
 	agent := s.Hub.Connections[agentID]
+	if agent == nil {
+		return nil
+	}
 	return &models.AgentInfo{
 		AgentID:  agentID,
 		Name:     agent.Name,
