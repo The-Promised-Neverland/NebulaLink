@@ -1,8 +1,10 @@
-# Stage 1:Build
+# Stage 1: Build
 FROM golang:1.21-alpine AS build
 
-# Set working directory
 WORKDIR /app
+
+# Install git if modules need it
+RUN apk add --no-cache git bash
 
 # Cache dependencies
 COPY go.mod go.sum ./
@@ -22,11 +24,7 @@ WORKDIR /app
 # Copy binary from build stage
 COPY --from=build /app/server .
 
-# Expose backend port
 EXPOSE 80
-
-# Run as non-root for safety
 USER 1000:1000
 
-# Start backend
 CMD ["./server"]
