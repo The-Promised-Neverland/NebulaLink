@@ -15,7 +15,7 @@ COPY . .
 RUN go build -o server ./cmd
 
 # Stage 2: Runtime
-FROM apline:latest
+FROM alpine:latest
 
 WORKDIR /app
 
