@@ -78,6 +78,18 @@ func (h *Hub) closeConnection(c *Connection) {
 	}
 	h.Mutex.Lock()
 	c.LastSeen = time.Now()
+	isAgent := c.Id != "frontend" && c.Id != ""
+	h.Mutex.Unlock()
+	if isAgent {
+		msg := models.Message{
+			Type: "agent_disconnected",
+			Payload: map[string]string{
+				"agent_id": c.Id,
+			},
+		}
+		h.Send("frontend", msg)
+	}
+	h.Mutex.Lock()
 	delete(h.Connections, c.Id)
 	h.Mutex.Unlock()
 	fmt.Printf("Disconnected: %s (Last seen %v)\n", c.Id, c.LastSeen)

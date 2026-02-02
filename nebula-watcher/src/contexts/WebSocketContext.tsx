@@ -161,6 +161,24 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           updateAgentList(agentList);
           break;
         }
+        case "agent_disconnected": {
+          const payload = message.payload as { agent_id: string };
+          console.log("[WebSocket] Agent disconnected:", payload.agent_id);
+          // Immediately mark agent as offline
+          setAgents((prev) => {
+            const updated = new Map(prev);
+            const existing = updated.get(payload.agent_id);
+            if (existing) {
+              updated.set(payload.agent_id, {
+                ...existing,
+                isOnline: false,
+              });
+              console.log(`[WebSocket] Marked agent ${payload.agent_id} as offline`);
+            }
+            return updated;
+          });
+          break;
+        }
         default:
           console.log("[WebSocket] Unhandled message type:", message.type);
       }
