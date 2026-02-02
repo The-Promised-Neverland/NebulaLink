@@ -1,16 +1,6 @@
 version: "3.9"
 
 services:
-  frontend:
-    build: ./nebula-watcher
-    ports:
-      - "8080:80"
-    networks:
-      - app-network
-    environment:
-      - VITE_API-URL=http://backend:80
-      - VITE_WS_URL=ws://backend:80/ws      
-
   backend:
     build: ./master-server
     ports:
@@ -19,6 +9,20 @@ services:
       - app-network
     environment:
       - LOG_LEVEL=info   # master has no env for now
+    restart: unless-stopped
+
+  frontend:
+    build: ./nebula-watcher
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+    environment:
+      - VITE_API-URL=http://backend:80
+      - VITE_WS_URL=ws://backend:80/ws
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 networks:
   app-network:

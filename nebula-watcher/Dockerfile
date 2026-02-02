@@ -16,6 +16,9 @@ COPY . .
 # Build the app
 RUN npm run build
 
+# Stage 2: Runtime with Nginx
+FROM nginx:alpine
+
 # Copy build output to Nginx's html directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
