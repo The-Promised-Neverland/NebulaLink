@@ -24,7 +24,7 @@ jobs:
       - name: SSH and Deploy
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@18.61.91.119 << 'EOF'
-            cd /home/ec2-user/your-app-folder
+            cd /home/ec2-user/nebula-project
             git reset --hard
             git pull origin main
             docker-compose down
