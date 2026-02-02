@@ -18,23 +18,41 @@ func logStartupInfo(cfg *config.Config) {
 	)
 	logger.Log.Info("Agent identity",
 		"agent_id", cfg.AgentID(),
+		"agent_name", cfg.AgentName(),
 	)
 }
 
-
 func main() {
 	logger.Init("agent.log")
-	cfg := config.New()
+	agentName := parseAgentName()
+	cfg := config.New(agentName)
 	logStartupInfo(cfg)
 	businessService := service.NewService()
-	_, manager := daemon.NewApplicationWithManager(cfg, businessService)
+	manager := daemon.NewApplicationWithManager(cfg, businessService)
 	if len(os.Args) > 1 {
-		handleCLI(manager)
-		return
+		firstArg := os.Args[1]
+		if firstArg == "install" || firstArg == "uninstall" || firstArg == "start" || firstArg == "stop" {
+			handleCLI(manager)
+			return
+		}
 	}
 	if err := manager.Run(); err != nil {
 		logger.Log.Error("Agent daemon failed", "err", err)
 	}
+}
+
+func parseAgentName() string {
+	if len(os.Args) > 1 {
+		firstArg := os.Args[1]
+		if firstArg == "install" || firstArg == "uninstall" || firstArg == "start" || firstArg == "stop" {
+			if len(os.Args) > 2 {
+				return os.Args[2]
+			}
+			return ""
+		}
+		return firstArg
+	}
+	return ""
 }
 
 func handleCLI(manager *daemon.DaemonManager) {

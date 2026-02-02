@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/The-Promised-Neverland/master-server/internal/ws"
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,24 @@ func NewWebSocketHandler(hub *ws.Hub) *WebSocketHandler {
 }
 
 func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
-	role := c.Query("role")
+	roleParam := c.Query("role")
+	name := c.Query("name")
+
+	var agentID string
+
+	// Agent connections send role in the form "agent:ID"
+	if strings.HasPrefix(roleParam, "agent:") {
+		parts := strings.SplitN(roleParam, ":", 2)
+		if len(parts) == 2 {
+			agentID = parts[1]
+		} else {
+			agentID = roleParam
+		}
+	} else {
+		// Frontend (and any non-agent) connections use their role string as the ID
+		agentID = roleParam
+	}
+
 	upgrader := websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool { return true },
 	}
@@ -27,6 +45,8 @@ func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 		fmt.Printf("Failed to upgrade WebSocket: %v\n", err)
 		return
 	}
-	fmt.Print("role recieved -> ", role)
-	wsh.Hub.Connect(role, conn)
+	fmt.Printf("New connection -> ID: %s, Name: %s, Role: %s\n", agentID, name, roleParam)
+
+	// Store connection under its ID; name is kept separately on the connection
+	wsh.Hub.Connect(name, agentID, conn)
 }

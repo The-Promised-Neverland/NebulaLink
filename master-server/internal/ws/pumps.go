@@ -26,7 +26,7 @@ func (h *Hub) ReadPump(c *Connection) {
 			_, msgBytes, err := c.Conn.ReadMessage()
 			if err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-					fmt.Printf("WebSocket read error for %s: %v\n", c.Role, err)
+					fmt.Printf("WebSocket read error for %s: %v\n", c.Id, err)
 				}
 				c.Cancel()
 				return
@@ -37,7 +37,7 @@ func (h *Hub) ReadPump(c *Connection) {
 			h.Mutex.Unlock()
 			var msg models.Message
 			if err := json.Unmarshal(msgBytes, &msg); err != nil {
-				fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Role, err)
+				fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Id, err)
 				continue
 			}
 			select {
@@ -45,7 +45,7 @@ func (h *Hub) ReadPump(c *Connection) {
 			case <-c.Ctx.Done():
 				return
 			default:
-				fmt.Printf("Incoming channel full for %s, dropping message\n", c.Role)
+				fmt.Printf("Incoming channel full for %s, dropping message\n", c.Id)
 			}
 		}
 	}
@@ -67,17 +67,17 @@ func (h *Hub) WritePump(c *Connection) {
 			}
 			data, err := json.Marshal(msg)
 			if err != nil {
-				fmt.Printf("Marshal error for %s: %v\n", c.Role, err)
+				fmt.Printf("Marshal error for %s: %v\n", c.Id, err)
 				continue
 			}
 			if err := c.Conn.WriteMessage(websocket.TextMessage, data); err != nil {
-				fmt.Printf("Send failed to %s: %v\n", c.Role, err)
+				fmt.Printf("Send failed to %s: %v\n", c.Id, err)
 				return
 			}
 		case <-ticker.C:
 			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				fmt.Printf("Ping failed to %s: %v\n", c.Role, err)
+				fmt.Printf("Ping failed to %s: %v\n", c.Id, err)
 				return
 			}
 		case <-c.Ctx.Done():
@@ -88,6 +88,6 @@ func (h *Hub) WritePump(c *Connection) {
 
 func (h *Hub) ProcessorPump(c *Connection) {
 	for msg := range c.IncomingCh {
-		h.MssgProcessor.ProcessMessage(c.Role, &msg)
+		h.MssgProcessor.ProcessMessage(c.Id, &msg)
 	}
 }

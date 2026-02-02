@@ -14,6 +14,7 @@ type HealthCheck struct {
 
 type AgentInfo struct {
 	AgentID  string    `json:"agent_id"`
+	Name     string    `json:"agent_name,omitempty"`
 	OS       string    `json:"agent_os"`
 	LastSeen time.Time `json:"agent_last_seen"`
 }

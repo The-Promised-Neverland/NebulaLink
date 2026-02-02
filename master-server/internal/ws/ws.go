@@ -28,21 +28,21 @@ func NewHub() *Hub {
 }
 
 // Registers or re-connects an agent
-func (h *Hub) Connect(role string, conn *websocket.Conn) {
+func (h *Hub) Connect(name string, id string, conn *websocket.Conn) {
 	h.Mutex.Lock()
 	defer h.Mutex.Unlock()
-	if existing, exists := h.Connections[role]; exists {
-		fmt.Printf("Reconnecting: %s (closing old connection)\n", role)
+	if existing, exists := h.Connections[id]; exists {
+		fmt.Printf("Reconnecting: %s (closing old connection)\n", id)
 		if existing.Conn != nil {
 			existing.Cancel()
 			existing.Conn.Close()
 		}
-		delete(h.Connections, role)
+		delete(h.Connections, id)
 	} else {
-		fmt.Printf("New connection: %s\n", role)
+		fmt.Printf("New connection: %s\n", id)
 	}
-	connection := NewConnection(role, conn)
-	h.Connections[role] = connection
+	connection := NewConnection(name, id, conn)
+	h.Connections[id] = connection
 	go h.ReadPump(connection)
 	go h.WritePump(connection)
 	go h.ProcessorPump(connection)
@@ -75,8 +75,7 @@ func (h *Hub) closeConnection(c *Connection) {
 	}
 	h.Mutex.Lock()
 	c.LastSeen = time.Now()
-	delete(h.Connections, c.Role)
+	delete(h.Connections, c.Id)
 	h.Mutex.Unlock()
-
-	fmt.Printf("Disconnected: %s (Last seen %v)\n", c.Role, c.LastSeen)
+	fmt.Printf("Disconnected: %s (Last seen %v)\n", c.Id, c.LastSeen)
 }

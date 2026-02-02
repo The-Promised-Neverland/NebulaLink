@@ -21,6 +21,7 @@ type Config struct {
 	serviceDescription string
 	heartbeatTimer     time.Duration
 	binaryPath         string
+	agentName          string
 }
 
 func defaultPaths() string {
@@ -41,7 +42,7 @@ func defaultPaths() string {
 	}
 }
 
-func New() *Config {
+func New(agentName string) *Config {
 	err := godotenv.Load() // ignore error if .env not found
 	if err != nil {
 		panic(".env was unable to load. Cannot connect to master...")
@@ -58,6 +59,7 @@ func New() *Config {
 		serviceDisplayName: serviceDisplayName,
 		serviceDescription: serviceDescription,
 		heartbeatTimer:     time.Duration(heartbeatSec) * time.Second,
+		agentName:          agentName,
 	}
 	cfg.binaryPath = defaultPaths()
 	return cfg
@@ -89,6 +91,10 @@ func (c *Config) HeartbeatTimer() time.Duration {
 
 func (c *Config) BinaryPath() string {
 	return c.binaryPath
+}
+
+func (c *Config) AgentName() string {
+	return c.agentName
 }
 
 // SharedFolderPath returns the OS-specific path for the shared folder on Desktop.

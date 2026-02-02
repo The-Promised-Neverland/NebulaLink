@@ -35,6 +35,7 @@ func (w *AgentWorker) SendHeartbeat() error {
 		Type: models.AgentMsgHeartbeat,
 		Payload: models.Metrics{
 			AgentID:    w.Cfg.AgentID(),
+			AgentName:  w.Cfg.AgentName(),
 			SysMetrics: *metrics,
 			Timestamp:  time.Now().Unix(),
 		},

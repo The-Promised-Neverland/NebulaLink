@@ -34,7 +34,7 @@ func newApplication(
 	}
 }
 
-func NewApplicationWithManager(cfg *config.Config, svc *service.Service) (*Application, *DaemonManager) {
+func NewApplicationWithManager(cfg *config.Config, svc *service.Service) *DaemonManager {
 	app := newApplication(cfg, svc)
 	manager := NewDaemonManager(cfg, app)
 	sharedPath, err := cfg.SharedFolderPath()
@@ -55,7 +55,7 @@ func NewApplicationWithManager(cfg *config.Config, svc *service.Service) (*Appli
 		}
 	}
 
-	return app, manager
+	return manager
 }
 
 func (app *Application) Run(appCtx context.Context, daemonManager *DaemonManager) {

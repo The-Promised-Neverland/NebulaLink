@@ -115,12 +115,16 @@ class WebSocketService {
     }
     
     // Set new timeout - if server doesn't ping us, we'll reconnect
+    // Master server sends ping every 30s and expects pong within 60s
+    // So we should timeout if we don't receive any message (including ping) for ~90s
+    // This gives us 3 missed ping cycles (30s * 3) before reconnecting
+    const timeout = env.wsPingInterval * 3; // 90 seconds (3 ping cycles)
     this.pongTimeout = setTimeout(() => {
       console.warn("No server ping received - reconnecting...");
       if (this.ws) {
         this.ws.close();
       }
-    }, env.wsPongTimeout * 2); // Give more time since server pings every 30s
+    }, timeout);
   }
 
   private handlePong(): void {

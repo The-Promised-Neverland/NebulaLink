@@ -16,6 +16,7 @@ type JobStatus struct {
 
 type Metrics struct {
 	AgentID    string      `json:"agent_id"`
+	AgentName  string      `json:"agent_name,omitempty"`
 	SysMetrics HostMetrics `json:"host_metrics"`
 	Timestamp  int64       `json:"timestamp,omitempty"`
 }
