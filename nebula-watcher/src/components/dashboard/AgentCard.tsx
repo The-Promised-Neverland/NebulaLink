@@ -14,11 +14,16 @@ export function AgentCard({ agent }: AgentCardProps) {
     darwin: "🍎",
   };
 
-  const formatLastSeen = (timestamp: string) => {
+  const formatRelativeTime = (timestamp?: string) => {
+    if (!timestamp) return "unknown";
     const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return "unknown";
+
     const now = new Date();
     const diff = now.getTime() - date.getTime();
-    
+
+    if (diff < 0) return "in the future";
+
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
@@ -28,6 +33,13 @@ export function AgentCard({ agent }: AgentCardProps) {
     if (hours > 0) return `${hours}h ago`;
     if (minutes > 0) return `${minutes}m ago`;
     return "Just now";
+  };
+
+  const formatAbsoluteTime = (timestamp?: string) => {
+    if (!timestamp) return "Unknown";
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return "Unknown";
+    return date.toLocaleString();
   };
 
   return (
@@ -78,10 +90,27 @@ export function AgentCard({ agent }: AgentCardProps) {
           </div>
         )}
 
-        {/* Last seen */}
-        <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-          <Clock className="h-3.5 w-3.5" />
-          <span>Last seen: {formatLastSeen(agent.agent_last_seen)}</span>
+        {/* Last seen / offline info */}
+        <div className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
+          <Clock className="h-3.5 w-3.5 mt-[2px]" />
+          {agent.isOnline ? (
+            <span>
+              <span className="font-medium text-success">Online</span>
+              <span className="mx-1">·</span>
+              <span>last heartbeat {formatRelativeTime(agent.agent_last_seen)}</span>
+            </span>
+          ) : (
+            <div className="flex flex-col">
+              <span>
+                <span className="font-medium text-destructive">Offline</span>
+                <span className="mx-1">·</span>
+                <span>offline for {formatRelativeTime(agent.agent_last_seen)}</span>
+              </span>
+              <span className="text-[0.7rem]">
+                Last seen at {formatAbsoluteTime(agent.agent_last_seen)}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </Link>
