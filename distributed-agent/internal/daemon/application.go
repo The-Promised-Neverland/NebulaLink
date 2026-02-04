@@ -223,6 +223,10 @@ func (app *Application) scanDirectory() (models.DirectorySnapshot, error) {
 		if err != nil {
 			relPath = path
 		}
+		// Skip the root directory itself (relPath will be ".")
+		if relPath == "." || relPath == "" {
+			return nil
+		}
 		fileInfo := models.FileInfo{
 			Name:     info.Name(),
 			Path:     relPath,
