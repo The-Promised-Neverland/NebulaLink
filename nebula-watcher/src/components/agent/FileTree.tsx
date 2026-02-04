@@ -19,6 +19,7 @@ interface FileTreeProps {
 export function FileTree({ snapshot }: FileTreeProps) {
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   // Build tree structure from flat file list
   const treeData = useMemo(() => {
@@ -125,17 +126,18 @@ export function FileTree({ snapshot }: FileTreeProps) {
     return root;
   }, [snapshot]);
 
-  // Auto-expand root directories on first load
+  // Auto-expand root directories on first load only (not when user collapses)
   useEffect(() => {
-    if (snapshot?.directory?.files && expandedPaths.size === 0) {
+    if (snapshot?.directory?.files && !hasInitialized && treeData.length > 0) {
       const rootDirs = treeData
         .filter(n => n.type === "directory" && n.children && n.children.length > 0)
         .map(n => n.path);
       if (rootDirs.length > 0) {
         setExpandedPaths(new Set(rootDirs));
+        setHasInitialized(true);
       }
     }
-  }, [snapshot, treeData, expandedPaths.size]);
+  }, [snapshot, treeData, hasInitialized]);
 
   // Filter tree based on search
   const filteredTree = useMemo(() => {
