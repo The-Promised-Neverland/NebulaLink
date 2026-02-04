@@ -24,7 +24,6 @@ func NewRouter(hub *ws.Hub, handler *handlers.Handler, wsh *handlers.WebSocketHa
 func (rtr *Router) SetupRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(middleware.CorsMiddleware())
-	router.Use(middleware.AgentExistenceMiddleware(rtr.Hub))
 
 	router.GET("/health", rtr.Handler.HealthCheck)
 
@@ -34,7 +33,7 @@ func (rtr *Router) SetupRouter() *gin.Engine {
 		{
 			agents.GET("", rtr.Handler.ListAgents)                    // list all agents
 			agents.GET("/:id", rtr.Handler.GetAgent)                  // get agent data (last seen, isOnline, downtime)
-			agents.GET("/:id/metrics", rtr.Handler.GetAgentMetrics)   // get agent metrics
+			agents.GET("/:id/metrics", rtr.Handler.TriggerAgentMetrics)   // get agent metrics
 			agents.POST("/:id/restart", rtr.Handler.RestartAgent)     // restart a agent
 			agents.POST("/:id/uninstall", rtr.Handler.UninstallAgent) // uninstall a agent
 		}
@@ -44,11 +43,6 @@ func (rtr *Router) SetupRouter() *gin.Engine {
 			tasks.POST("", func(ctx *gin.Context) {})    // post task
 			tasks.GET("/:id", func(ctx *gin.Context) {}) // Get task status
 			tasks.GET("", func(ctx *gin.Context) {})     // All tasks pending
-		}
-
-		internal := v1.Group("/callback")
-		{
-			internal.POST("/metrics/:id", rtr.Handler.ReceiveAgentMetrics) // Agent posts to this
 		}
 	}
 	router.GET("/ws", rtr.WSHandler.UpgradeHandler) // Upgrade to websocket request

@@ -5,7 +5,7 @@ import (
 )
 
 type RoutedMessage struct {
-	Target  string // "frontend", "agent:ID",
+	TargetId  string // "frontend", "agentID",
 	Message models.Message
 }
 
@@ -32,7 +32,7 @@ func (p *Processor) ProcessMessage(source string, msg *models.Message) {
 func (p *Processor) handleAgentMessage(msg *models.Message) {
 	switch msg.Type {
 	case "agent_metrics", "task_result", "agent_directory_snapshot":
-		p.OutgoingCh <- RoutedMessage{Target: "frontend", Message: *msg}
+		p.OutgoingCh <- RoutedMessage{TargetId: "frontend", Message: *msg}
 	default:
 	}
 }

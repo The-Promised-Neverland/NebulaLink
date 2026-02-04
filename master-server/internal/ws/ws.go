@@ -61,13 +61,13 @@ func (h *Hub) Connect(name string, id string, conn *websocket.Conn) {
 
 func (h *Hub) routeMessages() {
 	for routedMsg := range h.MssgProcessor.OutgoingCh {
-		h.Send(routedMsg.Target, routedMsg.Message)
+		h.Send(routedMsg.TargetId, routedMsg.Message)
 	}
 }
 
-func (h *Hub) Send(id string, msg models.Message) {
+func (h *Hub) Send(TargetId string, msg models.Message) {
 	h.Mutex.RLock()
-	c := h.Connections[id]
+	c := h.Connections[TargetId]
 	h.Mutex.RUnlock()
 	if c == nil || c.Conn == nil {
 		return
@@ -75,7 +75,7 @@ func (h *Hub) Send(id string, msg models.Message) {
 	select {
 	case c.SendCh <- msg:
 	default:
-		fmt.Printf("Send channel full for %s\n", id)
+		fmt.Printf("Send channel full for %s\n", TargetId)
 	}
 }
 
@@ -106,7 +106,7 @@ func (h *Hub) sendAgentListToFrontend() {
 	h.Mutex.RLock()
 	agents := make([]*models.AgentInfo, 0, len(h.Connections))
 	for id, agent := range h.Connections {
-		if id == "frontend" || id == "" {
+		if id == "frontend" {
 			continue
 		}
 		info := &models.AgentInfo{
