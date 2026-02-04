@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"runtime"
@@ -23,8 +24,11 @@ func logStartupInfo(cfg *config.Config) {
 }
 
 func main() {
+	agentName, err := parseAgentName()
+	if err != nil {
+		printUsageAndExit(err)
+	}
 	logger.Init("agent.log")
-	agentName := parseAgentName()
 	cfg := config.New(agentName)
 	logStartupInfo(cfg)
 	businessService := service.NewService()
@@ -41,18 +45,37 @@ func main() {
 	}
 }
 
-func parseAgentName() string {
+func printUsageAndExit(err error) {
+	if err != nil {
+		log.Println("Error:", err)
+	}
+
+	log.Println(`
+Usage:
+  agent <agent-name>
+  agent install <agent-name>
+  agent uninstall <agent-name>
+  agent start <agent-name>
+  agent stop <agent-name>
+
+Example:
+  agent install branch-agent-01
+`)
+	os.Exit(1)
+}
+
+func parseAgentName() (string, error) {
 	if len(os.Args) > 1 {
 		firstArg := os.Args[1]
 		if firstArg == "install" || firstArg == "uninstall" || firstArg == "start" || firstArg == "stop" {
 			if len(os.Args) > 2 {
-				return os.Args[2]
+				return os.Args[2], nil
 			}
-			return ""
+			return "", fmt.Errorf("agent name is required")
 		}
-		return firstArg
+		return firstArg, nil
 	}
-	return ""
+	return "", fmt.Errorf("agent name is required")
 }
 
 func handleCLI(manager *daemon.DaemonManager) {

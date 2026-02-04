@@ -515,3 +515,19 @@
 {"time":"2026-02-02T16:52:14.6135101+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":56.510416666666664,"memory_usage":89,"disk_usage":61.07498158905681,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":619382}}
 {"time":"2026-02-02T16:52:15.1788145+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}
 {"time":"2026-02-02T16:52:15.1805479+05:30","level":"INFO","msg":"Stopping file event handler"}
+{"time":"2026-02-04T12:20:34.5742071+05:30","level":"INFO","msg":"Error: agent name is required"}
+{"time":"2026-02-04T12:20:34.5774323+05:30","level":"INFO","msg":"\nUsage:\n  agent <agent-name>\n  agent install <agent-name>\n  agent uninstall <agent-name>\n  agent start <agent-name>\n  agent stop <agent-name>\n\nExample:\n  agent install branch-agent-01\n"}
+{"time":"2026-02-04T12:30:29.1495103+05:30","level":"INFO","msg":"NebulaLink Agent starting","os":"windows","arch":"amd64"}
+{"time":"2026-02-04T12:30:29.1526227+05:30","level":"INFO","msg":"Agent identity","agent_id":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3","agent_name":"Abhijit"}
+{"time":"2026-02-04T12:30:29.1536812+05:30","level":"INFO","msg":"File watcher started","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-04T12:30:29.1536812+05:30","level":"INFO","msg":"File watcher initialized","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-04T12:30:29.1536812+05:30","level":"INFO","msg":"Kardianos starting service","service":"NebulaLink Agent","platform":"windows-service"}
+{"time":"2026-02-04T12:30:29.1536812+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3"}
+{"time":"2026-02-04T12:30:29.2003468+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3"}
+{"time":"2026-02-04T12:30:29.201659+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-04T12:30:30.202703+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":1}
+{"time":"2026-02-04T12:30:34.2046338+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":20.909693088982113,"memory_usage":86,"disk_usage":61.184050623712125,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":776483}}
+{"time":"2026-02-04T12:30:39.2047545+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":23.29693187727509,"memory_usage":87,"disk_usage":61.18406345517457,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":776488}}
+{"time":"2026-02-04T12:30:44.2040695+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":13.695765812859385,"memory_usage":84,"disk_usage":61.18406345517457,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":776493}}
+{"time":"2026-02-04T12:30:49.2030824+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":33.43717549325026,"memory_usage":84,"disk_usage":61.184065861073776,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":776498}}
+{"time":"2026-02-04T12:30:52.5425322+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}
