@@ -137,9 +137,10 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
             const now = Date.now();
             
             if (existing) {
-              // Update existing agent
+              // Update existing agent - preserve name if new one is not provided
               updated.set(agentId, {
                 ...existing,
+                agent_name: payload.agent_name || existing.agent_name, // Use new name or keep existing
                 isOnline: true,
                 metrics: payload.host_metrics,
                 lastMetricsUpdate: now,
@@ -150,14 +151,14 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
               // Create new agent entry from metrics
               updated.set(agentId, {
                 agent_id: agentId,
-                agent_name: undefined, // Will be updated from API
+                agent_name: payload.agent_name, // Use name from metrics if available
                 agent_os: payload.host_metrics.os,
                 agent_last_seen: new Date().toISOString(),
                 isOnline: true,
                 metrics: payload.host_metrics,
                 lastMetricsUpdate: now,
               });
-              console.log(`[WebSocket] Created new agent entry for ${agentId}`);
+              console.log(`[WebSocket] Created new agent entry for ${agentId} with name: ${payload.agent_name || 'undefined'}`);
             }
             
             return updated;

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, memo } from "react";
 import {
   Folder,
   File,
@@ -173,7 +173,8 @@ export function FileTree({ snapshot }: FileTreeProps) {
       } else {
         next.add(path);
       }
-      return next;
+      // Force a new Set instance to trigger re-render
+      return new Set(next);
     });
   }, []);
 
@@ -285,6 +286,14 @@ function TreeNode({
   const isDirectory = node.type === "directory";
   const hasChildren = isDirectory && node.children && node.children.length > 0;
 
+  const handleToggle = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isDirectory && hasChildren) {
+      onToggle(node.path);
+    }
+  }, [isDirectory, hasChildren, node.path, onToggle]);
+
   return (
     <div>
       <div
@@ -295,12 +304,7 @@ function TreeNode({
           !isDirectory && "hover:bg-muted/30"
         )}
         style={{ paddingLeft: `${level * 20 + 8}px` }}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (isDirectory && hasChildren) {
-            onToggle(node.path);
-          }
-        }}
+        onClick={handleToggle}
       >
         {/* Expand/collapse icon */}
         <div className="w-4 flex-shrink-0 flex items-center justify-center">
@@ -345,7 +349,7 @@ function TreeNode({
         <div>
           {node.children!.map((child) => (
             <TreeNode
-              key={child.path}
+              key={`${child.path}-${expandedPaths.has(child.path)}`}
               node={child}
               level={level + 1}
               expandedPaths={expandedPaths}

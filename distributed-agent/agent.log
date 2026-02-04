@@ -2111,3 +2111,41 @@
 {"time":"2026-02-05T02:53:21.3965584+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":11.584415584415584,"memory_usage":88,"disk_usage":61.32099200068186,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828249}}
 {"time":"2026-02-05T02:53:26.3919072+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":43.910088865656036,"memory_usage":81,"disk_usage":61.32062149220396,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828254}}
 {"time":"2026-02-05T02:53:27.3335538+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}
+{"time":"2026-02-05T02:57:39.9216026+05:30","level":"INFO","msg":"NebulaLink Agent starting","os":"windows","arch":"amd64"}
+{"time":"2026-02-05T02:57:39.9261446+05:30","level":"INFO","msg":"Agent identity","agent_id":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3","agent_name":"Abhijit"}
+{"time":"2026-02-05T02:57:39.9301444+05:30","level":"INFO","msg":"File watcher started","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-05T02:57:39.9309593+05:30","level":"INFO","msg":"File watcher initialized","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-05T02:57:39.9316471+05:30","level":"INFO","msg":"Kardianos starting service","service":"NebulaLink Agent","platform":"windows-service"}
+{"time":"2026-02-05T02:57:39.9336706+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-05T02:57:39.9911256+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-05T02:57:39.9916906+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-05T02:57:40.9965423+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-05T02:57:44.9970945+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":41.33746449780532,"memory_usage":85,"disk_usage":61.321988844920014,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828513}}
+{"time":"2026-02-05T02:57:49.9954814+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":26.861009890681935,"memory_usage":85,"disk_usage":61.321988844920014,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828518}}
+{"time":"2026-02-05T02:57:54.995436+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":27.826993225638354,"memory_usage":85,"disk_usage":61.321988844920014,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828523}}
+{"time":"2026-02-05T02:57:59.9952898+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":39.603960396039604,"memory_usage":84,"disk_usage":61.322001676382456,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828528}}
+{"time":"2026-02-05T02:58:04.9943914+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":26.18427902134305,"memory_usage":84,"disk_usage":61.32210432808195,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828533}}
+{"time":"2026-02-05T02:58:09.9968424+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":21.920668058455114,"memory_usage":84,"disk_usage":61.322091496619514,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828538}}
+{"time":"2026-02-05T02:58:10.0036586+05:30","level":"INFO","msg":"Received ping from master"}
+{"time":"2026-02-05T02:58:14.9962796+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":28.022833419823563,"memory_usage":85,"disk_usage":61.32223023680713,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828543}}
+{"time":"2026-02-05T02:58:19.9953629+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":28.690662493479397,"memory_usage":85,"disk_usage":61.322242266303164,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828548}}
+{"time":"2026-02-05T02:58:24.9954142+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":31.754294638209267,"memory_usage":85,"disk_usage":61.3222206132103,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828553}}
+{"time":"2026-02-05T02:58:29.9961512+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":23.57850808555034,"memory_usage":85,"disk_usage":61.32222943484072,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828558}}
+{"time":"2026-02-05T02:58:34.9966681+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":12.330905306971903,"memory_usage":84,"disk_usage":61.32222943484072,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828563}}
+{"time":"2026-02-05T02:58:39.9981807+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":23.972958918356735,"memory_usage":84,"disk_usage":61.32221660337829,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828568}}
+{"time":"2026-02-05T02:58:40.0024114+05:30","level":"INFO","msg":"Received ping from master"}
+{"time":"2026-02-05T02:58:44.9957214+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":25.547445255474454,"memory_usage":84,"disk_usage":61.32222943484072,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828573}}
+{"time":"2026-02-05T02:58:49.9968947+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":14.479166666666668,"memory_usage":84,"disk_usage":61.32222943484072,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828578}}
+{"time":"2026-02-05T02:58:54.9976184+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":60.9375,"memory_usage":88,"disk_usage":61.322244672202366,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828583}}
+{"time":"2026-02-05T02:59:00.0056279+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":47.55463059313215,"memory_usage":92,"disk_usage":61.32226151349683,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828588}}
+{"time":"2026-02-05T02:59:05.1498048+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":80.07135575942915,"memory_usage":92,"disk_usage":61.32232567080901,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828593}}
+{"time":"2026-02-05T02:59:09.9962411+05:30","level":"INFO","msg":"Received ping from master"}
+{"time":"2026-02-05T02:59:10.0153251+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":93.50372736954206,"memory_usage":92,"disk_usage":61.32234732390187,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828598}}
+{"time":"2026-02-05T02:59:14.9974766+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":77.1875,"memory_usage":90,"disk_usage":61.322351333733884,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828603}}
+{"time":"2026-02-05T02:59:20.0057915+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":87.91666666666667,"memory_usage":90,"disk_usage":61.32197280559196,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828608}}
+{"time":"2026-02-05T02:59:24.9998666+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":84.53125,"memory_usage":92,"disk_usage":61.3219856370544,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828613}}
+{"time":"2026-02-05T02:59:30.0235881+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":76.58688865764827,"memory_usage":89,"disk_usage":61.32196238002874,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828618}}
+{"time":"2026-02-05T02:59:35.0042185+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":78.98852971845672,"memory_usage":88,"disk_usage":61.3450157062313,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828623}}
+{"time":"2026-02-05T02:59:39.996963+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":69.47916666666667,"memory_usage":86,"disk_usage":61.36086737414057,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828628}}
+{"time":"2026-02-05T02:59:40.060933+05:30","level":"INFO","msg":"Received ping from master"}
+{"time":"2026-02-05T02:59:45.0200759+05:30","level":"INFO","msg":"Sending Heartbeat","metrics":{"cpu_usage":68.75,"memory_usage":85,"disk_usage":61.35147795150161,"hostname":"DESKTOP-4RM216I","os":"windows","uptime":828633}}

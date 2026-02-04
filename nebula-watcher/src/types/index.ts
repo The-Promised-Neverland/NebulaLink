@@ -34,6 +34,7 @@ export interface HostMetrics {
 
 export interface MetricsPayload {
   agent_id: string;
+  agent_name?: string;        // Agent name from metrics
   host_metrics: HostMetrics;
   timestamp?: number;         // Unix timestamp
 }
