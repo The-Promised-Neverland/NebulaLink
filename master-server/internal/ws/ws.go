@@ -29,7 +29,7 @@ func NewHub() *Hub {
 }
 
 // Registers or re-connects an agent
-func (h *Hub) Connect(name string, id string, conn *websocket.Conn) {
+func (h *Hub) Connect(name string, id string, os string, conn *websocket.Conn) {
 	h.Mutex.Lock()
 	var connection *Connection
 	if existing, exists := h.Connections[id]; exists {
@@ -41,13 +41,16 @@ func (h *Hub) Connect(name string, id string, conn *websocket.Conn) {
 		existing.Conn = conn
 		existing.LastSeen = time.Now()
 		existing.Name = name
+		if os != "" {
+			existing.OS = os
+		}
 		ctx, cancel := context.WithCancel(context.Background())
 		existing.Ctx = ctx
 		existing.Cancel = cancel
 		connection = existing
 	} else {
 		fmt.Printf("New connection: %s\n", id)
-		connection = NewConnection(name, id, conn)
+		connection = NewConnection(name, id, os, conn)
 		h.Connections[id] = connection
 	}
 	h.Mutex.Unlock()

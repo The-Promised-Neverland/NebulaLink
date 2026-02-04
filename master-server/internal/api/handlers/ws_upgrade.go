@@ -20,6 +20,7 @@ func NewWebSocketHandler(hub *ws.Hub) *WebSocketHandler {
 func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 	name := c.Query("name")
 	id := c.Query("id")
+	os := c.Query("os")
 	if id == "" {
 		id = "frontend"
 	}	
@@ -33,6 +34,6 @@ func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 		fmt.Printf("Failed to upgrade WebSocket: %v\n", err)
 		return
 	}
-	fmt.Printf("New connection -> ID: %s, Name: %s\n", id, name)
-	wsh.Hub.Connect(name, id, conn)
+	fmt.Printf("New connection -> ID: %s, Name: %s, OS: %s\n", id, name, os)
+	wsh.Hub.Connect(name, id, os, conn)
 }

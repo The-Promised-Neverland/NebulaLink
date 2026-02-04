@@ -13,6 +13,7 @@ const (
 	writeWait      = 10 * time.Second
 )
 
+// TODO: Un-used
 func (h *Hub) sendPingToAgent(agent *Connection) error {
 	if agent.Conn == nil {
 		return fmt.Errorf("connection is nil")

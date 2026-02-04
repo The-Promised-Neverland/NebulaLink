@@ -20,12 +20,13 @@ type Connection struct {
 	Cancel     context.CancelFunc
 }
 
-func NewConnection(name string, id string, conn *websocket.Conn) *Connection {
+func NewConnection(name string, id string, os string, conn *websocket.Conn) *Connection {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &Connection{
 		Name:       name,
 		Id:         id,
 		Conn:       conn,
+		OS:         os,
 		LastSeen:   time.Now(),
 		SendCh:     make(chan models.Message, 100),
 		IncomingCh: make(chan models.Message, 500),
