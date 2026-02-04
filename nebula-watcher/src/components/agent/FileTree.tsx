@@ -100,8 +100,15 @@ export function FileTree({ snapshot }: FileTreeProps) {
       }
     });
 
-    // Sort recursively
+    // Sort recursively - directories first, then files
     const sortTree = (nodes: FileTreeNode[]): void => {
+      // Sort root level first
+      nodes.sort((a, b) => {
+        if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      });
+      
+      // Sort children recursively
       nodes.forEach(node => {
         if (node.children) {
           node.children.sort((a, b) => {
@@ -288,7 +295,8 @@ function TreeNode({
           !isDirectory && "hover:bg-muted/30"
         )}
         style={{ paddingLeft: `${level * 20 + 8}px` }}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           if (isDirectory && hasChildren) {
             onToggle(node.path);
           }

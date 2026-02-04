@@ -19,11 +19,45 @@ interface WebSocketContextValue {
 
 const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 
+const SNAPSHOTS_STORAGE_KEY = "nebulalink_directory_snapshots";
+
+// Load snapshots from localStorage
+const loadSnapshotsFromStorage = (): Map<string, DirectorySnapshot> => {
+  try {
+    const stored = localStorage.getItem(SNAPSHOTS_STORAGE_KEY);
+    if (stored) {
+      const data = JSON.parse(stored);
+      const map = new Map<string, DirectorySnapshot>();
+      Object.entries(data).forEach(([key, value]) => {
+        map.set(key, value as DirectorySnapshot);
+      });
+      console.log(`[WebSocket] Loaded ${map.size} snapshots from localStorage`);
+      return map;
+    }
+  } catch (error) {
+    console.error("[WebSocket] Failed to load snapshots from localStorage:", error);
+  }
+  return new Map();
+};
+
+// Save snapshots to localStorage
+const saveSnapshotsToStorage = (snapshots: Map<string, DirectorySnapshot>) => {
+  try {
+    const data = Object.fromEntries(snapshots);
+    localStorage.setItem(SNAPSHOTS_STORAGE_KEY, JSON.stringify(data));
+    console.log(`[WebSocket] Saved ${snapshots.size} snapshots to localStorage`);
+  } catch (error) {
+    console.error("[WebSocket] Failed to save snapshots to localStorage:", error);
+  }
+};
+
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ConnectionStatus>("disconnected");
   const [agents, setAgents] = useState<Map<string, AgentWithStatus>>(new Map());
   const [metrics, setMetrics] = useState<Map<string, MetricsPayload>>(new Map());
-  const [snapshots, setSnapshots] = useState<Map<string, DirectorySnapshot>>(new Map());
+  const [snapshots, setSnapshots] = useState<Map<string, DirectorySnapshot>>(() => 
+    loadSnapshotsFromStorage()
+  );
 
   const updateAgentList = useCallback((agentList: AgentInfo[]) => {
     console.log("[WebSocket] Updating agent list from API:", agentList);
@@ -150,6 +184,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
             const updated = new Map(prev);
             updated.set(agentId, payload);
             console.log(`[WebSocket] Stored snapshot for ${agentId}, total snapshots: ${updated.size}`);
+            // Save to localStorage
+            saveSnapshotsToStorage(updated);
             return updated;
           });
           break;
