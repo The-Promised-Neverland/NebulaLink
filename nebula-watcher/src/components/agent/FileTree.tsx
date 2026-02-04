@@ -27,6 +27,43 @@ export function FileTree({ snapshot }: FileTreeProps) {
     const root: FileTreeNode[] = [];
     const pathMap = new Map<string, FileTreeNode>();
 
+    // Helper to get or create directory node
+    const getOrCreateDirectory = (dirPath: string, dirName: string, parentPath?: string): FileTreeNode => {
+      const normalizedPath = dirPath.replace(/\/$/, "");
+      
+      if (pathMap.has(normalizedPath)) {
+        return pathMap.get(normalizedPath)!;
+      }
+
+      // Find the file entry for this directory if it exists
+      const dirFile = snapshot.directory.files.find(
+        f => f.type === "directory" && f.path.replace(/\/$/, "") === normalizedPath
+      );
+
+      const node: FileTreeNode = {
+        name: dirName,
+        path: normalizedPath,
+        size: dirFile?.size || 0,
+        modified: dirFile?.modified || new Date().toISOString(),
+        type: "directory",
+        children: [],
+      };
+
+      pathMap.set(normalizedPath, node);
+
+      // Add to parent or root
+      if (parentPath) {
+        const parent = pathMap.get(parentPath);
+        if (parent && parent.children) {
+          parent.children.push(node);
+        }
+      } else {
+        root.push(node);
+      }
+
+      return node;
+    };
+
     // Sort files: directories first, then by name
     const sortedFiles = [...snapshot.directory.files].sort((a, b) => {
       if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
@@ -34,10 +71,12 @@ export function FileTree({ snapshot }: FileTreeProps) {
     });
 
     sortedFiles.forEach((file) => {
-      const pathParts = file.path.replace(/\/$/, "").split("/");
+      const normalizedPath = file.path.replace(/\/$/, "");
+      const pathParts = normalizedPath.split("/").filter(p => p !== "");
+
       const node: FileTreeNode = {
         name: file.name,
-        path: file.path,
+        path: normalizedPath,
         size: file.size,
         modified: file.modified,
         type: file.type,
@@ -48,24 +87,54 @@ export function FileTree({ snapshot }: FileTreeProps) {
         // Root level item
         root.push(node);
         if (file.type === "directory") {
-          pathMap.set(file.path.replace(/\/$/, ""), node);
+          pathMap.set(normalizedPath, node);
         }
       } else {
-        // Nested item - find parent
+        // Nested item - ensure all parent directories exist
+        let currentPath = "";
+        for (let i = 0; i < pathParts.length - 1; i++) {
+          const part = pathParts[i];
+          const parentPath = currentPath;
+          currentPath = currentPath ? `${currentPath}/${part}` : part;
+          
+          if (!pathMap.has(currentPath)) {
+            getOrCreateDirectory(currentPath, part, parentPath || undefined);
+          }
+        }
+
+        // Add the file/directory to its parent
         const parentPath = pathParts.slice(0, -1).join("/");
         const parent = pathMap.get(parentPath);
         
         if (parent && parent.children) {
           parent.children.push(node);
           if (file.type === "directory") {
-            pathMap.set(file.path.replace(/\/$/, ""), node);
+            pathMap.set(normalizedPath, node);
           }
         } else {
-          // Parent not found, add to root (shouldn't happen with proper data)
+          // Fallback: add to root if parent not found
           root.push(node);
+          if (file.type === "directory") {
+            pathMap.set(normalizedPath, node);
+          }
         }
       }
     });
+
+    // Sort children recursively
+    const sortTree = (nodes: FileTreeNode[]): void => {
+      nodes.forEach(node => {
+        if (node.children) {
+          node.children.sort((a, b) => {
+            if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
+            return a.name.localeCompare(b.name);
+          });
+          sortTree(node.children);
+        }
+      });
+    };
+
+    sortTree(root);
 
     return root;
   }, [snapshot]);

@@ -73,7 +73,9 @@ export function AgentCard({ agent }: AgentCardProps) {
               </h3>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-lg">{osIcons[agent.agent_os] || "💻"}</span>
-                <span className="text-sm text-muted-foreground">{agent.agent_os}</span>
+                <span className="text-sm text-muted-foreground font-medium">
+                  {agent.agent_os || "Unknown OS"}
+                </span>
               </div>
             </div>
           </div>
