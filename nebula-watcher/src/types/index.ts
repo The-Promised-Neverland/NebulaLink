@@ -90,6 +90,7 @@ export type WebSocketMessageType =
   | "agent_metrics" 
   | "agent_directory_snapshot"
   | "agent_list"
+  | "agent_disconnected"
   | "health_check";
 
 export interface WebSocketMessage {
