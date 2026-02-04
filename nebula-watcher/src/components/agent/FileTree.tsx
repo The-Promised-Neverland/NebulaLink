@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Folder,
   File,
@@ -25,54 +25,33 @@ export function FileTree({ snapshot }: FileTreeProps) {
     if (!snapshot?.directory?.files) return [];
 
     const root: FileTreeNode[] = [];
-    const pathMap = new Map<string, FileTreeNode>();
+    const nodeMap = new Map<string, FileTreeNode>();
 
-    // Helper to get or create directory node
-    const getOrCreateDirectory = (dirPath: string, dirName: string, parentPath?: string): FileTreeNode => {
-      const normalizedPath = dirPath.replace(/\/$/, "");
-      
-      if (pathMap.has(normalizedPath)) {
-        return pathMap.get(normalizedPath)!;
+    // Helper to get or create a directory node
+    const getOrCreateDir = (dirPath: string, dirName: string): FileTreeNode => {
+      if (nodeMap.has(dirPath)) {
+        return nodeMap.get(dirPath)!;
       }
 
-      // Find the file entry for this directory if it exists
-      const dirFile = snapshot.directory.files.find(
-        f => f.type === "directory" && f.path.replace(/\/$/, "") === normalizedPath
-      );
-
-      const node: FileTreeNode = {
+      const dirNode: FileTreeNode = {
         name: dirName,
-        path: normalizedPath,
-        size: dirFile?.size || 0,
-        modified: dirFile?.modified || new Date().toISOString(),
+        path: dirPath,
+        size: 0,
+        modified: new Date().toISOString(),
         type: "directory",
         children: [],
       };
-
-      pathMap.set(normalizedPath, node);
-
-      // Add to parent or root
-      if (parentPath) {
-        const parent = pathMap.get(parentPath);
-        if (parent && parent.children) {
-          parent.children.push(node);
-        }
-      } else {
-        root.push(node);
-      }
-
-      return node;
+      nodeMap.set(dirPath, dirNode);
+      return dirNode;
     };
 
-    // Sort files: directories first, then by name
-    const sortedFiles = [...snapshot.directory.files].sort((a, b) => {
-      if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
-      return a.name.localeCompare(b.name);
-    });
+    // Process all files
+    snapshot.directory.files.forEach((file) => {
+      const normalizedPath = file.path.replace(/\/$/, "").replace(/\\/g, "/");
+      if (!normalizedPath || normalizedPath === "." || normalizedPath === "..") return;
 
-    sortedFiles.forEach((file) => {
-      const normalizedPath = file.path.replace(/\/$/, "");
-      const pathParts = normalizedPath.split("/").filter(p => p !== "");
+      const pathParts = normalizedPath.split("/").filter(p => p);
+      if (pathParts.length === 0) return;
 
       const node: FileTreeNode = {
         name: file.name,
@@ -84,44 +63,44 @@ export function FileTree({ snapshot }: FileTreeProps) {
       };
 
       if (pathParts.length === 1) {
-        // Root level item
-        root.push(node);
+        // Root level
         if (file.type === "directory") {
-          pathMap.set(normalizedPath, node);
+          nodeMap.set(normalizedPath, node);
         }
+        root.push(node);
       } else {
-        // Nested item - ensure all parent directories exist
+        // Nested - build parent chain
         let currentPath = "";
+        let parent: FileTreeNode | null = null;
+
         for (let i = 0; i < pathParts.length - 1; i++) {
           const part = pathParts[i];
-          const parentPath = currentPath;
           currentPath = currentPath ? `${currentPath}/${part}` : part;
           
-          if (!pathMap.has(currentPath)) {
-            getOrCreateDirectory(currentPath, part, parentPath || undefined);
+          const dirNode = getOrCreateDir(currentPath, part);
+          if (i === 0 && !root.includes(dirNode)) {
+            root.push(dirNode);
           }
+          if (parent && parent.children && !parent.children.includes(dirNode)) {
+            parent.children.push(dirNode);
+          }
+          parent = dirNode;
         }
 
         // Add the file/directory to its parent
-        const parentPath = pathParts.slice(0, -1).join("/");
-        const parent = pathMap.get(parentPath);
-        
         if (parent && parent.children) {
           parent.children.push(node);
           if (file.type === "directory") {
-            pathMap.set(normalizedPath, node);
+            nodeMap.set(normalizedPath, node);
           }
         } else {
-          // Fallback: add to root if parent not found
+          // Fallback: add to root
           root.push(node);
-          if (file.type === "directory") {
-            pathMap.set(normalizedPath, node);
-          }
         }
       }
     });
 
-    // Sort children recursively
+    // Sort recursively
     const sortTree = (nodes: FileTreeNode[]): void => {
       nodes.forEach(node => {
         if (node.children) {
@@ -138,6 +117,18 @@ export function FileTree({ snapshot }: FileTreeProps) {
 
     return root;
   }, [snapshot]);
+
+  // Auto-expand root directories on first load
+  useEffect(() => {
+    if (snapshot?.directory?.files && expandedPaths.size === 0) {
+      const rootDirs = treeData
+        .filter(n => n.type === "directory" && n.children && n.children.length > 0)
+        .map(n => n.path);
+      if (rootDirs.length > 0) {
+        setExpandedPaths(new Set(rootDirs));
+      }
+    }
+  }, [snapshot, treeData, expandedPaths.size]);
 
   // Filter tree based on search
   const filteredTree = useMemo(() => {
@@ -291,33 +282,42 @@ function TreeNode({
     <div>
       <div
         className={cn(
-          "file-tree-item flex items-center gap-2 px-2 py-1.5 rounded-md",
-          isDirectory && "cursor-pointer",
-          "hover:bg-muted/50"
+          "file-tree-item flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors",
+          isDirectory && hasChildren && "cursor-pointer hover:bg-muted/70",
+          !hasChildren && isDirectory && "opacity-60",
+          !isDirectory && "hover:bg-muted/30"
         )}
-        style={{ paddingLeft: `${level * 16 + 8}px` }}
-        onClick={() => isDirectory && onToggle(node.path)}
+        style={{ paddingLeft: `${level * 20 + 8}px` }}
+        onClick={() => {
+          if (isDirectory && hasChildren) {
+            onToggle(node.path);
+          }
+        }}
       >
         {/* Expand/collapse icon */}
-        <div className="w-4 flex-shrink-0">
-          {hasChildren && (
+        <div className="w-4 flex-shrink-0 flex items-center justify-center">
+          {hasChildren ? (
             isExpanded ? (
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             ) : (
               <ChevronRight className="h-4 w-4 text-muted-foreground" />
             )
+          ) : isDirectory ? (
+            <div className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+          ) : (
+            <div className="w-4" />
           )}
         </div>
 
         {/* File/folder icon */}
         {isDirectory ? (
-          <Folder className={cn("h-4 w-4 flex-shrink-0", isExpanded ? "text-primary" : "text-muted-foreground")} />
+          <Folder className={cn("h-4 w-4 flex-shrink-0", isExpanded && hasChildren ? "text-primary" : "text-muted-foreground")} />
         ) : (
           <FileText className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
         )}
 
         {/* Name */}
-        <span className={cn("flex-1 text-sm truncate", isDirectory ? "font-medium" : "")}>
+        <span className={cn("flex-1 text-sm truncate", isDirectory ? "font-medium" : "font-normal")}>
           {node.name}
         </span>
 
@@ -332,9 +332,9 @@ function TreeNode({
         </span>
       </div>
 
-      {/* Children */}
+      {/* Children - render when expanded */}
       {isExpanded && hasChildren && (
-        <div className="animate-fade-in">
+        <div>
           {node.children!.map((child) => (
             <TreeNode
               key={child.path}
