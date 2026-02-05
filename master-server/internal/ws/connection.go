@@ -2,6 +2,7 @@ package ws
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"github.com/The-Promised-Neverland/master-server/internal/models"
@@ -18,6 +19,8 @@ type Connection struct {
 	IncomingCh chan models.Message
 	Ctx        context.Context
 	Cancel     context.CancelFunc
+	wg         sync.WaitGroup
+	connMutex  sync.RWMutex
 }
 
 func NewConnection(name string, id string, os string, conn *websocket.Conn) *Connection {

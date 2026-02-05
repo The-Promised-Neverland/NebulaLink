@@ -1,36 +1,30 @@
 package ws
 
 import (
-	"fmt"
 	"time"
-
-	"github.com/gorilla/websocket"
 )
 
 const (
-	pongWait       = 60 * time.Second
-	pingPeriod     = 30 * time.Second
-	writeWait      = 10 * time.Second
+	pongWait   = 60 * time.Second
+	pingPeriod = 30 * time.Second
+	writeWait  = 10 * time.Second
 )
 
-// TODO: Un-used
-func (h *Hub) sendPingToAgent(agent *Connection) error {
+func (h *WSHub) handlePong(agent *Connection) {
+	agent.connMutex.RLock()
 	if agent.Conn == nil {
-		return fmt.Errorf("connection is nil")
-	}
-	if err := agent.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-		fmt.Printf("Ping failed for %v\n", err)
-		return err
-	}
-	return nil
-}
-
-func (h *Hub) handlePong(agent *Connection) {
-	if agent.Conn == nil {
+		agent.connMutex.RUnlock()
 		return
 	}
-	agent.Conn.SetPongHandler(func(string) error {
-		agent.Conn.SetReadDeadline(time.Now().Add(pongWait))
+	conn := agent.Conn
+	agent.connMutex.RUnlock()
+
+	conn.SetPongHandler(func(string) error {
+		agent.connMutex.RLock()
+		if agent.Conn != nil {
+			agent.Conn.SetReadDeadline(time.Now().Add(pongWait))
+		}
+		agent.connMutex.RUnlock()
 		h.Mutex.Lock()
 		agent.LastSeen = time.Now()
 		h.Mutex.Unlock()

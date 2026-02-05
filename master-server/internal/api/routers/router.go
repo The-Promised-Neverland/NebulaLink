@@ -3,21 +3,26 @@ package routers
 import (
 	"github.com/The-Promised-Neverland/master-server/internal/api/handlers"
 	middleware "github.com/The-Promised-Neverland/master-server/internal/api/middlware"
+	"github.com/The-Promised-Neverland/master-server/internal/sse"
 	"github.com/The-Promised-Neverland/master-server/internal/ws"
 	"github.com/gin-gonic/gin"
 )
 
 type Router struct {
-	Hub       *ws.Hub
-	Handler   *handlers.Handler
-	WSHandler *handlers.WebSocketHandler
+	WSHub      *ws.WSHub
+	SSEHub     *sse.SSEHub
+	Handler    *handlers.Handler
+	WSHandler  *handlers.WebSocketHandler
+	SSEHandler *handlers.SSEHandler
 }
 
-func NewRouter(hub *ws.Hub, handler *handlers.Handler, wsh *handlers.WebSocketHandler) *Router {
+func NewRouter(wshub *ws.WSHub, sseHub *sse.SSEHub, handler *handlers.Handler, wsh *handlers.WebSocketHandler, sseH *handlers.SSEHandler) *Router {
 	return &Router{
-		Hub:       hub,
-		Handler:   handler,
-		WSHandler: wsh,
+		WSHub:      wshub,
+		SSEHub:     sseHub,
+		Handler:    handler,
+		WSHandler:  wsh,
+		SSEHandler: sseH,
 	}
 }
 
@@ -31,21 +36,15 @@ func (rtr *Router) SetupRouter() *gin.Engine {
 	{
 		agents := v1.Group("/agents")
 		{
-			agents.GET("", rtr.Handler.ListAgents)                    // list all agents
-			agents.GET("/:id", rtr.Handler.GetAgent)                  // get agent data (last seen, isOnline, downtime)
-			agents.GET("/:id/metrics", rtr.Handler.TriggerAgentMetrics)   // get agent metrics
-			agents.POST("/:id/restart", rtr.Handler.RestartAgent)     // restart a agent
-			agents.POST("/:id/uninstall", rtr.Handler.UninstallAgent) // uninstall a agent
-		}
-
-		tasks := v1.Group("/tasks")
-		{
-			tasks.POST("", func(ctx *gin.Context) {})    // post task
-			tasks.GET("/:id", func(ctx *gin.Context) {}) // Get task status
-			tasks.GET("", func(ctx *gin.Context) {})     // All tasks pending
+			agents.GET("", rtr.Handler.ListAgents)                      // list all agents
+			agents.GET("/:id", rtr.Handler.GetAgent)                    // get agent data (last seen, isOnline, downtime)
+			agents.GET("/:id/metrics", rtr.Handler.TriggerAgentMetrics) // get agent metrics
+			agents.POST("/:id/restart", rtr.Handler.RestartAgent)       // restart a agent
+			agents.POST("/:id/uninstall", rtr.Handler.UninstallAgent)   // uninstall a agent
 		}
 	}
-	router.GET("/ws", rtr.WSHandler.UpgradeHandler) // Upgrade to websocket request
+	router.GET("/ws", rtr.WSHandler.UpgradeHandler)
+	router.GET("/sse", rtr.SSEHandler.StreamHandler)
 
 	return router
 }

@@ -2,42 +2,26 @@ package ws_mssg_processor
 
 import (
 	"github.com/The-Promised-Neverland/master-server/internal/models"
+	"github.com/The-Promised-Neverland/master-server/internal/sse"
 )
 
-type RoutedMessage struct {
-	TargetId  string // "frontend", "agentID",
-	Message models.Message
-}
-
 type Processor struct {
-	OutgoingCh chan RoutedMessage
+	SSEHub *sse.SSEHub
 }
 
-func NewProcessor() *Processor {
+func NewProcessor(sseHub *sse.SSEHub) *Processor {
 	return &Processor{
-		OutgoingCh: make(chan RoutedMessage),
+		SSEHub: sseHub,
 	}
 }
 
-// Delegates message based on actor
-func (p *Processor) ProcessMessage(source string, msg *models.Message) {
-	if source == "frontend" {
-		p.handleFrontendMessage(msg)
-	} else {
-		p.handleAgentMessage(msg)
-	}
+func (p *Processor) ProcessAgentMessages(agentName string, msg *models.Message) {
+	p.handleAgentMessage(msg)
 }
 
 // Handles agentic tasks
 func (p *Processor) handleAgentMessage(msg *models.Message) {
-	switch msg.Type {
-	case "agent_metrics", "task_result", "agent_directory_snapshot":
-		p.OutgoingCh <- RoutedMessage{TargetId: "frontend", Message: *msg}
-	default:
+	if p.SSEHub != nil {
+		p.SSEHub.Broadcast(*msg)
 	}
-}
-
-// Handles frontend tasks
-func (p *Processor) handleFrontendMessage(msg *models.Message) {
-	// TODO
 }

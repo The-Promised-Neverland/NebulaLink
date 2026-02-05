@@ -10,10 +10,10 @@ import (
 )
 
 type WebSocketHandler struct {
-	Hub *ws.Hub
+	Hub *ws.WSHub
 }
 
-func NewWebSocketHandler(hub *ws.Hub) *WebSocketHandler {
+func NewWebSocketHandler(hub *ws.WSHub) *WebSocketHandler {
 	return &WebSocketHandler{Hub: hub}
 }
 
@@ -21,12 +21,9 @@ func (wsh *WebSocketHandler) UpgradeHandler(c *gin.Context) {
 	name := c.Query("name")
 	id := c.Query("id")
 	os := c.Query("os")
-	if id == "" {
-		id = "frontend"
-	}	
 	upgrader := websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool { 
-			return true 
+		CheckOrigin: func(r *http.Request) bool {
+			return true
 		},
 	}
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)

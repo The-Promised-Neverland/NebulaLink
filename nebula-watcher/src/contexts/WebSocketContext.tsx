@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
-import { wsService } from "@/services/websocket";
+import { sseService } from "@/services/sse";
 import type {
   ConnectionStatus,
   WebSocketMessage,
@@ -60,7 +60,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   );
 
   const updateAgentList = useCallback((agentList: AgentInfo[]) => {
-    console.log("[WebSocket] Updating agent list from API:", agentList);
+      console.log("[SSE] Updating agent list from API:", agentList);
     setAgents((prev) => {
       const newAgents = new Map(prev);
       const now = Date.now();
@@ -76,7 +76,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           : Infinity;
         const isOnline = (now - lastSeen < onlineThreshold) && (metricsAge < onlineThreshold);
         
-        console.log(`[WebSocket] Agent ${agent.agent_id} (${agent.agent_name || 'unnamed'}): lastSeen=${now - lastSeen}ms ago, metricsAge=${metricsAge}ms, isOnline=${isOnline}`);
+        console.log(`[SSE] Agent ${agent.agent_id} (${agent.agent_name || 'unnamed'}): lastSeen=${now - lastSeen}ms ago, metricsAge=${metricsAge}ms, isOnline=${isOnline}`);
         
         newAgents.set(agent.agent_id, {
           ...agent,
@@ -92,13 +92,13 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Connect on mount
-    wsService.connect();
+    sseService.connect();
 
     // Subscribe to status changes
-    const unsubStatus = wsService.onStatusChange(setStatus);
+    const unsubStatus = sseService.onStatusChange(setStatus);
 
     // Subscribe to messages
-    const unsubMessage = wsService.onMessage((message: WebSocketMessage) => {
+    const unsubMessage = sseService.onMessage((message: WebSocketMessage) => {
       console.log("[WebSocket] Message received:", {
         type: message.type,
         payload: message.payload,
@@ -115,7 +115,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
             agentId = agentId.substring(6); // Remove "agent:" prefix
           }
           
-          console.log("[WebSocket] Processing agent_metrics:", {
+          console.log("[SSE] Processing agent_metrics:", {
             original_agent_id: payload.agent_id,
             normalized_agent_id: agentId,
             metrics: payload.host_metrics,
@@ -126,7 +126,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           setMetrics((prev) => {
             const updated = new Map(prev);
             updated.set(agentId, payload);
-            console.log(`[WebSocket] Stored metrics for ${agentId}, total metrics: ${updated.size}`);
+            console.log(`[SSE] Stored metrics for ${agentId}, total metrics: ${updated.size}`);
             return updated;
           });
           
@@ -146,7 +146,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
                 lastMetricsUpdate: now,
                 agent_last_seen: new Date().toISOString(),
               });
-              console.log(`[WebSocket] Updated agent ${agentId} with metrics`);
+              console.log(`[SSE] Updated agent ${agentId} with metrics`);
             } else {
               // Create new agent entry from metrics
               updated.set(agentId, {
@@ -158,7 +158,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
                 metrics: payload.host_metrics,
                 lastMetricsUpdate: now,
               });
-              console.log(`[WebSocket] Created new agent entry for ${agentId} with name: ${payload.agent_name || 'undefined'}`);
+              console.log(`[SSE] Created new agent entry for ${agentId} with name: ${payload.agent_name || 'undefined'}`);
             }
             
             return updated;
@@ -174,7 +174,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
             agentId = agentId.substring(6); // Remove "agent:" prefix
           }
           
-          console.log("[WebSocket] Processing directory snapshot:", {
+          console.log("[SSE] Processing directory snapshot:", {
             original_agent_id: payload.agent_id,
             normalized_agent_id: agentId,
             fileCount: payload.directory?.total_files,
@@ -184,7 +184,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           setSnapshots((prev) => {
             const updated = new Map(prev);
             updated.set(agentId, payload);
-            console.log(`[WebSocket] Stored snapshot for ${agentId}, total snapshots: ${updated.size}`);
+            console.log(`[SSE] Stored snapshot for ${agentId}, total snapshots: ${updated.size}`);
             // Save to localStorage
             saveSnapshotsToStorage(updated);
             return updated;
@@ -193,14 +193,14 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         }
         case "agent_list": {
           const agentList = message.payload as AgentInfo[];
-          console.log("[WebSocket] Received agent_list update:", agentList);
+          console.log("[SSE] Received agent_list update:", agentList);
           // Update agent list directly from WebSocket (real-time update)
           updateAgentList(agentList);
           break;
         }
         case "agent_disconnected": {
           const payload = message.payload as { agent_id: string };
-          console.log("[WebSocket] Agent disconnected:", payload.agent_id);
+          console.log("[SSE] Agent disconnected:", payload.agent_id);
           // Immediately mark agent as offline
           setAgents((prev) => {
             const updated = new Map(prev);
@@ -210,21 +210,21 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
                 ...existing,
                 isOnline: false,
               });
-              console.log(`[WebSocket] Marked agent ${payload.agent_id} as offline`);
+              console.log(`[SSE] Marked agent ${payload.agent_id} as offline`);
             }
             return updated;
           });
           break;
         }
         default:
-          console.log("[WebSocket] Unhandled message type:", message.type);
+          console.log("[SSE] Unhandled message type:", message.type);
       }
     });
 
     return () => {
       unsubStatus();
       unsubMessage();
-      wsService.disconnect();
+      sseService.disconnect();
     };
   }, []);
 

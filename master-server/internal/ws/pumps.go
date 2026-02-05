@@ -13,17 +13,30 @@ const (
 	maxMessageSize = 8192
 )
 
-func (h *Hub) ReadPump(c *Connection) {
+func (h *WSHub) ReadPump(c *Connection) {
 	defer h.closeConnection(c)
+	c.connMutex.RLock()
+	if c.Conn == nil {
+		c.connMutex.RUnlock()
+		return
+	}
 	c.Conn.SetReadLimit(maxMessageSize)
 	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+	c.connMutex.RUnlock()
 	h.handlePong(c)
 	for {
 		select {
 		case <-c.Ctx.Done():
 			return
 		default:
-			_, msgBytes, err := c.Conn.ReadMessage()
+			c.connMutex.RLock()
+			if c.Conn == nil {
+				c.connMutex.RUnlock()
+				return
+			}
+			conn := c.Conn
+			c.connMutex.RUnlock()
+			_, msgBytes, err := conn.ReadMessage()
 			if err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 					fmt.Printf("WebSocket read error for %s: %v\n", c.Id, err)
@@ -31,7 +44,11 @@ func (h *Hub) ReadPump(c *Connection) {
 				c.Cancel()
 				return
 			}
-			c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+			c.connMutex.RLock()
+			if c.Conn != nil {
+				c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+			}
+			c.connMutex.RUnlock()
 			h.Mutex.Lock()
 			c.LastSeen = time.Now()
 			h.Mutex.Unlock()
@@ -51,7 +68,7 @@ func (h *Hub) ReadPump(c *Connection) {
 	}
 }
 
-func (h *Hub) WritePump(c *Connection) {
+func (h *WSHub) WritePump(c *Connection) {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -60,23 +77,41 @@ func (h *Hub) WritePump(c *Connection) {
 	for {
 		select {
 		case msg, ok := <-c.SendCh:
-			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				c.connMutex.RLock()
+				if c.Conn != nil {
+					c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				}
+				c.connMutex.RUnlock()
 				return
 			}
+			c.connMutex.RLock()
+			if c.Conn == nil {
+				c.connMutex.RUnlock()
+				return
+			}
+			conn := c.Conn
+			conn.SetWriteDeadline(time.Now().Add(writeWait))
+			c.connMutex.RUnlock()			
 			data, err := json.Marshal(msg)
 			if err != nil {
 				fmt.Printf("Marshal error for %s: %v\n", c.Id, err)
 				continue
 			}
-			if err := c.Conn.WriteMessage(websocket.TextMessage, data); err != nil {
+			if err := conn.WriteMessage(websocket.TextMessage, data); err != nil {
 				fmt.Printf("Send failed to %s: %v\n", c.Id, err)
 				return
 			}
 		case <-ticker.C:
-			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+			c.connMutex.RLock()
+			if c.Conn == nil {
+				c.connMutex.RUnlock()
+				return
+			}
+			conn := c.Conn
+			conn.SetWriteDeadline(time.Now().Add(writeWait))
+			c.connMutex.RUnlock()
+			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				fmt.Printf("Ping failed to %s: %v\n", c.Id, err)
 				return
 			}
@@ -86,8 +121,21 @@ func (h *Hub) WritePump(c *Connection) {
 	}
 }
 
-func (h *Hub) ProcessorPump(c *Connection) {
-	for msg := range c.IncomingCh {
-		h.MssgProcessor.ProcessMessage(c.Name, &msg)
+func (h *WSHub) ProcessorPump(c *Connection) {
+	for {
+		select {
+		case msg, ok := <-c.IncomingCh:
+			if !ok {
+				return
+			}
+			select {
+			case <-c.Ctx.Done():
+				return
+			default:
+				h.MssgProcessor.ProcessAgentMessages(c.Name, &msg)
+			}
+		case <-c.Ctx.Done():
+			return
+		}
 	}
 }

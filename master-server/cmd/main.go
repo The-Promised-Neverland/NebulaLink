@@ -8,17 +8,21 @@ import (
 	"github.com/The-Promised-Neverland/master-server/internal/api/handlers"
 	"github.com/The-Promised-Neverland/master-server/internal/api/routers"
 	"github.com/The-Promised-Neverland/master-server/internal/service"
+	"github.com/The-Promised-Neverland/master-server/internal/sse"
 	"github.com/The-Promised-Neverland/master-server/internal/ws"
 	"github.com/The-Promised-Neverland/master-server/pkg/system"
 )
 
 func main() {
 	system.InitStartTime()
-	hub := ws.NewHub()
-	svc := service.NewService(hub)
+	sseHub := sse.NewSSEHub()
+	wsHub := ws.NewWSHub(sseHub)
+	svc := service.NewService(wsHub, sseHub)
 	handler := handlers.NewHandler(svc)
-	wsHandler := handlers.NewWebSocketHandler(hub)
-	router := routers.NewRouter(hub, handler, wsHandler).SetupRouter()
+	wsHandler := handlers.NewWebSocketHandler(wsHub)
+	sseHandler := handlers.NewSSEHandler(sseHub)
+	sseHandler.SetService(svc)
+	router := routers.NewRouter(wsHub, sseHub, handler, wsHandler, sseHandler).SetupRouter()
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8430"

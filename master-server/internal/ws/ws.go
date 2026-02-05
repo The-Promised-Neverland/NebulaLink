@@ -8,36 +8,38 @@ import (
 
 	ws_mssg_processor "github.com/The-Promised-Neverland/master-server/internal/api/processors"
 	"github.com/The-Promised-Neverland/master-server/internal/models"
+	"github.com/The-Promised-Neverland/master-server/internal/sse"
 	"github.com/gorilla/websocket"
 )
 
-type Hub struct {
+type WSHub struct {
 	Connections   map[string]*Connection
 	Mutex         sync.RWMutex
 	MssgProcessor *ws_mssg_processor.Processor
+	SSEHub        *sse.SSEHub
 }
 
-// NewHub initializes the hub
-func NewHub() *Hub {
-	processor := ws_mssg_processor.NewProcessor()
-	hub := &Hub{
+func NewWSHub(sseHub *sse.SSEHub) *WSHub {
+	processor := ws_mssg_processor.NewProcessor(sseHub)
+	hub := &WSHub{
 		Connections:   make(map[string]*Connection),
 		MssgProcessor: processor,
+		SSEHub:        sseHub,
 	}
-	go hub.routeMessages()
 	return hub
 }
 
 // Registers or re-connects an agent
-func (h *Hub) Connect(name string, id string, os string, conn *websocket.Conn) {
+func (h *WSHub) Connect(name string, id string, os string, conn *websocket.Conn) {
 	h.Mutex.Lock()
 	var connection *Connection
 	if existing, exists := h.Connections[id]; exists {
 		fmt.Printf("Reconnecting: %s\n", id)
+		existing.Cancel()
 		if existing.Conn != nil {
-			existing.Cancel()
 			existing.Conn.Close()
 		}
+		existing.wg.Wait()
 		existing.Conn = conn
 		existing.LastSeen = time.Now()
 		existing.Name = name
@@ -54,21 +56,22 @@ func (h *Hub) Connect(name string, id string, os string, conn *websocket.Conn) {
 		h.Connections[id] = connection
 	}
 	h.Mutex.Unlock()
-	go h.ReadPump(connection)
-	go h.WritePump(connection)
-	go h.ProcessorPump(connection)
-	if name == "frontend" {
-		h.sendAgentListToFrontend()
-	}
+	connection.wg.Add(3)
+	go func() {
+		defer connection.wg.Done()
+		h.ReadPump(connection)
+	}()
+	go func() {
+		defer connection.wg.Done()
+		h.WritePump(connection)
+	}()
+	go func() {
+		defer connection.wg.Done()
+		h.ProcessorPump(connection)
+	}()
 }
 
-func (h *Hub) routeMessages() {
-	for routedMsg := range h.MssgProcessor.OutgoingCh {
-		h.Send(routedMsg.TargetId, routedMsg.Message)
-	}
-}
-
-func (h *Hub) Send(TargetId string, msg models.Message) {
+func (h *WSHub) Send(TargetId string, msg models.Message) {
 	h.Mutex.RLock()
 	c := h.Connections[TargetId]
 	h.Mutex.RUnlock()
@@ -82,7 +85,7 @@ func (h *Hub) Send(TargetId string, msg models.Message) {
 	}
 }
 
-func (h *Hub) closeConnection(c *Connection) {
+func (h *WSHub) closeConnection(c *Connection) {
 	c.Cancel()
 	if c.Conn != nil {
 		_ = c.Conn.Close()
@@ -90,40 +93,15 @@ func (h *Hub) closeConnection(c *Connection) {
 	h.Mutex.Lock()
 	c.LastSeen = time.Now()
 	c.Conn = nil
-	isAgent := c.Id != "frontend" && c.Id != ""
 	h.Mutex.Unlock()
-	if isAgent {
-		msg := models.Message{
-			Type: "agent_disconnected",
-			Payload: map[string]string{
-				"agent_id": c.Id,
-			},
-		}
-		h.Send("frontend", msg)
+	msg := models.Message{
+		Type: "agent_disconnected",
+		Payload: map[string]string{
+			"agent_id": c.Id,
+		},
+	}
+	if h.SSEHub != nil {
+		h.SSEHub.Broadcast(msg)
 	}
 	fmt.Printf("Disconnected: %s (Last seen %v)\n", c.Id, c.LastSeen)
-}
-
-// sendAgentListToFrontend sends the current agent list to the frontend
-func (h *Hub) sendAgentListToFrontend() {
-	h.Mutex.RLock()
-	agents := make([]*models.AgentInfo, 0, len(h.Connections))
-	for id, agent := range h.Connections {
-		if id == "frontend" {
-			continue
-		}
-		info := &models.AgentInfo{
-			AgentID:  id,
-			Name:     agent.Name,
-			OS:       agent.OS,
-			LastSeen: agent.LastSeen,
-		}
-		agents = append(agents, info)
-	}
-	h.Mutex.RUnlock()
-	msg := models.Message{
-		Type:    "agent_list",
-		Payload: agents,
-	}
-	h.Send("frontend", msg)
 }

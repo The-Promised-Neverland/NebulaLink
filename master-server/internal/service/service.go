@@ -2,25 +2,28 @@ package service
 
 import (
 	"github.com/The-Promised-Neverland/master-server/internal/models"
+	"github.com/The-Promised-Neverland/master-server/internal/sse"
 	"github.com/The-Promised-Neverland/master-server/internal/ws"
 )
 
 type Service struct {
-	Hub *ws.Hub
+	WSHub  *ws.WSHub
+	SSEHub *sse.SSEHub
 }
 
-func NewService(Hub *ws.Hub) *Service {
+func NewService(wsHub *ws.WSHub, sseHub *sse.SSEHub) *Service {
 	return &Service{
-		Hub: Hub,
+		WSHub:  wsHub,
+		SSEHub: sseHub,
 	}
 }
 
 func (s *Service) GetAllAgents() []*models.AgentInfo {
-	s.Hub.Mutex.RLock()
-	defer s.Hub.Mutex.RUnlock()
-	agents := make([]*models.AgentInfo, 0, len(s.Hub.Connections))
-	for id, agent := range s.Hub.Connections {
-		if id == "frontend" || id == "" {
+	s.WSHub.Mutex.RLock()
+	defer s.WSHub.Mutex.RUnlock()
+	agents := make([]*models.AgentInfo, 0, len(s.WSHub.Connections))
+	for id, agent := range s.WSHub.Connections {
+		if agent.Name == "frontend" || id == "" {
 			continue
 		}
 		info := &models.AgentInfo{
@@ -39,13 +42,13 @@ func (s *Service) TriggerAgentforMetrics(agentID string) {
 		Type: "master_metrics_request",
 		Payload: nil,
 	}
-	s.Hub.Send(agentID, req)
+	s.WSHub.Send(agentID, req)
 }
 
 func (s *Service) GetAgent(agentID string) *models.AgentInfo {
-	s.Hub.Mutex.RLock()
-	defer s.Hub.Mutex.RUnlock()
-	agent := s.Hub.Connections[agentID]
+	s.WSHub.Mutex.RLock()
+	defer s.WSHub.Mutex.RUnlock()
+	agent := s.WSHub.Connections[agentID]
 	if agent == nil {
 		return nil
 	}
@@ -55,6 +58,15 @@ func (s *Service) GetAgent(agentID string) *models.AgentInfo {
 		OS:       agent.OS,
 		LastSeen: agent.LastSeen,
 	}
+}
+
+func (s *Service) SendAgentListToFrontend() {
+	agents := s.GetAllAgents()
+	msg := models.Message{
+		Type:    "agent_list",
+		Payload: agents,
+	}
+	s.SSEHub.Broadcast(msg)
 }
 
 func (s *Service) RestartAgent(agentID string) {
