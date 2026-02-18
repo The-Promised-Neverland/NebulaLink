@@ -22,7 +22,6 @@ func (a *Agent) setupPingPongHandlers() {
 	}
 	a.Conn.SetReadDeadline(time.Now().Add(pongWait))
 	a.Conn.SetPingHandler(func(appData string) error {
-		logger.Log.Info("Received ping from master")
 		if a.Conn != nil {
 			a.Conn.SetReadDeadline(time.Now().Add(pongWait))
 			err := a.Conn.WriteControl(websocket.PongMessage, []byte(appData), time.Now().Add(writeDeadline))
@@ -34,7 +33,6 @@ func (a *Agent) setupPingPongHandlers() {
 		return nil
 	})
 	a.Conn.SetPongHandler(func(appData string) error {
-		logger.Log.Info("Received pong from master")
 		if a.Conn != nil {
 			a.Conn.SetReadDeadline(time.Now().Add(pongWait))
 		}

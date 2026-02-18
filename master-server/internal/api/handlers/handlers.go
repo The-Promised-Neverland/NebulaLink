@@ -79,3 +79,24 @@ func (h *Handler) UninstallAgent(c *gin.Context) {
 		"message": "Agent uninstallation initiated",
 	})
 }
+
+// send a file path to the agent to be able to trigger the fetch
+func (h *Handler) GetAgentFileSystem(c *gin.Context) {
+	agentID := c.Param("id")
+	requestedAgentID := c.Param("requestedAgentID")
+	var req struct {
+		Path string `json:"path" binding:"required"`
+	}
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Path binding error: " + err.Error(),
+		})
+		return
+	}
+	h.Service.GetAgentFileSystem(agentID, requestedAgentID, req.Path)
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "File system data requested from agent " + requestedAgentID + " for agent " + agentID,
+	})
+}
