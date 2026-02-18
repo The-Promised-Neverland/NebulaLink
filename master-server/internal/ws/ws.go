@@ -6,7 +6,6 @@ import (
 	"sync"
 	"time"
 
-	ws_mssg_processor "github.com/The-Promised-Neverland/master-server/internal/api/processors"
 	"github.com/The-Promised-Neverland/master-server/internal/models"
 	"github.com/The-Promised-Neverland/master-server/internal/sse"
 	"github.com/gorilla/websocket"
@@ -15,15 +14,12 @@ import (
 type WSHub struct {
 	Connections   map[string]*Connection
 	Mutex         sync.RWMutex
-	MssgProcessor *ws_mssg_processor.Processor
 	SSEHub        *sse.SSEHub
 }
 
 func NewWSHub(sseHub *sse.SSEHub) *WSHub {
-	processor := ws_mssg_processor.NewProcessor(sseHub)
 	hub := &WSHub{
 		Connections:   make(map[string]*Connection),
-		MssgProcessor: processor,
 		SSEHub:        sseHub,
 	}
 	return hub
@@ -67,7 +63,7 @@ func (h *WSHub) Connect(name string, id string, os string, conn *websocket.Conn)
 	}()
 	go func() {
 		defer connection.wg.Done()
-		h.ProcessorPump(connection)
+		h.BroadcasterPump(connection)
 	}()
 }
 

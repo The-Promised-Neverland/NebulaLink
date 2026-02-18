@@ -70,7 +70,17 @@ func (s *Service) SendAgentListToFrontend() {
 }
 
 func (s *Service) RestartAgent(agentID string) {
+	req := models.Message{
+		Type: "master_restart_request",
+		Payload: nil,
+	}
+	s.WSHub.Send(agentID, req)
 }
 
 func (s *Service) UninstallAgent(agentID string) {
+	req := models.Message{
+		Type: "master_uninstall_initiated",
+		Payload: nil,
+	}
+	s.WSHub.Send(agentID, req)
 }

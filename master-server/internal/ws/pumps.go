@@ -121,7 +121,8 @@ func (h *WSHub) WritePump(c *Connection) {
 	}
 }
 
-func (h *WSHub) ProcessorPump(c *Connection) {
+// Broadcast message from agent to all frontend clients
+func (h *WSHub) BroadcasterPump(c *Connection) {
 	for {
 		select {
 		case msg, ok := <-c.IncomingCh:
@@ -132,7 +133,7 @@ func (h *WSHub) ProcessorPump(c *Connection) {
 			case <-c.Ctx.Done():
 				return
 			default:
-				h.MssgProcessor.ProcessAgentMessages(c.Name, &msg)
+				h.SSEHub.Broadcast(msg)
 			}
 		case <-c.Ctx.Done():
 			return
