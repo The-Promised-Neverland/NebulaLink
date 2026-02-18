@@ -3,7 +3,7 @@ package models
 const (
 	MasterMsgMetricsRequest = "master_metrics_request"
 	MasterMsgTaskAssignment = "master_task_assigned"
-	MasterMsgRestartAgent   = "master_restart"
+	MasterMsgRestartAgent   = "master_restart_request"
 	MasterMsgAgentUninstall = "master_uninstall_initiated"
 )
 

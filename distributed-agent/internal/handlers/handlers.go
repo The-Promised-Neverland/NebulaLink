@@ -1,6 +1,9 @@
 package handlers
 
-import "github.com/The-Promised-Neverland/agent/internal/models"
+import (
+	"github.com/The-Promised-Neverland/agent/internal/models"
+	"github.com/The-Promised-Neverland/agent/pkg/logger"
+)
 
 func (h *Handlers) RequestMetrics() error {
 	metrics := h.BusinessService.GetHostMetrics()
@@ -17,9 +20,10 @@ func (h *Handlers) AssignTask(msg *any) error {
 }
 
 func (h *Handlers) RestartAgent() error {
-	return h.DaemonControl.Restart()
+	logger.Log.Info("Master Triggered Restart")
+	return h.DaemonManagerService.Restart()
 }
 
 func (h *Handlers) UninstallAgent() error {
-	return h.DaemonControl.Uninstall()
+	return h.DaemonManagerService.Uninstall()
 }

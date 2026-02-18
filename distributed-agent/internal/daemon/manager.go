@@ -14,17 +14,17 @@ import (
 )
 
 type DaemonManager struct {
-	cfg    *config.Config
-	app    *Application
-	appCtx context.Context
+	cfg       *config.Config
+	app       *Application
+	appCtx    context.Context
 	appCancel context.CancelFunc
 }
 
 func NewDaemonManager(cfg *config.Config, app *Application) *DaemonManager {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &DaemonManager{
-		cfg:    cfg,
-		app:    app,
+		cfg:       cfg,
+		app:       app,
 		appCtx:    ctx,
 		appCancel: cancel,
 	}
@@ -96,6 +96,7 @@ func (m *DaemonManager) Restart() error {
 	if err != nil {
 		return err
 	}
+	
 	return s.Restart()
 }
 

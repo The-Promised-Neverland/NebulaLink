@@ -8,29 +8,29 @@ import (
 )
 
 // DaemonControl defines the interface for controlling the daemon lifecycle.
-type DaemonControl interface {
+type DaemonManagerService interface {
 	Restart() error
 	Uninstall() error
 }
 
 type Handlers struct {
-	Agent           *ws.Agent
-	BusinessService *service.Service
-	Config          *config.Config
-	DaemonControl   DaemonControl
+	Agent                *ws.Agent
+	BusinessService      *service.Service
+	Config               *config.Config
+	DaemonManagerService DaemonManagerService
 }
 
 func NewHandler(
 	agent *ws.Agent,
 	businessService *service.Service,
 	cfg *config.Config,
-	daemonControl DaemonControl,
+	daemonManagerService DaemonManagerService,
 ) *Handlers {
 	return &Handlers{
-		Agent:           agent,
-		BusinessService: businessService,
-		Config:          cfg,
-		DaemonControl:   daemonControl,
+		Agent:                agent,
+		BusinessService:      businessService,
+		Config:               cfg,
+		DaemonManagerService: daemonManagerService,	
 	}
 }
 
