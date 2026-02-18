@@ -53,7 +53,7 @@ func (m *DaemonManager) Stop(s kardianos.Service) error {
 	return nil
 }
 
-func (m *DaemonManager) Install() error {
+func (m *DaemonManager) InstallDaemon() error {
 	if err := m.createSharedFolder(); err != nil {
 		return fmt.Errorf("failed to create shared folder: %w", err)
 	}
@@ -77,10 +77,10 @@ func (m *DaemonManager) Install() error {
 	if err := p.ConfigureRestartPolicy(); err != nil {
 		return fmt.Errorf("failed to configure restart policy: %w", err)
 	}
-	return s.Start()
+	return nil
 }
 
-func (m *DaemonManager) Uninstall() error {
+func (m *DaemonManager) UninstallDaemon() error {
 	s, err := m.newService()
 	if err != nil {
 		return err
@@ -91,7 +91,7 @@ func (m *DaemonManager) Uninstall() error {
 	return s.Uninstall()
 }
 
-func (m *DaemonManager) Restart() error {
+func (m *DaemonManager) RestartDaemon() error {
 	s, err := m.newService()
 	if err != nil {
 		return err
@@ -100,7 +100,7 @@ func (m *DaemonManager) Restart() error {
 	return s.Restart()
 }
 
-func (m *DaemonManager) Run() error {
+func (m *DaemonManager) StartDaemon() error {
 	s, err := m.newService()
 	if err != nil {
 		return err
@@ -108,7 +108,7 @@ func (m *DaemonManager) Run() error {
 	return s.Run()
 }
 
-func (m *DaemonManager) StopService() error {
+func (m *DaemonManager) StopDaemon() error {
 	s, err := m.newService()
 	if err != nil {
 		return err

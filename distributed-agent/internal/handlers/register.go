@@ -9,8 +9,8 @@ import (
 
 // DaemonControl defines the interface for controlling the daemon lifecycle.
 type DaemonManagerService interface {
-	Restart() error
-	Uninstall() error
+	RestartDaemon() error
+	UninstallDaemon() error
 }
 
 type Handlers struct {

@@ -21,9 +21,9 @@ func (h *Handlers) AssignTask(msg *any) error {
 
 func (h *Handlers) RestartAgent() error {
 	logger.Log.Info("Master Triggered Restart")
-	return h.DaemonManagerService.Restart()
+	return h.DaemonManagerService.RestartDaemon()
 }
 
 func (h *Handlers) UninstallAgent() error {
-	return h.DaemonManagerService.Uninstall()
+	return h.DaemonManagerService.UninstallDaemon()
 }
