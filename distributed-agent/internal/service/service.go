@@ -2,6 +2,7 @@ package service
 
 import (
 	"archive/tar"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -43,6 +44,14 @@ func (s *Service) GetHostMetrics() *models.HostMetrics {
 func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan error) {
 	dataCh := make(chan []byte, 8)
 	errCh := make(chan error, 1)
+	sharedPath, err := s.cfg.SharedFolderPath()
+	if err != nil {
+		errCh <- errors.New("Shared path not provided")
+		close(errCh)
+		return nil, errCh
+	}
+	targetPath := filepath.Join(sharedPath, path)
+	targetPath = filepath.Clean(targetPath)
 
 	go func() {
 		defer close(dataCh)
@@ -54,7 +63,7 @@ func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan 
 
 		go func() {
 			defer pw.Close()
-			if walkErr := filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
+			if walkErr := filepath.Walk(targetPath, func(filePath string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
 				}
