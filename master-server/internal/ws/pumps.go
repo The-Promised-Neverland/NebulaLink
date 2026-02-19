@@ -13,13 +13,12 @@ const (
 	maxMessageSize = 2 * 1024 * 1024 // 2MB
 )
 
-
 // TODO: Processing of chunks is remaining
 func (h *WSHub) DataStreamPump(c *Connection) {
 	for {
 		select {
 		case chunk := <-c.StreamCh:
-			fmt.Printf("Sending Bytes... %d\n", len(chunk))  
+			fmt.Printf("Recieving Bytes... %d\n", len(chunk))
 			var statusMsg models.Message
 			if err := json.Unmarshal(chunk, &statusMsg); err != nil {
 				fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Id, err)
@@ -72,14 +71,12 @@ func (h *WSHub) ReadPump(c *Connection) {
 			}
 			switch msgType {
 			case websocket.BinaryMessage:
-				for {
-					select {
-					case c.StreamCh <- msgBytes:
-					case <-c.Ctx.Done():
-						return
-					default:
-						
-					}
+				select {
+				case c.StreamCh <- msgBytes:
+				case <-c.Ctx.Done():
+				case <-time.After(time.Second * 5): // Handling backpressure in lazy way
+					fmt.Println("Timed out trying to send message to StreamCh")
+					return
 				}
 			default:
 				c.connMutex.RLock()
