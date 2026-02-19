@@ -19,7 +19,7 @@ func (h *WSHub) DataStreamPump(c *Connection) {
 	for {
 		select {
 		case chunk := <-c.StreamCh:
-			fmt.Printf("Received chunk as string: %s\n", string(chunk))
+			fmt.Printf("Sending Bytes... %d\n", len(chunk))  
 			var statusMsg models.Message
 			if err := json.Unmarshal(chunk, &statusMsg); err != nil {
 				fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Id, err)

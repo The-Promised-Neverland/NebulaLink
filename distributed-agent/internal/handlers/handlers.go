@@ -78,7 +78,7 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 		return err
 	}
 	for chunk := range dataCh {
-		logger.Log.Info("Sending chunk", slog.String("chunk", string(chunk)))
+		logger.Log.Info("Sending Bytes...", slog.Int("bytes", len(chunk)))
 		_, err := writer.Write(chunk)
 		if err != nil {
 			close(done)
