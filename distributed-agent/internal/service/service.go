@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/The-Promised-Neverland/agent/internal/config"
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/disk"
@@ -13,10 +14,14 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
-type Service struct{}
+type Service struct {
+	cfg *config.Config
+}
 
-func NewService() *Service {
-	return &Service{}
+func NewService(cfg *config.Config) *Service {
+	return &Service{
+		cfg: cfg,
+	}
 }
 
 func (s *Service) GetHostMetrics() *models.HostMetrics {
@@ -38,19 +43,18 @@ func (s *Service) GetHostMetrics() *models.HostMetrics {
 func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan error) {
 	dataCh := make(chan []byte, 8)
 	errCh := make(chan error, 1)
+
 	go func() {
 		defer close(dataCh)
 		defer close(errCh)
 
-		// pipe that converts tar writes into channel chunks
 		pr, pw := io.Pipe()
 		tw := tar.NewWriter(pw)
 		defer tw.Close()
 
-		// walk directory
 		go func() {
 			defer pw.Close()
-			filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
+			if walkErr := filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
 				}
@@ -58,8 +62,8 @@ func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan 
 				if err != nil {
 					return err
 				}
-				relPath, _ := filepath.Rel(path, filePath)
-				header.Name = filepath.ToSlash(relPath)
+				rel, _ := filepath.Rel(path, filePath)
+				header.Name = filepath.ToSlash(rel)
 				if err := tw.WriteHeader(header); err != nil {
 					return err
 				}
@@ -74,11 +78,14 @@ func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan 
 					}
 				}
 				return nil
-			})
+			}); walkErr != nil {
+				_ = pw.CloseWithError(walkErr)
+			}
 		}()
-		buf := make([]byte, 1024*64) // 64KB buffer
+
+		buf := make([]byte, 64*1024)
 		for {
-			n, err := pr.Read(buf) // read tar stream into buffer
+			n, err := pr.Read(buf)
 			if n > 0 {
 				chunk := make([]byte, n)
 				copy(chunk, buf[:n])
@@ -93,5 +100,6 @@ func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan 
 			}
 		}
 	}()
+
 	return dataCh, errCh
 }

@@ -52,7 +52,7 @@ func main() {
 	cfg := config.New(agentName)
 	logStartupInfo(cfg)
 
-	businessService := service.NewService()
+	businessService := service.NewService(cfg)
 	manager := daemon.NewApplicationWithManager(cfg, businessService)
 
 	if command != "" {

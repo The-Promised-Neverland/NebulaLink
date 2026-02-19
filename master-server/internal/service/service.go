@@ -104,7 +104,7 @@ func (s *Service) UninstallAgent(agentID string) {
 func (s *Service) GetAgentFileSystem(agentID string, requestedAgentID string, path string) {
 	req := models.Message{
 		Type: "master_filesystem_request",
-		Payload: map[string]string{
+		Payload: map[string]interface{}{
 			"requestedAgentID": requestedAgentID,
 			"fileSystemPath":   path,
 		},
