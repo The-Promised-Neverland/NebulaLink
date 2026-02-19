@@ -36,12 +36,12 @@ func (rtr *Router) SetupRouter() *gin.Engine {
 	{
 		agents := v1.Group("/agents")
 		{
-			agents.GET("", rtr.Handler.ListAgents)                      // list all agents
-			agents.GET("/:id", rtr.Handler.GetAgent)                    // get agent data (last seen, isOnline, downtime)
-			agents.GET("/:id/metrics", rtr.Handler.TriggerAgentMetrics) // get agent metrics
-			agents.POST("/:id/restart", rtr.Handler.RestartAgent)       // restart a agent
-			agents.POST("/:id/uninstall", rtr.Handler.UninstallAgent)   // uninstall a agent
-			agents.GET("/:id/filesystem", rtr.Handler.GetAgentFileSystem) // get agent filesystem data
+			agents.GET("", rtr.Handler.ListAgents)                                          // list all agents
+			agents.GET("/:id", rtr.Handler.GetAgent)                                        // get agent data (last seen, isOnline, downtime)
+			agents.GET("/:id/metrics", rtr.Handler.TriggerAgentMetrics)                     // get agent metrics
+			agents.POST("/:id/restart", rtr.Handler.RestartAgent)                           // restart a agent
+			agents.POST("/:id/uninstall", rtr.Handler.UninstallAgent)                       // uninstall a agent
+			agents.GET("/:id/filesystem/:requestedAgentID", rtr.Handler.GetAgentFileSystem) // get agent filesystem data
 		}
 	}
 	router.GET("/ws", rtr.WSHandler.UpgradeHandler)
