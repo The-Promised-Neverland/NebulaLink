@@ -9120,3 +9120,13 @@
 {"time":"2026-02-19T14:47:12.4685298+05:30","level":"INFO","msg":"All pumps started"}
 {"time":"2026-02-19T14:47:13.5446502+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
 {"time":"2026-02-19T15:48:35.5686357+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}
+{"time":"2026-02-19T16:11:48.9524961+05:30","level":"INFO","msg":"NebulaLink Agent starting","os":"windows","arch":"amd64"}
+{"time":"2026-02-19T16:11:48.9549882+05:30","level":"INFO","msg":"Agent identity","agent_id":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3","agent_name":"Abhijit"}
+{"time":"2026-02-19T16:11:48.9587495+05:30","level":"INFO","msg":"File watcher started","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-19T16:11:48.9587495+05:30","level":"INFO","msg":"File watcher initialized","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-19T16:11:48.9593303+05:30","level":"INFO","msg":"Kardianos starting service","service":"NebulaLink Agent","platform":"windows-service"}
+{"time":"2026-02-19T16:11:48.9598682+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T16:11:49.0073557+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T16:11:49.0105695+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-19T16:11:50.0136253+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-19T16:20:13.0710654+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}
