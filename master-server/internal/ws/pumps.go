@@ -13,6 +13,32 @@ const (
 	maxMessageSize = 8192
 )
 
+
+// TODO: Processing of chunks is remaining
+func (h *WSHub) DataStreamPump(c *Connection) {
+	for {
+		select {
+		case chunk := <-c.StreamCh:
+			fmt.Printf("Received chunk as string: %s\n", string(chunk))
+			var statusMsg models.Message
+			if err := json.Unmarshal(chunk, &statusMsg); err != nil {
+				fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Id, err)
+				continue
+			}
+			if payload, ok := statusMsg.Payload.(map[string]interface{}); ok {
+				if status, ok := payload["status"].(string); ok {
+					if status == "completed" {
+						c.StreamCh = make(chan []byte, 1024*64)
+						fmt.Println("Stream has completed. Continuing to receive further data...")
+					}
+				}
+			}
+		case <-c.Ctx.Done():
+			return
+		}
+	}
+}
+
 func (h *WSHub) ReadPump(c *Connection) {
 	defer h.closeConnection(c)
 	c.connMutex.RLock()
@@ -36,7 +62,7 @@ func (h *WSHub) ReadPump(c *Connection) {
 			}
 			conn := c.Conn
 			c.connMutex.RUnlock()
-			_, msgBytes, err := conn.ReadMessage()
+			msgType, msgBytes, err := conn.ReadMessage()
 			if err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 					fmt.Printf("WebSocket read error for %s: %v\n", c.Id, err)
@@ -44,25 +70,38 @@ func (h *WSHub) ReadPump(c *Connection) {
 				c.Cancel()
 				return
 			}
-			c.connMutex.RLock()
-			if c.Conn != nil {
-				c.Conn.SetReadDeadline(time.Now().Add(pongWait))
-			}
-			c.connMutex.RUnlock()
-			h.Mutex.Lock()
-			c.LastSeen = time.Now()
-			h.Mutex.Unlock()
-			var msg models.Message
-			if err := json.Unmarshal(msgBytes, &msg); err != nil {
-				fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Id, err)
-				continue
-			}
-			select {
-			case c.IncomingCh <- msg:
-			case <-c.Ctx.Done():
-				return
+			switch msgType {
+			case websocket.BinaryMessage:
+				for {
+					select {
+					case c.StreamCh <- msgBytes:
+					case <-c.Ctx.Done():
+						return
+					default:
+						
+					}
+				}
 			default:
-				fmt.Printf("Incoming channel full for %s, dropping message\n", c.Id)
+				c.connMutex.RLock()
+				if c.Conn != nil {
+					c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+				}
+				c.connMutex.RUnlock()
+				h.Mutex.Lock()
+				c.LastSeen = time.Now()
+				h.Mutex.Unlock()
+				var msg models.Message
+				if err := json.Unmarshal(msgBytes, &msg); err != nil {
+					fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Id, err)
+					continue
+				}
+				select {
+				case c.IncomingCh <- msg:
+				case <-c.Ctx.Done():
+					return
+				default:
+					fmt.Printf("Incoming channel full for %s, dropping message\n", c.Id)
+				}
 			}
 		}
 	}
@@ -92,7 +131,7 @@ func (h *WSHub) WritePump(c *Connection) {
 			}
 			conn := c.Conn
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
-			c.connMutex.RUnlock()			
+			c.connMutex.RUnlock()
 			data, err := json.Marshal(msg)
 			if err != nil {
 				fmt.Printf("Marshal error for %s: %v\n", c.Id, err)

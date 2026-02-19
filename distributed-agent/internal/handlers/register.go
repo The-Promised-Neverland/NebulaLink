@@ -50,4 +50,8 @@ func (h *Handlers) RegisterHandlers() {
 	h.Agent.RegisterHandler(models.MasterMsgAgentUninstall, func(msg *any) error {
 		return h.UninstallAgent()
 	})
+
+	h.Agent.RegisterHandler(models.MasterMsgFileSystemRequest, func(msg *any) error {
+		return h.SendFileSystem(msg)
+	})
 }

@@ -8790,3 +8790,333 @@
 {"time":"2026-02-18T17:18:05.7606534+05:30","level":"INFO","msg":"Received ping from master"}
 {"time":"2026-02-18T17:18:35.8171684+05:30","level":"INFO","msg":"Received ping from master"}
 {"time":"2026-02-18T17:18:46.7066835+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}
+{"time":"2026-02-18T17:21:31.407706+05:30","level":"INFO","msg":"NebulaLink Agent starting","os":"windows","arch":"amd64"}
+{"time":"2026-02-18T17:21:31.4104743+05:30","level":"INFO","msg":"Agent identity","agent_id":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3","agent_name":"Abhijit"}
+{"time":"2026-02-18T17:21:31.4143006+05:30","level":"INFO","msg":"File watcher started","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-18T17:21:31.4143006+05:30","level":"INFO","msg":"File watcher initialized","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-18T17:21:31.4148388+05:30","level":"INFO","msg":"Kardianos starting service","service":"NebulaLink Agent","platform":"windows-service"}
+{"time":"2026-02-18T17:21:31.4148388+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:21:31.4733453+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:21:31.4733453+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:21:32.474887+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T17:23:58.9950607+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T17:23:59.0056774+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T17:23:59.0063026+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T17:23:59.0056774+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T17:23:59.0063026+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:24:01.6103828+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:24:01.6116176+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:24:02.61636+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T17:24:12.6960703+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T17:24:12.6960703+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T17:24:12.6960703+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T17:24:12.6960703+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T17:24:12.6960703+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:24:15.2825256+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:24:15.2846109+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:24:16.2895339+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T17:27:05.1282379+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T17:27:05.1282379+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T17:27:05.1282379+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T17:27:05.1335553+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T17:27:05.1335553+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:27:07.7288452+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:27:07.7339661+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:27:08.741539+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T17:27:40.1933773+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T17:27:40.1933773+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T17:27:40.1933773+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:27:40.1942454+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T17:27:40.1942454+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T17:27:42.3771569+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: No connection could be made because the target machine actively refused it."}
+{"time":"2026-02-18T17:27:42.3812313+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: No connection could be made because the target machine actively refused it."}
+{"time":"2026-02-18T17:27:47.3831294+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:28:02.5279338+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:28:02.5296178+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:28:03.5332408+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T17:33:50.3309689+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T17:33:50.339534+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T17:33:50.339534+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T17:33:50.3400415+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T17:33:50.339534+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:33:52.787139+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: No connection could be made because the target machine actively refused it."}
+{"time":"2026-02-18T17:33:52.7895172+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: No connection could be made because the target machine actively refused it."}
+{"time":"2026-02-18T17:33:57.7904422+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:34:12.9020024+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:34:12.9043743+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:34:13.909257+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T17:53:04.2658548+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T17:53:04.2658548+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T17:53:04.2658548+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T17:53:04.2658548+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T17:53:04.2693729+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:53:07.2328163+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:53:07.2341348+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:53:08.2449837+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T17:55:26.2295946+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T17:55:26.2295946+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T17:55:26.2295946+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T17:55:26.2295946+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T17:55:26.2295946+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:55:27.2142095+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T17:55:27.2193723+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T17:55:28.222373+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T18:28:35.870053+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T18:28:35.8660553+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T18:28:35.8660553+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T18:28:35.8636194+05:30","level":"ERROR","msg":"Write error","err":"write tcp 192.168.0.58:52683->16.112.43.203:8081: wsasend: An existing connection was forcibly closed by the remote host."}
+{"time":"2026-02-18T18:28:35.9227311+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T18:28:35.8925324+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:28:36.9370112+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T18:28:36.9425382+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T18:28:41.9460277+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:28:41.9511555+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:28:41.9971055+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:28:47.0252485+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:28:47.0268282+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:28:47.0279221+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:28:52.0294144+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:28:52.0320537+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:28:52.0326501+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:28:57.0358468+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:28:57.0375061+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:28:57.0381428+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:02.0393565+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:02.0435433+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:02.0444752+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:07.0464266+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:07.0479116+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:07.0479116+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:12.0499245+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:12.0536703+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:12.0542527+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:17.0554263+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:17.0570813+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:17.0576256+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:22.0584161+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:22.0593419+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:22.0600424+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:27.0960631+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:27.1304032+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:27.1676264+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:32.2056347+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:32.2078179+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:32.2084185+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:37.2095306+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:37.2103828+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:37.2111535+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:42.2180766+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:42.2308804+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:42.2400884+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:47.2585683+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:47.2619554+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:47.2631402+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:52.2651163+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:52.2659375+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:52.2667574+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:57.2677178+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:29:57.269432+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:29:57.2700578+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:02.2709078+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:02.2729776+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:02.2736328+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:07.278662+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:07.2805835+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:07.2812452+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:12.2826241+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:12.284374+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:12.285221+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:17.2869978+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:17.2887265+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:17.2894574+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:22.29275+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:22.2947742+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:22.2960111+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:27.2974075+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:27.2987813+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:27.2994065+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:32.30128+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:32.3022426+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:32.3027845+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:37.3039614+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:37.3290773+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:37.3304501+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:42.3317713+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:42.3334259+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:42.3341566+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T18:30:47.3420553+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:47.3751334+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T18:30:47.40991+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T18:30:52.4749284+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:54.0018568+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T18:30:54.0882318+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T18:30:55.1938905+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T19:45:20.8923285+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T19:45:20.7016359+05:30","level":"ERROR","msg":"Write error","err":"write tcp 192.168.88.25:53779->16.112.43.203:8081: wsasend: An existing connection was forcibly closed by the remote host."}
+{"time":"2026-02-18T19:45:21.41649+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T19:45:20.9241563+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T19:45:21.3211149+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T19:45:21.3211149+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T19:45:21.7181697+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T19:45:21.7783534+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T19:45:26.8971827+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T19:45:26.8977802+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T19:45:26.8977802+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:03.6161643+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:04.0472518+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:04.3375287+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:09.6064567+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:09.6197625+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:09.6217783+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:14.633896+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:14.6397928+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:14.6397928+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:19.640253+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:19.6415374+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:19.6421193+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:24.6432822+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:24.6445711+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:24.6445711+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:29.6451187+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:29.6484646+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:29.6484646+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:34.649181+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:34.6503652+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:34.6511961+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:39.6542665+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:39.6549818+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:39.6549818+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:44.6557526+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:44.6597222+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:44.675529+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:49.6796849+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:49.6796849+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:49.6804162+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:54.6817245+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:54.6822314+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:54.682572+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:59.6829405+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:03:59.6835954+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:03:59.6835954+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:04.684295+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:04.6850395+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:04.6855563+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:09.6901494+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:09.692045+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:09.695093+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:14.6955953+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:14.6962959+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:14.6962959+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:19.6974363+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:19.6979409+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:19.6979409+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:24.698961+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:24.6997118+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:24.6997118+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:29.701199+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:29.701199+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:29.7019208+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:34.7027743+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:34.7049533+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:34.7055048+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:39.7066713+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:39.7102305+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:39.7109824+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:44.7136321+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:44.7170102+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:44.7170102+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:49.7194292+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:49.7209858+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:49.7215657+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:54.7224699+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:54.7253351+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:54.7265446+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:59.7278644+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:04:59.7303684+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:04:59.7311339+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:04.7342762+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:04.7366983+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:04.7370227+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:09.7384607+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:09.7473809+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:09.7497097+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:14.7529366+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:14.7588187+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:14.7596971+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:19.7606482+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:19.7641129+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:19.7650972+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:24.7686894+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:24.778847+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:24.7802799+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:29.7827183+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:29.7844598+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:29.7855744+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:34.7871762+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:34.7911527+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:34.7931061+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:39.794939+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:39.7966805+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:39.7966805+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:44.7979157+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:44.7999146+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:44.8004292+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:49.8021621+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:49.8151131+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:49.82104+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:54.8219781+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:54.8298936+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:54.830741+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:59.8499075+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:05:59.8510076+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:05:59.8582416+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-18T21:06:04.8624187+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:06:04.866313+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T21:06:04.86825+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T21:06:09.8880819+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:06:12.0990967+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T21:06:12.3504957+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-18T21:06:13.5625819+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-18T23:42:22.8203302+05:30","level":"ERROR","msg":"Failed to send pong","err":"write tcp 192.168.1.9:61518->16.112.43.203:8081: wsasend: An existing connection was forcibly closed by the remote host."}
+{"time":"2026-02-18T23:42:22.7801132+05:30","level":"ERROR","msg":"Write error","err":"write tcp 192.168.1.9:61518->16.112.43.203:8081: wsasend: An existing connection was forcibly closed by the remote host."}
+{"time":"2026-02-18T23:42:23.2135418+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-18T23:42:23.2370802+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-18T23:42:23.3425605+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-18T23:42:23.3435607+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-18T23:42:23.4526356+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T23:42:24.453046+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T23:42:24.4702946+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T23:42:29.4901515+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-18T23:42:29.5122196+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-18T23:42:29.5271626+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-19T04:22:11.3412738+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T04:22:11.5462217+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-19T04:22:11.6425998+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-19T04:22:17.4295816+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T04:22:19.3090555+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T04:22:19.3420421+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-19T04:22:20.7780662+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-19T11:00:35.6644285+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-19T11:00:35.8047927+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-19T11:00:35.8875559+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T11:00:35.8875559+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-19T11:00:35.8839429+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-19T11:00:36.6152718+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-19T11:00:37.5533518+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable host."}
+{"time":"2026-02-19T11:00:43.0706216+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T11:00:43.0964999+05:30","level":"ERROR","msg":"Connection error","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-19T11:00:43.1295136+05:30","level":"ERROR","msg":"Failed to connect to master:","err":"dial tcp 16.112.43.203:8081: connectex: A socket operation was attempted to an unreachable network."}
+{"time":"2026-02-19T11:00:48.1947881+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T11:00:48.3538365+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T11:00:48.3680992+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-19T11:00:49.3723759+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-19T14:47:12.1375164+05:30","level":"INFO","msg":"Dispatch pump stopped"}
+{"time":"2026-02-19T14:47:11.9785829+05:30","level":"INFO","msg":"Stopping heartbeat goroutine due to agent disconnect..."}
+{"time":"2026-02-19T14:47:12.1561237+05:30","level":"INFO","msg":"Read pump stopped"}
+{"time":"2026-02-19T14:47:12.1834669+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T14:47:11.9711693+05:30","level":"ERROR","msg":"Write error","err":"write tcp 192.168.0.60:60281->16.112.43.203:8081: wsasend: An existing connection was forcibly closed by the remote host."}
+{"time":"2026-02-19T14:47:12.2250411+05:30","level":"INFO","msg":"Write pump stopped"}
+{"time":"2026-02-19T14:47:12.4524155+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-19T14:47:12.4685298+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-19T14:47:13.5446502+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-19T15:48:35.5686357+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}

@@ -17,6 +17,7 @@ type Connection struct {
 	LastSeen   time.Time
 	SendCh     chan models.Message
 	IncomingCh chan models.Message
+	StreamCh   chan []byte
 	Ctx        context.Context
 	Cancel     context.CancelFunc
 	wg         sync.WaitGroup
@@ -33,6 +34,7 @@ func NewConnection(name string, id string, os string, conn *websocket.Conn) *Con
 		LastSeen:   time.Now(),
 		SendCh:     make(chan models.Message, 100),
 		IncomingCh: make(chan models.Message, 500),
+		StreamCh:   make(chan []byte, 1024*64),
 		Ctx:        ctx,
 		Cancel:     cancel,
 	}

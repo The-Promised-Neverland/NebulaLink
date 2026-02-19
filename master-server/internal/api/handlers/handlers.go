@@ -94,9 +94,24 @@ func (h *Handler) GetAgentFileSystem(c *gin.Context) {
 		})
 		return
 	}
+	agentOnlineStatus, err := h.Service.IsAgentOnline(requestedAgentID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	if !agentOnlineStatus {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Requested agent is offline. Please ensure the agent is online to fetch the filesystem data.",
+		})
+		return
+	}
 	h.Service.GetAgentFileSystem(agentID, requestedAgentID, req.Path)
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "File system data requested from agent " + requestedAgentID + " for agent " + agentID,
+		"message": "Requested file will be available in your shared folder shortly",
 	})
 }

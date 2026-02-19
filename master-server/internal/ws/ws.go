@@ -12,15 +12,15 @@ import (
 )
 
 type WSHub struct {
-	Connections   map[string]*Connection
-	Mutex         sync.RWMutex
-	SSEHub        *sse.SSEHub
+	Connections map[string]*Connection
+	Mutex       sync.RWMutex
+	SSEHub      *sse.SSEHub
 }
 
 func NewWSHub(sseHub *sse.SSEHub) *WSHub {
 	hub := &WSHub{
-		Connections:   make(map[string]*Connection),
-		SSEHub:        sseHub,
+		Connections: make(map[string]*Connection),
+		SSEHub:      sseHub,
 	}
 	return hub
 }
@@ -52,7 +52,7 @@ func (h *WSHub) Connect(name string, id string, os string, conn *websocket.Conn)
 		h.Connections[id] = connection
 	}
 	h.Mutex.Unlock()
-	connection.wg.Add(3)
+	connection.wg.Add(4)
 	go func() {
 		defer connection.wg.Done()
 		h.ReadPump(connection)
@@ -64,6 +64,10 @@ func (h *WSHub) Connect(name string, id string, os string, conn *websocket.Conn)
 	go func() {
 		defer connection.wg.Done()
 		h.BroadcasterPump(connection)
+	}()
+	go func() {
+		defer connection.wg.Done()
+		h.DataStreamPump(connection) // Start stream processing
 	}()
 }
 

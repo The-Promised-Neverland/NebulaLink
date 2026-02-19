@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/The-Promised-Neverland/master-server/internal/models"
 	"github.com/The-Promised-Neverland/master-server/internal/sse"
 	"github.com/The-Promised-Neverland/master-server/internal/ws"
@@ -43,6 +45,20 @@ func (s *Service) TriggerAgentforMetrics(agentID string) {
 		Payload: nil,
 	}
 	s.WSHub.Send(agentID, req)
+}
+
+func (s *Service) IsAgentOnline(agentID string)	(bool, error) {
+	s.WSHub.Mutex.RLock()
+	defer s.WSHub.Mutex.RUnlock()
+	_, exists := s.WSHub.Connections[agentID]
+	if !exists {
+		return false, errors.New("agent not found")
+	}
+	connection := s.WSHub.Connections[agentID].Conn
+	if connection == nil {
+		return false, nil
+	}
+	return true, nil
 }
 
 func (s *Service) GetAgent(agentID string) *models.AgentInfo {

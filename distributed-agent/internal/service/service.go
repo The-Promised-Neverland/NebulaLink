@@ -1,6 +1,11 @@
 package service
 
 import (
+	"archive/tar"
+	"io"
+	"os"
+	"path/filepath"
+
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/disk"
@@ -28,4 +33,65 @@ func (s *Service) GetHostMetrics() *models.HostMetrics {
 		OS:          hostInfo.OS,
 		Uptime:      hostInfo.Uptime,
 	}
+}
+
+func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan error) {
+	dataCh := make(chan []byte, 8)
+	errCh := make(chan error, 1)
+	go func() {
+		defer close(dataCh)
+		defer close(errCh)
+
+		// pipe that converts tar writes into channel chunks
+		pr, pw := io.Pipe()
+		tw := tar.NewWriter(pw)
+		defer tw.Close()
+
+		// walk directory
+		go func() {
+			defer pw.Close()
+			filepath.Walk(path, func(filePath string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+				header, err := tar.FileInfoHeader(info, "")
+				if err != nil {
+					return err
+				}
+				relPath, _ := filepath.Rel(path, filePath)
+				header.Name = filepath.ToSlash(relPath)
+				if err := tw.WriteHeader(header); err != nil {
+					return err
+				}
+				if !info.IsDir() {
+					f, err := os.Open(filePath)
+					if err != nil {
+						return err
+					}
+					defer f.Close()
+					if _, err := io.Copy(tw, f); err != nil {
+						return err
+					}
+				}
+				return nil
+			})
+		}()
+		buf := make([]byte, 1024*64) // 64KB buffer
+		for {
+			n, err := pr.Read(buf) // read tar stream into buffer
+			if n > 0 {
+				chunk := make([]byte, n)
+				copy(chunk, buf[:n])
+				dataCh <- chunk
+			}
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				errCh <- err
+				break
+			}
+		}
+	}()
+	return dataCh, errCh
 }
