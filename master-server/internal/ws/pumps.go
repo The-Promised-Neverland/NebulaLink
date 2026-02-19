@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	maxMessageSize = 8192
+	maxMessageSize = 2 * 1024 * 1024 // 2MB
 )
 
 
