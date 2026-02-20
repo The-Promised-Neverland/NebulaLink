@@ -5,7 +5,6 @@ import (
 	"errors"
 	"os"
 	"runtime"
-	"sync"
 
 	"github.com/The-Promised-Neverland/agent/internal/config"
 	"github.com/The-Promised-Neverland/agent/internal/models"
@@ -19,35 +18,29 @@ type Outbound struct {
 	Binary []byte
 }
 
-type transferState struct {
-	file        *os.File
-	isActive    bool
-	sourceAgent string
-	tempPath    string
-}
-
 type Agent struct {
-	Conn          *websocket.Conn
-	Config        *config.Config
-	Handlers      map[string]func(msg *any) error
-	sendCh        chan Outbound
-	incomingCh    chan Outbound
-	ctx           context.Context
-	cancel        context.CancelFunc
-	transferState *transferState
-	transferMutex sync.Mutex
+	Conn       *websocket.Conn
+	Config     *config.Config
+	Handlers   map[string]func(msg *any) error
+	sendCh     chan Outbound
+	incomingCh chan Outbound
+	ctx        context.Context
+	cancel     context.CancelFunc
+	// Simple transfer handling - only one transfer at a time
+	tempFile     *os.File
+	tempFilePath string
+	sourceAgent  string
 }
 
 func NewAgent(cfg *config.Config, parentCtx context.Context) *Agent {
 	ctx, cancel := context.WithCancel(parentCtx)
 	return &Agent{
-		Config:        cfg,
-		Handlers:      make(map[string]func(msg *any) error),
-		sendCh:        make(chan Outbound, 256),
-		incomingCh:    make(chan Outbound, 256),
-		ctx:           ctx,
-		cancel:        cancel,
-		transferState: nil,
+		Config:     cfg,
+		Handlers:   make(map[string]func(msg *any) error),
+		sendCh:     make(chan Outbound, 256),
+		incomingCh: make(chan Outbound, 256),
+		ctx:        ctx,
+		cancel:     cancel,
 	}
 }
 
@@ -94,6 +87,17 @@ func (a *Agent) Send(out Outbound) error {
 }
 
 func (a *Agent) Close() error {
+	// Clean up any open transfer file
+	if a.tempFile != nil {
+		a.tempFile.Close()
+		if a.tempFilePath != "" {
+			os.Remove(a.tempFilePath)
+		}
+		a.tempFile = nil
+		a.tempFilePath = ""
+		a.sourceAgent = ""
+	}
+	
 	a.cancel()
 	if a.Conn != nil {
 		return a.Conn.Close()

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
-import { sseService } from "@/services/sse";
+import { wsService } from "@/services/websocket";
 import type {
   ConnectionStatus,
   WebSocketMessage,
@@ -19,65 +19,23 @@ interface WebSocketContextValue {
 
 const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 
-const SNAPSHOTS_STORAGE_KEY = "nebulalink_directory_snapshots";
-
-// Load snapshots from localStorage
-const loadSnapshotsFromStorage = (): Map<string, DirectorySnapshot> => {
-  try {
-    const stored = localStorage.getItem(SNAPSHOTS_STORAGE_KEY);
-    if (stored) {
-      const data = JSON.parse(stored);
-      const map = new Map<string, DirectorySnapshot>();
-      Object.entries(data).forEach(([key, value]) => {
-        map.set(key, value as DirectorySnapshot);
-      });
-      console.log(`[WebSocket] Loaded ${map.size} snapshots from localStorage`);
-      return map;
-    }
-  } catch (error) {
-    console.error("[WebSocket] Failed to load snapshots from localStorage:", error);
-  }
-  return new Map();
-};
-
-// Save snapshots to localStorage
-const saveSnapshotsToStorage = (snapshots: Map<string, DirectorySnapshot>) => {
-  try {
-    const data = Object.fromEntries(snapshots);
-    localStorage.setItem(SNAPSHOTS_STORAGE_KEY, JSON.stringify(data));
-    console.log(`[WebSocket] Saved ${snapshots.size} snapshots to localStorage`);
-  } catch (error) {
-    console.error("[WebSocket] Failed to save snapshots to localStorage:", error);
-  }
-};
-
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ConnectionStatus>("disconnected");
   const [agents, setAgents] = useState<Map<string, AgentWithStatus>>(new Map());
   const [metrics, setMetrics] = useState<Map<string, MetricsPayload>>(new Map());
-  const [snapshots, setSnapshots] = useState<Map<string, DirectorySnapshot>>(() => 
-    loadSnapshotsFromStorage()
-  );
+  const [snapshots, setSnapshots] = useState<Map<string, DirectorySnapshot>>(new Map());
 
   const updateAgentList = useCallback((agentList: AgentInfo[]) => {
-      console.log("[SSE] Updating agent list from API:", agentList);
     setAgents((prev) => {
       const newAgents = new Map(prev);
       const now = Date.now();
-      const onlineThreshold = 90000; // 90 seconds (3 heartbeat cycles)
+      const onlineThreshold = 60000; // 1 minute
 
       agentList.forEach((agent) => {
         const lastSeen = new Date(agent.agent_last_seen).getTime();
+        const isOnline = now - lastSeen < onlineThreshold;
+        
         const existing = newAgents.get(agent.agent_id);
-        
-        // Check if online based on lastSeen AND last metrics update
-        const metricsAge = existing?.lastMetricsUpdate 
-          ? now - existing.lastMetricsUpdate 
-          : Infinity;
-        const isOnline = (now - lastSeen < onlineThreshold) && (metricsAge < onlineThreshold);
-        
-        console.log(`[SSE] Agent ${agent.agent_id} (${agent.agent_name || 'unnamed'}): lastSeen=${now - lastSeen}ms ago, metricsAge=${metricsAge}ms, isOnline=${isOnline}`);
-        
         newAgents.set(agent.agent_id, {
           ...agent,
           isOnline,
@@ -92,73 +50,46 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Connect on mount
-    sseService.connect();
+    wsService.connect();
 
     // Subscribe to status changes
-    const unsubStatus = sseService.onStatusChange(setStatus);
+    const unsubStatus = wsService.onStatusChange(setStatus);
 
     // Subscribe to messages
-    const unsubMessage = sseService.onMessage((message: WebSocketMessage) => {
-      console.log("[WebSocket] Message received:", {
-        type: message.type,
-        payload: message.payload,
-        timestamp: new Date().toISOString()
-      });
+    const unsubMessage = wsService.onMessage((message: WebSocketMessage) => {
+      console.log("WebSocket message received:", message.type, message.payload);
       
       switch (message.type) {
         case "agent_metrics": {
           const payload = message.payload as MetricsPayload;
+          console.log("Processing agent_metrics for:", payload.agent_id, payload);
           
-          // Extract agent ID - might be in format "agent:ID" or just "ID"
-          let agentId = payload.agent_id;
-          if (agentId.startsWith("agent:")) {
-            agentId = agentId.substring(6); // Remove "agent:" prefix
-          }
-          
-          console.log("[SSE] Processing agent_metrics:", {
-            original_agent_id: payload.agent_id,
-            normalized_agent_id: agentId,
-            metrics: payload.host_metrics,
-            timestamp: payload.timestamp
-          });
-          
-          // Always store metrics with normalized ID
-          setMetrics((prev) => {
-            const updated = new Map(prev);
-            updated.set(agentId, payload);
-            console.log(`[SSE] Stored metrics for ${agentId}, total metrics: ${updated.size}`);
-            return updated;
-          });
+          // Always store metrics
+          setMetrics((prev) => new Map(prev).set(payload.agent_id, payload));
           
           // Update agent - create if doesn't exist
           setAgents((prev) => {
             const updated = new Map(prev);
-            const existing = updated.get(agentId);
-            const now = Date.now();
+            const existing = updated.get(payload.agent_id);
             
             if (existing) {
-              // Update existing agent - preserve name if new one is not provided
-              updated.set(agentId, {
+              // Update existing agent
+              updated.set(payload.agent_id, {
                 ...existing,
-                agent_name: payload.agent_name || existing.agent_name, // Use new name or keep existing
                 isOnline: true,
                 metrics: payload.host_metrics,
-                lastMetricsUpdate: now,
-                agent_last_seen: new Date().toISOString(),
+                lastMetricsUpdate: Date.now(),
               });
-              console.log(`[SSE] Updated agent ${agentId} with metrics`);
             } else {
               // Create new agent entry from metrics
-              updated.set(agentId, {
-                agent_id: agentId,
-                agent_name: payload.agent_name, // Use name from metrics if available
+              updated.set(payload.agent_id, {
+                agent_id: payload.agent_id,
                 agent_os: payload.host_metrics.os,
                 agent_last_seen: new Date().toISOString(),
                 isOnline: true,
                 metrics: payload.host_metrics,
-                lastMetricsUpdate: now,
+                lastMetricsUpdate: Date.now(),
               });
-              console.log(`[SSE] Created new agent entry for ${agentId} with name: ${payload.agent_name || 'undefined'}`);
             }
             
             return updated;
@@ -167,64 +98,17 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         }
         case "agent_directory_snapshot": {
           const payload = message.payload as DirectorySnapshot;
-          
-          // Extract agent ID - might be in format "agent:ID" or just "ID"
-          let agentId = payload.agent_id;
-          if (agentId.startsWith("agent:")) {
-            agentId = agentId.substring(6); // Remove "agent:" prefix
-          }
-          
-          console.log("[SSE] Processing directory snapshot:", {
-            original_agent_id: payload.agent_id,
-            normalized_agent_id: agentId,
-            fileCount: payload.directory?.total_files,
-            totalSize: payload.directory?.total_size,
-            timestamp: payload.timestamp
-          });
-          setSnapshots((prev) => {
-            const updated = new Map(prev);
-            updated.set(agentId, payload);
-            console.log(`[SSE] Stored snapshot for ${agentId}, total snapshots: ${updated.size}`);
-            // Save to localStorage
-            saveSnapshotsToStorage(updated);
-            return updated;
-          });
+          console.log("Processing directory snapshot for:", payload.agent_id);
+          setSnapshots((prev) => new Map(prev).set(payload.agent_id, payload));
           break;
         }
-        case "agent_list": {
-          const agentList = message.payload as AgentInfo[];
-          console.log("[SSE] Received agent_list update:", agentList);
-          // Update agent list directly from WebSocket (real-time update)
-          updateAgentList(agentList);
-          break;
-        }
-        case "agent_disconnected": {
-          const payload = message.payload as { agent_id: string };
-          console.log("[SSE] Agent disconnected:", payload.agent_id);
-          // Immediately mark agent as offline
-          setAgents((prev) => {
-            const updated = new Map(prev);
-            const existing = updated.get(payload.agent_id);
-            if (existing) {
-              updated.set(payload.agent_id, {
-                ...existing,
-                isOnline: false,
-              });
-              console.log(`[SSE] Marked agent ${payload.agent_id} as offline`);
-            }
-            return updated;
-          });
-          break;
-        }
-        default:
-          console.log("[SSE] Unhandled message type:", message.type);
       }
     });
 
     return () => {
       unsubStatus();
       unsubMessage();
-      sseService.disconnect();
+      wsService.disconnect();
     };
   }, []);
 

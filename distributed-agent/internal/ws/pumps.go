@@ -148,19 +148,7 @@ func (a *Agent) dispatchPump() {
 		case msg := <-a.incomingCh:
 			if msg.Msg != nil {
 				messageRec := *msg.Msg
-				if messageRec.Type == models.MasterMsgRelayManager {
-					payloadMap, ok := messageRec.Payload.(map[string]interface{})
-					if ok {
-						if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {
-							if err := a.handleTransferStatus(&messageRec.Payload); err != nil {
-								logger.Log.Warn("Failed to handle transfer status", "err", err)
-							}
-							continue
-						}
-					}
-				}
 				if handler, ok := a.Handlers[messageRec.Type]; ok {
-					logger.Log.Debug("Found handler for message type", "type", messageRec.Type)
 					if err := handler(&messageRec.Payload); err != nil {
 						logger.Log.Error("Handler error", "type", messageRec.Type, "err", err)
 					}
@@ -176,83 +164,13 @@ func (a *Agent) dispatchPump() {
 	}
 }
 
-// handleTransferStatus handles filesystem transfer status messages
-func (a *Agent) handleTransferStatus(payload *interface{}) error {
-	var status, agentID string
-	if payloadMap, ok := (*payload).(map[string]interface{}); ok {
-		status, _ = payloadMap["status"].(string)
-		agentID, _ = payloadMap["agent_id"].(string)
-	}
-	if status == "" {
-		logger.Log.Error("status not found for streaming...")
-		return nil
-	}
-	a.processTransferStatus(status, agentID)
-	return nil
-}
-
-// processTransferStatus processes the transfer status and manages transfer state
-func (a *Agent) processTransferStatus(status, sourceAgentID string) {
-	a.transferMutex.Lock()
-	defer a.transferMutex.Unlock()
-	switch status {
-	case "initiated":
-		// TODO: Later we will tag the chunk with the transferID to allow multiple streams sends
-		if a.transferState != nil && a.transferState.isActive {
-			logger.Log.Warn("Transfer already in progress, ignoring new initiated message", "sourceAgent", sourceAgentID)
-			return
-		}	
-		tempDir := os.TempDir()
-		tempFile := filepath.Join(tempDir, fmt.Sprintf("nebulalink-transfer-%s-%d.tar", sourceAgentID, time.Now().Unix()))
-		file, err := os.Create(tempFile)
-		if err != nil {
-			logger.Log.Error("Failed to create temp file for transfer", "err", err, "path", tempFile)
-			return
-		}
-		a.transferState = &transferState{
-			file:        file,
-			isActive:    true,
-			sourceAgent: sourceAgentID,
-			tempPath:    tempFile,
-		}
-		logger.Log.Info("Transfer initiated", "sourceAgent", sourceAgentID, "tempFile", tempFile)
-	case "running":
-		if a.transferState != nil && a.transferState.isActive {
-			logger.Log.Info("Transfer in progress", "sourceAgent", sourceAgentID)
-		}
-	case "completed":
-		if a.transferState == nil || !a.transferState.isActive {
-			logger.Log.Warn("Received completed status but no active transfer", "sourceAgent", sourceAgentID)
-			return
-		}
-		if err := a.transferState.file.Close(); err != nil {
-			logger.Log.Error("Failed to close temp file", "err", err)
-		}
-		if err := a.extractTarToSharedFolder(a.transferState.tempPath, sourceAgentID); err != nil {
-			logger.Log.Error("Failed to extract tar", "err", err, "tempFile", a.transferState.tempPath)
-		} else {
-			logger.Log.Info("Transfer completed and extracted", "sourceAgent", sourceAgentID)
-		}
-		if err := os.Remove(a.transferState.tempPath); err != nil {
-			logger.Log.Warn("Failed to remove temp file", "err", err, "path", a.transferState.tempPath)
-		}
-		a.transferState = nil
-	}
-}
-
-// handleBinaryChunk writes binary chunks to the active transfer file
+// handleBinaryChunk writes binary chunks to the temp file
 func (a *Agent) handleBinaryChunk(chunk []byte) {
-	a.transferMutex.Lock()
-	defer a.transferMutex.Unlock()
-	if a.transferState == nil || !a.transferState.isActive {
-		logger.Log.Warn("Received binary chunk but no active transfer, dropping chunk", "size", len(chunk))
+	if a.tempFile == nil {
+		logger.Log.Warn("Received binary chunk but no temp file open, dropping chunk", "size", len(chunk))
 		return
 	}
-	if a.transferState.file == nil {
-		logger.Log.Error("Transfer file is nil, cannot write chunk")
-		return
-	}
-	written, err := a.transferState.file.Write(chunk)
+	written, err := a.tempFile.Write(chunk)
 	if err != nil {
 		logger.Log.Error("Failed to write chunk to temp file", "err", err, "written", written)
 		return
@@ -260,7 +178,50 @@ func (a *Agent) handleBinaryChunk(chunk []byte) {
 	logger.Log.Debug("Wrote chunk to temp file", "bytes", written, "totalChunkSize", len(chunk))
 }
 
-// extractTarToSharedFolder extracts a tar file to the shared folder
+// StartTransfer creates a temp file for receiving transfer data
+func (a *Agent) StartTransfer(sourceAgentID string) error {
+	// Close any existing transfer
+	if a.tempFile != nil {
+		a.tempFile.Close()
+		os.Remove(a.tempFilePath)
+	}
+	tempDir := os.TempDir()
+	tempFile, err := os.CreateTemp(tempDir, "transfer_*.tar")
+	if err != nil {
+		return fmt.Errorf("failed to create temp file: %w", err)
+	}	
+	a.tempFile = tempFile
+	a.tempFilePath = tempFile.Name()
+	a.sourceAgent = sourceAgentID
+	logger.Log.Info("Started transfer", "sourceAgent", sourceAgentID, "tempFile", a.tempFilePath)
+	return nil
+}
+
+// CompleteTransfer closes the temp file, extracts the tar, and cleans up
+func (a *Agent) CompleteTransfer() error {
+	if a.tempFile == nil {
+		return fmt.Errorf("no active transfer to complete")
+	}
+	if err := a.tempFile.Close(); err != nil {
+		logger.Log.Error("Failed to close temp file", "err", err)
+	}
+	tempPath := a.tempFilePath
+	sourceAgent := a.sourceAgent
+	a.tempFile = nil
+	a.tempFilePath = ""
+	a.sourceAgent = ""
+	if err := a.extractTarToSharedFolder(tempPath, sourceAgent); err != nil {
+		os.Remove(tempPath)
+		return fmt.Errorf("failed to extract tar: %w", err)
+	}
+	if err := os.Remove(tempPath); err != nil {
+		logger.Log.Warn("Failed to remove temp file", "path", tempPath, "err", err)
+	}
+	logger.Log.Info("Completed transfer", "sourceAgent", sourceAgent)
+	return nil
+}
+
+// extractTarToSharedFolder extracts a tar file to the shared/transfers folder
 func (a *Agent) extractTarToSharedFolder(tarPath, sourceAgentID string) error {
 	sharedPath, err := a.Config.SharedFolderPath()
 	if err != nil {
@@ -284,7 +245,6 @@ func (a *Agent) extractTarToSharedFolder(tarPath, sourceAgentID string) error {
 		if err != nil {
 			return fmt.Errorf("failed to read tar header: %w", err)
 		}
-		// Skip empty or root directory entries
 		cleanName := filepath.Clean(header.Name)
 		if cleanName == "" || cleanName == "." || cleanName == "/" {
 			logger.Log.Error("Skipping root/empty tar entry", "name", header.Name)

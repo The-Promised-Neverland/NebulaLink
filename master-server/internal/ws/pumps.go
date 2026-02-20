@@ -11,6 +11,9 @@ import (
 
 const (
 	maxMessageSize = 2 * 1024 * 1024 // 2MB
+	pongWait       = 60 * time.Second
+	pingPeriod     = 30 * time.Second
+	writeWait      = 10 * time.Second
 )
 
 // TODO: Pass on the chunks to the requesting agent
@@ -19,7 +22,6 @@ func (h *WSHub) DataStreamPump(c *Connection) {
 		select {
 		case chunk := <-c.StreamCh:
 			fmt.Printf("Transfer in progress... %s -> %s: %d bytes\n", c.Id, c.RelayTo, len(chunk))
-			// TODO: Need to pass this onto the relayTo agent
 			sendToAgent := h.Connections[c.RelayTo].Id
 			h.Send(sendToAgent, Outbound{Binary: chunk})
 		case <-c.Ctx.Done():
@@ -38,7 +40,6 @@ func (h *WSHub) ReadPump(c *Connection) {
 	c.Conn.SetReadLimit(maxMessageSize)
 	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.connMutex.RUnlock()
-	h.handlePong(c)
 	for {
 		select {
 		case <-c.Ctx.Done():
@@ -96,7 +97,6 @@ func (h *WSHub) ReadPump(c *Connection) {
 	}
 }
 
-// TODO: NEED TO MOPDIFY THIS TO SEND AND ACCEPT BYTES/TEXT
 func (h *WSHub) WritePump(c *Connection) {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {

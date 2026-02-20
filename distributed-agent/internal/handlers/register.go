@@ -54,4 +54,8 @@ func (h *Handlers) RegisterHandlers() {
 	h.Agent.RegisterHandler(models.MasterMsgAgentRequestFile, func(msg *any) error {
 		return h.SendFileSystem(msg)
 	})
+
+	h.Agent.RegisterHandler(models.MasterMsgRelayManager, func(msg *any) error {
+		return h.ReceiveTransfer(msg)
+	})
 }

@@ -34,6 +34,44 @@ func (h *Handlers) UninstallAgent() error {
 	return h.DaemonManagerService.UninstallDaemon()
 }
 
+func (h *Handlers) ReceiveTransfer(msg *any) error {
+	payloadRaw, ok := (*msg).(map[string]interface{})
+	if !ok {
+		return errors.New("payload is not a valid map[string]interface{}")
+	}
+	
+	status, ok := payloadRaw["status"].(string)
+	if !ok {
+		return fmt.Errorf("status is missing or not a string")
+	}
+	
+	sourceAgentID, ok := payloadRaw["source_agent_id"].(string)
+	if !ok {
+		// Try alternative field name
+		sourceAgentID, _ = payloadRaw["agent_id"].(string)
+	}
+	
+	switch status {
+	case "initiated":
+		if sourceAgentID == "" {
+			return fmt.Errorf("source_agent_id is required to start transfer")
+		}
+		if err := h.Agent.StartTransfer(sourceAgentID); err != nil {
+			return fmt.Errorf("failed to start transfer: %w", err)
+		}
+		logger.Log.Info("Transfer initiated", "sourceAgent", sourceAgentID)
+	case "completed":
+		if err := h.Agent.CompleteTransfer(); err != nil {
+			return fmt.Errorf("failed to complete transfer: %w", err)
+		}
+		logger.Log.Info("Transfer completed")
+	default:
+		logger.Log.Debug("Transfer status update", "status", status)
+	}
+	
+	return nil
+}
+
 func (h *Handlers) SendFileSystem(msg *any) error {
 	payloadRaw, ok := (*msg).(map[string]interface{})
 	if !ok {
