@@ -78,7 +78,7 @@ func (h *WSHub) ReadPump(c *Connection) {
 					fmt.Println("Timed out trying to send message to StreamCh")
 					return
 				}
-			default:
+			case websocket.TextMessage:
 				c.connMutex.RLock()
 				if c.Conn != nil {
 					c.Conn.SetReadDeadline(time.Now().Add(pongWait))
@@ -97,8 +97,10 @@ func (h *WSHub) ReadPump(c *Connection) {
 				case <-c.Ctx.Done():
 					return
 				default:
+					// TODO: Handling backpressure
 					fmt.Printf("Incoming channel full for %s, dropping message\n", c.Id)
 				}
+			default:
 			}
 		}
 	}

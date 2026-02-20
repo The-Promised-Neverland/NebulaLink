@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/The-Promised-Neverland/agent/internal/models"
+	"github.com/The-Promised-Neverland/agent/internal/ws"
 	"github.com/The-Promised-Neverland/agent/pkg/logger"
 	"github.com/gorilla/websocket"
 )
@@ -19,8 +20,7 @@ func (h *Handlers) RequestMetrics() error {
 		Type:    models.MasterMsgMetricsRequest,
 		Payload: metrics,
 	}
-	h.Agent.Send(response)
-	return nil
+	return h.Agent.Send(ws.Outbound{Msg: &response})
 }
 
 func (h *Handlers) AssignTask(msg *any) error {

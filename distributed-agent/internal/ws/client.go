@@ -12,12 +12,17 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type Outbound struct {
+	Msg    *models.Message
+	Binary []byte
+}
+
 type Agent struct {
 	Conn       *websocket.Conn
 	Config     *config.Config
 	Handlers   map[string]func(msg *any) error
-	sendCh     chan models.Message
-	incomingCh chan models.Message
+	sendCh     chan Outbound
+	incomingCh chan Outbound
 	ctx        context.Context
 	cancel     context.CancelFunc
 }
@@ -27,8 +32,8 @@ func NewAgent(cfg *config.Config, parentCtx context.Context) *Agent {
 	return &Agent{
 		Config:     cfg,
 		Handlers:   make(map[string]func(msg *any) error),
-		sendCh:     make(chan models.Message, 256),
-		incomingCh: make(chan models.Message, 256),
+		sendCh:     make(chan Outbound, 256),
+		incomingCh: make(chan Outbound, 256),
 		ctx:        ctx,
 		cancel:     cancel,
 	}
@@ -64,11 +69,11 @@ func (a *Agent) Connect() error {
 	return nil
 }
 
-func (a *Agent) Send(msg models.Message) error {
+func (a *Agent) Send(out Outbound) error {
 	select {
 	case <-a.ctx.Done():
 		return errors.New("connection is closed")
-	case a.sendCh <- msg:
+	case a.sendCh <- out:
 		return nil
 	default:
 		logger.Log.Warn("Send buffer full, dropping message")

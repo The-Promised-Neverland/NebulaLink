@@ -50,31 +50,46 @@ func (a *Agent) readPump() {
 		case <-a.ctx.Done():
 			return
 		default:
-		}
-		if a.Conn == nil {
-			return
-		}
-		a.Conn.SetReadDeadline(time.Now().Add(pongWait))
-		_, msgBytes, err := a.Conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				logger.Log.Error("WebSocket read error", "err", err)
+			if a.Conn == nil {
+				return
 			}
-			a.Close()
-			return
-		}
-		a.Conn.SetReadDeadline(time.Now().Add(pongWait))
-		var msg models.Message
-		if err := json.Unmarshal(msgBytes, &msg); err != nil {
-			logger.Log.Warn("Failed to parse message", "err", err)
-			continue
-		}
-		select {
-		case a.incomingCh <- msg:
-		case <-a.ctx.Done():
-			return
-		default:
-			logger.Log.Warn("Incoming buffer full, dropping message")
+			a.Conn.SetReadDeadline(time.Now().Add(pongWait))
+			msgType, msgBytes, err := a.Conn.ReadMessage()
+			if err != nil {
+				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+					logger.Log.Error("WebSocket read error", "err", err)
+				}
+				a.Close()
+				return
+			}
+			switch msgType {
+			case websocket.TextMessage:
+				var msg models.Message
+				if err := json.Unmarshal(msgBytes, &msg); err != nil {
+					logger.Log.Warn("Unmarshalling error: TEXT", "err", err)
+					continue
+				}
+				select {
+				case a.incomingCh <- Outbound{Msg: &msg}:
+				case <-a.ctx.Done():
+					return
+				default:
+					// TODO: Handling backpressure
+					logger.Log.Warn("Incoming channel full for %s, dropping message\n")
+				}
+			case websocket.BinaryMessage:
+				select {
+				case a.incomingCh <- Outbound{Binary: msgBytes}:
+				case <-a.ctx.Done():
+					return
+				default:
+					// TODO: Handling backpressure
+					logger.Log.Warn("Incoming channel full for %s, dropping message\n")
+				}
+			default:
+				logger.Log.Warn("Recieved mssg dropped. Neither TEXT/BINARY")
+			}
+			a.Conn.SetReadDeadline(time.Now().Add(pongWait))
 		}
 	}
 }
@@ -91,10 +106,23 @@ func (a *Agent) writePump() {
 				return
 			}
 			a.Conn.SetWriteDeadline(time.Now().Add(writeDeadline))
-			if err := a.Conn.WriteJSON(msg); err != nil {
-				logger.Log.Error("Write error", "err", err)
-				a.Close()
-				return
+			if msg.Msg != nil {
+				bytes, err := json.Marshal(*msg.Msg)
+				if err != nil {
+					logger.Log.Error("Marshalling error", "err", err)
+					continue
+				}
+				if err := a.Conn.WriteMessage(websocket.TextMessage, bytes); err != nil {
+					logger.Log.Error("Write error: TEXT", "err", err)
+					a.Close()
+					return
+				}
+			} else {
+				if err := a.Conn.WriteMessage(websocket.BinaryMessage, msg.Binary); err != nil {
+					logger.Log.Error("Write error: BINARY", "err", err)
+					a.Close()
+					return
+				}
 			}
 		case <-a.ctx.Done():
 			if a.Conn != nil {
@@ -113,12 +141,17 @@ func (a *Agent) dispatchPump() {
 	for {
 		select {
 		case msg := <-a.incomingCh:
-			if handler, ok := a.Handlers[msg.Type]; ok {
-				if err := handler(&msg.Payload); err != nil {
-					logger.Log.Error("Handler error", "type", msg.Type, "err", err)
+			if msg.Msg != nil {
+				messageRec := *msg.Msg
+				if handler, ok := a.Handlers[messageRec.Type]; ok {
+					if err := handler(&messageRec.Payload); err != nil {
+						logger.Log.Error("Handler error", "type", messageRec.Type, "err", err)
+					}
+				} else {
+					logger.Log.Warn("No handler for message type", "type", messageRec.Type)
 				}
 			} else {
-				logger.Log.Warn("No handler for message type", "type", msg.Type)
+				// TODO: Recieving the tar bytes. Handle it
 			}
 		case <-a.ctx.Done():
 			return
@@ -133,8 +166,8 @@ func (a *Agent) RunPumps() {
 		return
 	}
 	a.setupPingPongHandlers()
-	go a.readPump()      // Reads messages
-	go a.writePump()     // Writes messages
-	go a.dispatchPump()  // Dispatches to handlers
+	go a.readPump()     // Reads messages
+	go a.writePump()    // Writes messages
+	go a.dispatchPump() // Dispatches to handlers
 	logger.Log.Info("All pumps started")
 }

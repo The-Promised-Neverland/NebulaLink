@@ -38,7 +38,7 @@ func (w *AgentWorker) SendHeartbeat() error {
 			Timestamp:  time.Now().Unix(),
 		},
 	}
-	return w.Agent.Send(msg)
+	return w.Agent.Send(ws.Outbound{Msg: &msg})
 }
 
 func (w *AgentWorker) SendConnSeverNotice() error {
@@ -49,7 +49,7 @@ func (w *AgentWorker) SendConnSeverNotice() error {
 			Timestamp: time.Now().Unix(),
 		},
 	}
-	return w.Agent.Send(msg)
+	return w.Agent.Send(ws.Outbound{Msg: &msg})
 }
 
 func (w *AgentWorker) SendDirectorySnapshot(snapshot models.DirectorySnapshot) error {
@@ -57,5 +57,5 @@ func (w *AgentWorker) SendDirectorySnapshot(snapshot models.DirectorySnapshot) e
 		Type:    models.AgentMsgDirectorySnapshot,
 		Payload: snapshot,
 	}
-	return w.Agent.Send(msg)
+	return w.Agent.Send(ws.Outbound{Msg: &msg})
 }
