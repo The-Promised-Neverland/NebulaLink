@@ -180,7 +180,6 @@ func (a *Agent) handleBinaryChunk(chunk []byte) {
 
 // StartTransfer creates a temp file for receiving transfer data
 func (a *Agent) StartTransfer(sourceAgentID string) error {
-	// Close any existing transfer
 	if a.tempFile != nil {
 		a.tempFile.Close()
 		os.Remove(a.tempFilePath)
@@ -189,7 +188,7 @@ func (a *Agent) StartTransfer(sourceAgentID string) error {
 	tempFile, err := os.CreateTemp(tempDir, "transfer_*.tar")
 	if err != nil {
 		return fmt.Errorf("failed to create temp file: %w", err)
-	}	
+	}
 	a.tempFile = tempFile
 	a.tempFilePath = tempFile.Name()
 	a.sourceAgent = sourceAgentID
@@ -299,8 +298,8 @@ func (a *Agent) RunPumps() {
 		return
 	}
 	a.setupPingPongHandlers()
-	go a.readPump()     // Reads messages
-	go a.writePump()    // Writes messages
-	go a.dispatchPump() // Dispatches to handlers
+	go a.readPump()
+	go a.writePump()
+	go a.dispatchPump()
 	logger.Log.Info("All pumps started")
 }
