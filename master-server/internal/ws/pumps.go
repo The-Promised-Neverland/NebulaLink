@@ -160,6 +160,7 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 				return
 			default:
 				if msg.Type == "master_filesystem_request" {
+					fmt.Printf("RECIEEVED MESSAGE REHARDING TEXT")
 					payloadMap, ok := msg.Payload.(map[string]string)
 					if ok {
 						c.RelayTo = payloadMap["requesting_agent_id"]

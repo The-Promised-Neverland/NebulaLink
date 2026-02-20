@@ -89,6 +89,17 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	// writer.Close()
 	// close(done)
 	// WARN: Cannot write to a websocket concurrently. Funneling is done
+	starterMsg := models.Message{
+		Type: models.MasterMsgFileSystemRequest,
+		Payload: models.FileSystemTransfer{
+			AgentID:         h.Config.AgentID(),
+			Status:          "initated",
+			AgentName:       h.Config.AgentName(),
+			RequestingAgent: requestAgentID,
+			Timestamp:       time.Now().Unix(),
+		},
+	}
+	h.Agent.Send(ws.Outbound{Msg: &starterMsg})
 	for chunk := range dataCh {
 		logger.Log.Info("Sending Bytes...", slog.Int("bytes", len(chunk)))
 		h.Agent.Send(ws.Outbound{Binary: chunk})
@@ -109,7 +120,7 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 			Status:          "completed",
 			AgentName:       h.Config.AgentName(),
 			RequestingAgent: requestAgentID,
-			Timestamp: time.Now().Unix(),
+			Timestamp:       time.Now().Unix(),
 		},
 	}
 	h.Agent.Send(ws.Outbound{Msg: &doneMsg})
