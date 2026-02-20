@@ -9,16 +9,21 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type Outbound struct {
+	Msg    *models.Message
+	Binary []byte
+}
+
 type Connection struct {
 	Name       string
 	Id         string
 	Conn       *websocket.Conn
 	OS         string
 	LastSeen   time.Time
-	SendCh     chan models.Message
-	IncomingCh chan models.Message
+	SendCh     chan Outbound
+	IncomingCh chan Outbound
 	StreamCh   chan []byte
-	RelayTo	   string  	// ID of the file system requesting agent. Value set up by read pump
+	RelayTo    string // ID of the file system requesting agent. Value set up by read pump
 	Ctx        context.Context
 	Cancel     context.CancelFunc
 	wg         sync.WaitGroup
@@ -33,8 +38,8 @@ func NewConnection(name string, id string, os string, conn *websocket.Conn) *Con
 		Conn:       conn,
 		OS:         os,
 		LastSeen:   time.Now(),
-		SendCh:     make(chan models.Message, 100),
-		IncomingCh: make(chan models.Message, 500),
+		SendCh:     make(chan Outbound, 1024*64),
+		IncomingCh: make(chan Outbound, 1024*64),
 		StreamCh:   make(chan []byte, 1024*64),
 		Ctx:        ctx,
 		Cancel:     cancel,

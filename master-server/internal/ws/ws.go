@@ -71,9 +71,9 @@ func (h *WSHub) Connect(name string, id string, os string, conn *websocket.Conn)
 	}()
 }
 
-func (h *WSHub) Send(TargetId string, msg models.Message) {
+func (h *WSHub) Send(agentID string, msg Outbound) {
 	h.Mutex.RLock()
-	c := h.Connections[TargetId]
+	c := h.Connections[agentID]
 	h.Mutex.RUnlock()
 	if c == nil || c.Conn == nil {
 		return
@@ -81,7 +81,7 @@ func (h *WSHub) Send(TargetId string, msg models.Message) {
 	select {
 	case c.SendCh <- msg:
 	default:
-		fmt.Printf("Send channel full for %s\n", TargetId)
+		fmt.Printf("Send channel full for %s\n", agentID)
 	}
 }
 

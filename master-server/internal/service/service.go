@@ -41,13 +41,13 @@ func (s *Service) GetAllAgents() []*models.AgentInfo {
 
 func (s *Service) TriggerAgentforMetrics(agentID string) {
 	req := models.Message{
-		Type: "master_metrics_request",
+		Type:    "master_metrics_request",
 		Payload: nil,
 	}
-	s.WSHub.Send(agentID, req)
+	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
 }
 
-func (s *Service) IsAgentOnline(agentID string)	(bool, error) {
+func (s *Service) IsAgentOnline(agentID string) (bool, error) {
 	s.WSHub.Mutex.RLock()
 	defer s.WSHub.Mutex.RUnlock()
 	_, exists := s.WSHub.Connections[agentID]
@@ -87,18 +87,18 @@ func (s *Service) SendAgentListToFrontend() {
 
 func (s *Service) RestartAgent(agentID string) {
 	req := models.Message{
-		Type: "master_restart_request",
+		Type:    "master_restart_request",
 		Payload: nil,
 	}
-	s.WSHub.Send(agentID, req)
+	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
 }
 
 func (s *Service) UninstallAgent(agentID string) {
 	req := models.Message{
-		Type: "master_uninstall_initiated",
+		Type:    "master_uninstall_initiated",
 		Payload: nil,
 	}
-	s.WSHub.Send(agentID, req)
+	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
 }
 
 func (s *Service) GetAgentFileSystem(agentID string, requestedAgentID string, path string) {
@@ -109,6 +109,5 @@ func (s *Service) GetAgentFileSystem(agentID string, requestedAgentID string, pa
 			"fileSystemPath":   path,
 		},
 	}
-	s.WSHub.Send(agentID, req)
+	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
 }
-
