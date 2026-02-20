@@ -70,7 +70,6 @@ func (a *Agent) readPump() {
 					logger.Log.Warn("Unmarshalling error: TEXT", "err", err)
 					continue
 				}
-				fmt.Printf("Received raw JSON: %s\n", string(msgBytes))
 				select {
 				case a.incomingCh <- Outbound{Msg: &msg}:
 				case <-a.ctx.Done():

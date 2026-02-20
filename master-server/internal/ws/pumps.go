@@ -128,7 +128,6 @@ func (h *WSHub) WritePump(c *Connection) {
 					fmt.Printf("Marshal error for %s: %v\n", c.Id, err)
 					continue
 				}
-				fmt.Printf("Sending to %s: %s\n", c.Id, string(bytes))
 				if err := conn.WriteMessage(websocket.TextMessage, bytes); err != nil {
 					fmt.Printf("TEXT: Send failed to %s: %v\n", c.Id, err)
 					return
