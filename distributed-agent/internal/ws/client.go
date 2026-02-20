@@ -3,7 +3,9 @@ package ws
 import (
 	"context"
 	"errors"
+	"os"
 	"runtime"
+	"sync"
 
 	"github.com/The-Promised-Neverland/agent/internal/config"
 	"github.com/The-Promised-Neverland/agent/internal/models"
@@ -17,25 +19,35 @@ type Outbound struct {
 	Binary []byte
 }
 
+type transferState struct {
+	file        *os.File
+	isActive    bool
+	sourceAgent string
+	tempPath    string
+}
+
 type Agent struct {
-	Conn       *websocket.Conn
-	Config     *config.Config
-	Handlers   map[string]func(msg *any) error
-	sendCh     chan Outbound
-	incomingCh chan Outbound
-	ctx        context.Context
-	cancel     context.CancelFunc
+	Conn          *websocket.Conn
+	Config        *config.Config
+	Handlers      map[string]func(msg *any) error
+	sendCh        chan Outbound
+	incomingCh    chan Outbound
+	ctx           context.Context
+	cancel        context.CancelFunc
+	transferState *transferState
+	transferMutex sync.Mutex
 }
 
 func NewAgent(cfg *config.Config, parentCtx context.Context) *Agent {
 	ctx, cancel := context.WithCancel(parentCtx)
 	return &Agent{
-		Config:     cfg,
-		Handlers:   make(map[string]func(msg *any) error),
-		sendCh:     make(chan Outbound, 256),
-		incomingCh: make(chan Outbound, 256),
-		ctx:        ctx,
-		cancel:     cancel,
+		Config:        cfg,
+		Handlers:      make(map[string]func(msg *any) error),
+		sendCh:        make(chan Outbound, 256),
+		incomingCh:    make(chan Outbound, 256),
+		ctx:           ctx,
+		cancel:        cancel,
+		transferState: nil,
 	}
 }
 
