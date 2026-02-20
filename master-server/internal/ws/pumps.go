@@ -175,6 +175,17 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 					if ok {
 						if relayTo, ok2 := payloadMap["requesting_agent_id"].(string); ok2 {
 							c.RelayTo = relayTo
+							if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {
+								statusMsg := models.Message{
+									Type: "master_filesystem_request",
+									Payload: map[string]interface{}{
+										"status":   status,
+										"agent_id": c.Id, // Source agent (relay agent) ID
+									},
+								}
+								h.Send(relayTo, Outbound{Msg: &statusMsg})
+								fmt.Printf("Forwarded '%s' status to requesting agent %s from relay agent %s\n", status, relayTo, c.Id)
+							}
 						} else {
 							fmt.Println("requesting_agent_id not found or not a string")
 						}

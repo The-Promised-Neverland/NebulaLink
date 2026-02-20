@@ -93,7 +93,7 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 		Type: models.MasterMsgFileSystemRequest,
 		Payload: models.FileSystemTransfer{
 			AgentID:         h.Config.AgentID(),
-			Status:          "initated",
+			Status:          "initiated",
 			AgentName:       h.Config.AgentName(),
 			RequestingAgent: requestAgentID,
 			Timestamp:       time.Now().Unix(),
