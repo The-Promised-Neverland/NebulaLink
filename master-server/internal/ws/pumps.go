@@ -19,19 +19,7 @@ func (h *WSHub) DataStreamPump(c *Connection) {
 		select {
 		case chunk := <-c.StreamCh:
 			fmt.Printf("Recieving Bytes... %d\n", len(chunk))
-			var statusMsg models.Message
-			if err := json.Unmarshal(chunk, &statusMsg); err != nil {
-				fmt.Printf("Failed to unmarshal message from %s: %v\n", c.Id, err)
-				continue
-			}
-			if payload, ok := statusMsg.Payload.(map[string]interface{}); ok {
-				if status, ok := payload["status"].(string); ok {
-					if status == "completed" {
-						c.StreamCh = make(chan []byte, 1024*64)
-						fmt.Println("Stream has completed. Continuing to receive further data...")
-					}
-				}
-			}
+			// TODO: Need to pass this onto the relayTo agent
 		case <-c.Ctx.Done():
 			return
 		}
