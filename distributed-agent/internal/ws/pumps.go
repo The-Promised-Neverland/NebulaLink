@@ -143,12 +143,20 @@ func (a *Agent) dispatchPump() {
 		case msg := <-a.incomingCh:
 			if msg.Msg != nil {
 				messageRec := *msg.Msg
+
+				// Debug: show raw message
+				logger.Log.Debug("Received message", "rawMsg", messageRec)
+
+				// Debug: show type explicitly
+				logger.Log.Debug("Message type", "Type", messageRec.Type, "IsEmpty?", messageRec.Type == "")
+
 				if handler, ok := a.Handlers[messageRec.Type]; ok {
+					logger.Log.Debug("Found handler for message type", "type", messageRec.Type)
 					if err := handler(&messageRec.Payload); err != nil {
 						logger.Log.Error("Handler error", "type", messageRec.Type, "err", err)
 					}
 				} else {
-					logger.Log.Warn("No handler for message type", "type", messageRec.Type)
+					logger.Log.Warn("No handler for message type", "type", messageRec.Type, "payload", messageRec.Payload)
 				}
 			} else {
 				// TODO: Recieving the tar bytes. Handle it
