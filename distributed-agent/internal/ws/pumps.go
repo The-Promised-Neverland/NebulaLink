@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/The-Promised-Neverland/agent/internal/models"
