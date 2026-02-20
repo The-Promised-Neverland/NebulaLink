@@ -284,9 +284,20 @@ func (a *Agent) extractTarToSharedFolder(tarPath, sourceAgentID string) error {
 		if err != nil {
 			return fmt.Errorf("failed to read tar header: %w", err)
 		}
-		targetPath := filepath.Join(extractPath, filepath.Clean(header.Name))
-		if !filepath.HasPrefix(targetPath, filepath.Clean(extractPath)+string(os.PathSeparator)) && targetPath != filepath.Clean(extractPath) {
-			logger.Log.Warn("Skipping file with invalid path", "path", header.Name)
+		// Skip empty or root directory entries
+		cleanName := filepath.Clean(header.Name)
+		if cleanName == "" || cleanName == "." || cleanName == "/" {
+			logger.Log.Error("Skipping root/empty tar entry", "name", header.Name)
+			continue
+		}
+		targetPath := filepath.Join(extractPath, cleanName)
+		extractPathClean := filepath.Clean(extractPath)
+		if !filepath.HasPrefix(targetPath, extractPathClean+string(os.PathSeparator)) && targetPath != extractPathClean {
+			logger.Log.Warn("Skipping file with invalid path (outside extract directory)", "path", header.Name, "targetPath", targetPath)
+			continue
+		}
+		if targetPath == extractPathClean {
+			logger.Log.Debug("Skipping entry that would overwrite extract directory", "name", header.Name)
 			continue
 		}
 		switch header.Typeflag {
@@ -294,13 +305,16 @@ func (a *Agent) extractTarToSharedFolder(tarPath, sourceAgentID string) error {
 			if err := os.MkdirAll(targetPath, os.FileMode(header.Mode)); err != nil {
 				return fmt.Errorf("failed to create directory: %w", err)
 			}
-			logger.Log.Debug("Extracted directory", "path", targetPath)
-
+			logger.Log.Info("Extracted directory", "path", targetPath)
 		case tar.TypeReg:
+			if info, err := os.Stat(targetPath); err == nil && info.IsDir() {
+				logger.Log.Warn("Skipping file entry - target path is a directory", "path", targetPath, "headerName", header.Name)
+				continue
+			}
 			if err := os.MkdirAll(filepath.Dir(targetPath), 0755); err != nil {
 				return fmt.Errorf("failed to create parent directory: %w", err)
 			}
-			outFile, err := os.OpenFile(targetPath, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))
+			outFile, err := os.OpenFile(targetPath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.FileMode(header.Mode))
 			if err != nil {
 				return fmt.Errorf("failed to create file: %w", err)
 			}

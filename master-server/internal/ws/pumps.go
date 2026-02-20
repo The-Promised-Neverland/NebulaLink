@@ -175,6 +175,11 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 					if ok {
 						if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {
 							if c.RelayTo != "" {
+								// Don't forward "initiated" if we already sent it from master
+								if status == "initiated" && c.InitiatedSent {
+									fmt.Printf("Skipping duplicate 'initiated' status from source agent %s (already sent by master)\n", c.Id)
+									continue
+								}
 								statusMsg := models.Message{
 									Type: models.MasterMsgRelayManager,
 									Payload: map[string]interface{}{
@@ -183,6 +188,9 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 									},
 								}
 								h.Send(c.RelayTo, Outbound{Msg: &statusMsg})
+								if status == "initiated" {
+									c.InitiatedSent = true
+								}
 								fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s\n", status, c.RelayTo, c.Id)
 							}
 						}
@@ -194,6 +202,7 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 						if requestingAgentID, ok2 := payloadMap["requesting_agent_id"].(string); ok2 && requestingAgentID != "" {
 							if c.RelayTo == "" {
 								c.RelayTo = requestingAgentID
+								c.InitiatedSent = false // Reset for new transfer
 								fmt.Printf("Set RelayTo=%s for source agent %s\n", requestingAgentID, c.Id)
 							}
 						}

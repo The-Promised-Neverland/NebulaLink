@@ -83,6 +83,10 @@ func (h *WSHub) Send(agentID string, msg Outbound) {
 			if requestInitiator, ok2 := payloadMap["request_initiator"].(string); ok2 && requestInitiator != "" {
 				if c.RelayTo == "" {
 					c.RelayTo = requestInitiator // Set relay target to destination agent
+					c.InitiatedSent = false      // Reset flag for new transfer
+				}
+				// Send "initiated" message only if we haven't sent it yet
+				if !c.InitiatedSent {
 					initiatedMsg := models.Message{
 						Type: models.MasterMsgRelayManager,
 						Payload: map[string]interface{}{
@@ -91,6 +95,7 @@ func (h *WSHub) Send(agentID string, msg Outbound) {
 						},
 					}
 					h.Send(requestInitiator, Outbound{Msg: &initiatedMsg})
+					c.InitiatedSent = true
 					fmt.Printf("Set RelayTo=%s for source agent %s and sent 'initiated' message to destination %s\n", requestInitiator, agentID, requestInitiator)
 				}
 			}
