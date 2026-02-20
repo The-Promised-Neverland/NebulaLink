@@ -18,7 +18,7 @@ func (h *WSHub) DataStreamPump(c *Connection) {
 	for {
 		select {
 		case chunk := <-c.StreamCh:
-			fmt.Printf("Recieving Bytes... %d\n", len(chunk))
+			fmt.Printf("Transfer in progress... %s -> %s: %d bytes\n", c.Id, c.RelayTo, len(chunk))
 			// TODO: Need to pass this onto the relayTo agent
 		case <-c.Ctx.Done():
 			return
@@ -159,11 +159,12 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 			case <-c.Ctx.Done():
 				return
 			default:
-				payloadMap, ok := msg.Payload.(map[string]string)
-				if ok {
-					h.Connections[payloadMap["agent_id"]].RelayTo = payloadMap[""]
+				if msg.Type == "master_filesystem_request" {
+					payloadMap, ok := msg.Payload.(map[string]string)
+					if ok {
+						c.RelayTo = payloadMap["requesting_agent_id"]
+					}
 				}
-
 				h.SSEHub.Broadcast(msg) // Broadcasts to all frontend clients via SSE
 			}
 		case <-c.Ctx.Done():

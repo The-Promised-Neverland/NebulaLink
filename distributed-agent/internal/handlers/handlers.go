@@ -62,10 +62,11 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 				statusMsg := models.Message{
 					Type: models.MasterMsgFileSystemRequest,
 					Payload: models.FileSystemTransfer{
-						AgentID:   h.Config.AgentID(),
-						Status:    "running",
-						AgentName: h.Config.AgentName(),
-						Timestamp: time.Now().Unix(),
+						AgentID:         h.Config.AgentID(),
+						Status:          "running",
+						AgentName:       h.Config.AgentName(),
+						RequestingAgent: requestAgentID,
+						Timestamp:       time.Now().Unix(),
 					},
 				}
 				h.Agent.Send(ws.Outbound{Msg: &statusMsg})
@@ -86,8 +87,8 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	// 	}
 	// }
 	// writer.Close()
-	// close(done) 
-	// WARN: Cannot write to a websocket concurrently. Funneling is required
+	// close(done)
+	// WARN: Cannot write to a websocket concurrently. Funneling is done
 	for chunk := range dataCh {
 		logger.Log.Info("Sending Bytes...", slog.Int("bytes", len(chunk)))
 		h.Agent.Send(ws.Outbound{Binary: chunk})
@@ -104,9 +105,10 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	doneMsg := models.Message{
 		Type: models.MasterMsgFileSystemRequest,
 		Payload: models.FileSystemTransfer{
-			AgentID:   h.Config.AgentID(),
-			Status:    "completed",
-			AgentName: h.Config.AgentName(),
+			AgentID:         h.Config.AgentID(),
+			Status:          "completed",
+			AgentName:       h.Config.AgentName(),
+			RequestingAgent: requestAgentID,
 			Timestamp: time.Now().Unix(),
 		},
 	}
