@@ -160,11 +160,16 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 				return
 			default:
 				if msg.Type == "master_filesystem_request" {
-					fmt.Printf("RECIEEVED MESSAGE REHARDING", ok, msg.Payload)
-					payloadMap, ok := msg.Payload.(map[string]string)
-					fmt.Printf("RECIEEVED MESSAGE REHARDING TEXT", ok, payloadMap)
+					payloadMap, ok := msg.Payload.(map[string]interface{})
 					if ok {
-						c.RelayTo = payloadMap["requesting_agent_id"]
+						if relayTo, ok2 := payloadMap["requesting_agent_id"].(string); ok2 {
+							c.RelayTo = relayTo
+							fmt.Printf("RelayTo set to: %s\n", c.RelayTo)
+						} else {
+							fmt.Println("requesting_agent_id not found or not a string")
+						}
+					} else {
+						fmt.Println("Payload is not map[string]interface{}")
 					}
 				}
 				h.SSEHub.Broadcast(msg) // Broadcasts to all frontend clients via SSE
