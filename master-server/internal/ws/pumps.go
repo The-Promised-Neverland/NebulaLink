@@ -13,7 +13,7 @@ const (
 	maxMessageSize = 2 * 1024 * 1024 // 2MB
 )
 
-// TODO: Processing of chunks is remaining
+// TODO: Pass on the chunks to the requesting agent
 func (h *WSHub) DataStreamPump(c *Connection) {
 	for {
 		select {
@@ -171,7 +171,12 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 			case <-c.Ctx.Done():
 				return
 			default:
-				h.SSEHub.Broadcast(msg)
+				payloadMap, ok := msg.Payload.(map[string]string)
+				if ok {
+					h.Connections[payloadMap["agent_id"]].RelayTo = payloadMap[""]
+				}
+
+				h.SSEHub.Broadcast(msg) // Broadcasts to all frontend clients via SSE
 			}
 		case <-c.Ctx.Done():
 			return

@@ -18,6 +18,7 @@ type Connection struct {
 	SendCh     chan models.Message
 	IncomingCh chan models.Message
 	StreamCh   chan []byte
+	RelayTo	   string  	// ID of the file system requesting agent. Value set up by read pump
 	Ctx        context.Context
 	Cancel     context.CancelFunc
 	wg         sync.WaitGroup

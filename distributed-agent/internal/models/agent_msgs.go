@@ -14,6 +14,13 @@ type JobStatus struct {
 	Output  string `json:"output,omitempty"`
 }
 
+type FileSystemTransfer struct {
+	AgentID   string `json:"agent_id"`
+	AgentName string `json:"agent_name,omitempty"`
+	Status    string `json:"status"`
+	Timestamp int64 `json:"timestamp,omitempty"`
+}
+
 type Metrics struct {
 	AgentID    string      `json:"agent_id"`
 	AgentName  string      `json:"agent_name,omitempty"`

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -11,7 +10,6 @@ import (
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/The-Promised-Neverland/agent/internal/ws"
 	"github.com/The-Promised-Neverland/agent/pkg/logger"
-	"github.com/gorilla/websocket"
 )
 
 func (h *Handlers) RequestMetrics() error {
@@ -63,29 +61,37 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 			case <-ticker.C:
 				statusMsg := models.Message{
 					Type: models.MasterMsgFileSystemRequest,
-					Payload: map[string]string{
-						"status": "running",
+					Payload: models.FileSystemTransfer{
+						AgentID:   h.Config.AgentID(),
+						Status:    "running",
+						AgentName: h.Config.AgentName(),
+						Timestamp: time.Now().Unix(),
 					},
 				}
-				statusBytes, _ := json.Marshal(statusMsg)
-				h.Agent.Conn.WriteMessage(websocket.BinaryMessage, statusBytes)
+				h.Agent.Send(ws.Outbound{Msg: &statusMsg})
 			}
 		}
 	}()
-	writer, err := h.Agent.Conn.NextWriter(websocket.BinaryMessage)
-	if err != nil {
-		close(done)
-		return err
-	}
+	// writer, err := h.Agent.Conn.NextWriter(websocket.BinaryMessage)
+	// if err != nil {
+	// 	close(done)
+	// 	return err
+	// }
+	// for chunk := range dataCh {
+	// 	logger.Log.Info("Sending Bytes...", slog.Int("bytes", len(chunk)))
+	// 	_, err := writer.Write(chunk)
+	// 	if err != nil {
+	// 		close(done)
+	// 		return err
+	// 	}
+	// }
+	// writer.Close()
+	// close(done) 
+	// WARN: Cannot write to a websocket concurrently. Funneling is required
 	for chunk := range dataCh {
 		logger.Log.Info("Sending Bytes...", slog.Int("bytes", len(chunk)))
-		_, err := writer.Write(chunk)
-		if err != nil {
-			close(done)
-			return err
-		}
+		h.Agent.Send(ws.Outbound{Binary: chunk})
 	}
-	writer.Close()
 	close(done)
 	select {
 	case err := <-errCh:
@@ -97,11 +103,13 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	}
 	doneMsg := models.Message{
 		Type: models.MasterMsgFileSystemRequest,
-		Payload: map[string]string{
-			"status": "completed",
+		Payload: models.FileSystemTransfer{
+			AgentID:   h.Config.AgentID(),
+			Status:    "completed",
+			AgentName: h.Config.AgentName(),
+			Timestamp: time.Now().Unix(),
 		},
 	}
-	statusBytes, _ := json.Marshal(doneMsg)
-	h.Agent.Conn.WriteMessage(websocket.BinaryMessage, statusBytes)
+	h.Agent.Send(ws.Outbound{Msg: &doneMsg})
 	return nil
 }
