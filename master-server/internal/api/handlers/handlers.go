@@ -80,10 +80,9 @@ func (h *Handler) UninstallAgent(c *gin.Context) {
 	})
 }
 
-// send a file path to the agent to be able to trigger the fetch
 func (h *Handler) GetAgentFileSystem(c *gin.Context) {
-	agentID := c.Param("id")
-	requestedAgentID := c.Param("requestedAgentID")
+	agentID := c.Param("id")           // Agent that receives the request
+	getFromAgent := c.Param("getFromAgent") // Agent whose files we want to get
 	var req struct {
 		Path string `json:"path" binding:"required"`
 	}
@@ -94,7 +93,7 @@ func (h *Handler) GetAgentFileSystem(c *gin.Context) {
 		})
 		return
 	}
-	agentOnlineStatus, err := h.Service.IsAgentOnline(requestedAgentID)
+	agentOnlineStatus, err := h.Service.IsAgentOnline(getFromAgent)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"success": false,
@@ -109,7 +108,7 @@ func (h *Handler) GetAgentFileSystem(c *gin.Context) {
 		})
 		return
 	}
-	h.Service.GetAgentFileSystem(agentID, requestedAgentID, req.Path)
+	h.Service.GetAgentFileSystem(agentID, getFromAgent, req.Path)
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "Requested file will be available in your shared folder shortly",

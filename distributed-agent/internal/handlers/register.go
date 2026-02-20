@@ -30,7 +30,7 @@ func NewHandler(
 		Agent:                agent,
 		BusinessService:      businessService,
 		Config:               cfg,
-		DaemonManagerService: daemonManagerService,	
+		DaemonManagerService: daemonManagerService,
 	}
 }
 
@@ -51,7 +51,7 @@ func (h *Handlers) RegisterHandlers() {
 		return h.UninstallAgent()
 	})
 
-	h.Agent.RegisterHandler(models.MasterMsgFileSystemRequest, func(msg *any) error {
+	h.Agent.RegisterHandler(models.MasterMsgAgentRequestFile, func(msg *any) error {
 		return h.SendFileSystem(msg)
 	})
 }

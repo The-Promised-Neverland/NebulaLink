@@ -78,20 +78,20 @@ func (h *WSHub) Send(agentID string, msg Outbound) {
 	if c == nil || c.Conn == nil {
 		return
 	}
-	if msg.Msg != nil && msg.Msg.Type == "master_filesystem_request" {
+	if msg.Msg != nil && msg.Msg.Type == models.MasterMsgAgentRequestFile {
 		if payloadMap, ok := msg.Msg.Payload.(map[string]interface{}); ok {
-			if requestedAgentID, ok2 := payloadMap["requestedAgentID"].(string); ok2 && requestedAgentID != "" {
+			if requestInitiator, ok2 := payloadMap["request_initiator"].(string); ok2 && requestInitiator != "" {
 				if c.RelayTo == "" {
-					c.RelayTo = requestedAgentID
+					c.RelayTo = requestInitiator // Set relay target to destination agent
 					initiatedMsg := models.Message{
-						Type: "master_filesystem_request",
+						Type: models.MasterMsgRelayManager,
 						Payload: map[string]interface{}{
 							"status":   "initiated",
-							"agent_id": agentID,
+							"agent_id": agentID, // Source agent (the one sending files)
 						},
 					}
-					h.Send(requestedAgentID, Outbound{Msg: &initiatedMsg})
-					fmt.Printf("Set RelayTo=%s for agent %s and sent 'initiated' message to %s\n", requestedAgentID, agentID, requestedAgentID)
+					h.Send(requestInitiator, Outbound{Msg: &initiatedMsg})
+					fmt.Printf("Set RelayTo=%s for source agent %s and sent 'initiated' message to destination %s\n", requestInitiator, agentID, requestInitiator)
 				}
 			}
 		}

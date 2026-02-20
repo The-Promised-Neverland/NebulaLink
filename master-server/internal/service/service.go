@@ -101,13 +101,13 @@ func (s *Service) UninstallAgent(agentID string) {
 	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
 }
 
-func (s *Service) GetAgentFileSystem(agentID string, requestedAgentID string, path string) {
+func (s *Service) GetAgentFileSystem(agentID string, getFromAgent string, path string) {
 	req := models.Message{
-		Type: "master_filesystem_request",
+		Type: models.MasterMsgAgentRequestFile,
 		Payload: map[string]interface{}{
-			"requestedAgentID": requestedAgentID,
-			"fileSystemPath":   path,
+			"request_initiator": agentID,
+			"path":              path,
 		},
 	}
-	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
+	s.WSHub.Send(getFromAgent, ws.Outbound{Msg: &req})
 }

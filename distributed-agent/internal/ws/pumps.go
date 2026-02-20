@@ -148,7 +148,7 @@ func (a *Agent) dispatchPump() {
 		case msg := <-a.incomingCh:
 			if msg.Msg != nil {
 				messageRec := *msg.Msg
-				if messageRec.Type == models.MasterMsgFileSystemRequest {
+				if messageRec.Type == models.MasterMsgRelayManager {
 					payloadMap, ok := messageRec.Payload.(map[string]interface{})
 					if ok {
 						if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {

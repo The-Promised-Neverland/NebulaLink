@@ -2,6 +2,11 @@ package models
 
 import "time"
 
+const (
+	MasterMsgRelayManager     = "master_filetransfer_manager"
+	MasterMsgAgentRequestFile = "master_coordinated_transfer_request"
+)
+
 type Message struct {
 	Type    string `json:"type"`
 	Payload any    `json:"payload,omitempty"`

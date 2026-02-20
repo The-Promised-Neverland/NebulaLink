@@ -170,27 +170,33 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 				return
 			default:
 				msgRecieved := *msg.Msg
-				if msgRecieved.Type == "master_filesystem_request" {
+				if msgRecieved.Type == models.MasterMsgRelayManager {
 					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
 					if ok {
-						if relayTo, ok2 := payloadMap["requesting_agent_id"].(string); ok2 {
-							c.RelayTo = relayTo
-							if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {
+						if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {
+							if c.RelayTo != "" {
 								statusMsg := models.Message{
-									Type: "master_filesystem_request",
+									Type: models.MasterMsgRelayManager,
 									Payload: map[string]interface{}{
 										"status":   status,
-										"agent_id": c.Id, // Source agent (relay agent) ID
+										"agent_id": c.Id, // Source agent (the one sending files)
 									},
 								}
-								h.Send(relayTo, Outbound{Msg: &statusMsg})
-								fmt.Printf("Forwarded '%s' status to requesting agent %s from relay agent %s\n", status, relayTo, c.Id)
+								h.Send(c.RelayTo, Outbound{Msg: &statusMsg})
+								fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s\n", status, c.RelayTo, c.Id)
 							}
-						} else {
-							fmt.Println("requesting_agent_id not found or not a string")
 						}
-					} else {
-						fmt.Println("Payload is not map[string]interface{}")
+					}
+				}
+				if msgRecieved.Type == models.MasterMsgAgentRequestFile {
+					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
+					if ok {
+						if requestingAgentID, ok2 := payloadMap["requesting_agent_id"].(string); ok2 && requestingAgentID != "" {
+							if c.RelayTo == "" {
+								c.RelayTo = requestingAgentID
+								fmt.Printf("Set RelayTo=%s for source agent %s\n", requestingAgentID, c.Id)
+							}
+						}
 					}
 				}
 				h.SSEHub.Broadcast(msgRecieved) // Broadcasts to all frontend clients via SSE

@@ -39,16 +39,16 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	if !ok {
 		return errors.New("payload is not a valid map[string]interface{}")
 	}
-	path, ok := payloadRaw["fileSystemPath"].(string)
+	path, ok := payloadRaw["path"].(string)
 	if !ok {
-		return fmt.Errorf("fileSystemPath is missing or not a string")
+		return fmt.Errorf("path is missing or not a string")
 	}
-	requestAgentID, ok := payloadRaw["requestedAgentID"].(string)
+	requestInitiator, ok := payloadRaw["request_initiator"].(string)
 	if !ok {
-		return fmt.Errorf("requested Agent ID is missing or not a string")
+		return fmt.Errorf("request_initiator is missing or not a string")
 	}
 	path = filepath.Clean(path)
-	logger.Log.Info("Requested filePath and agentID", slog.String("filePath", path), slog.String("agentID", requestAgentID))
+	logger.Log.Info("Requested filePath and requestInitiator", slog.String("filePath", path), slog.String("requestInitiator", requestInitiator))
 	dataCh, errCh := h.BusinessService.StreamRequestedFileSystem(path)
 	ticker := time.NewTicker(2 * time.Second)
 	done := make(chan struct{})
@@ -60,13 +60,10 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 				return
 			case <-ticker.C:
 				statusMsg := models.Message{
-					Type: models.MasterMsgFileSystemRequest,
-					Payload: models.FileSystemTransfer{
-						AgentID:         h.Config.AgentID(),
-						Status:          "running",
-						AgentName:       h.Config.AgentName(),
-						RequestingAgent: requestAgentID,
-						Timestamp:       time.Now().Unix(),
+					Type: models.MasterMsgRelayManager,
+					Payload: map[string]interface{}{
+						"status":   "running",
+						"agent_id": h.Config.AgentID(),
 					},
 				}
 				h.Agent.Send(ws.Outbound{Msg: &statusMsg})
@@ -90,13 +87,10 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	// close(done)
 	// WARN: Cannot write to a websocket concurrently. Funneling is done
 	starterMsg := models.Message{
-		Type: models.MasterMsgFileSystemRequest,
-		Payload: models.FileSystemTransfer{
-			AgentID:         h.Config.AgentID(),
-			Status:          "initiated",
-			AgentName:       h.Config.AgentName(),
-			RequestingAgent: requestAgentID,
-			Timestamp:       time.Now().Unix(),
+		Type: models.MasterMsgRelayManager,
+		Payload: map[string]interface{}{
+			"status":   "initiated",
+			"agent_id": h.Config.AgentID(),
 		},
 	}
 	h.Agent.Send(ws.Outbound{Msg: &starterMsg})
@@ -114,13 +108,10 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	default:
 	}
 	doneMsg := models.Message{
-		Type: models.MasterMsgFileSystemRequest,
-		Payload: models.FileSystemTransfer{
-			AgentID:         h.Config.AgentID(),
-			Status:          "completed",
-			AgentName:       h.Config.AgentName(),
-			RequestingAgent: requestAgentID,
-			Timestamp:       time.Now().Unix(),
+		Type: models.MasterMsgRelayManager,
+		Payload: map[string]interface{}{
+			"status":   "completed",
+			"agent_id": h.Config.AgentID(),
 		},
 	}
 	h.Agent.Send(ws.Outbound{Msg: &doneMsg})
