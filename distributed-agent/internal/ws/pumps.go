@@ -2,6 +2,7 @@ package ws
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/The-Promised-Neverland/agent/internal/models"
@@ -69,6 +70,7 @@ func (a *Agent) readPump() {
 					logger.Log.Warn("Unmarshalling error: TEXT", "err", err)
 					continue
 				}
+				fmt.Printf("Received raw JSON: %s\n", string(msgBytes))
 				select {
 				case a.incomingCh <- Outbound{Msg: &msg}:
 				case <-a.ctx.Done():
@@ -145,10 +147,10 @@ func (a *Agent) dispatchPump() {
 				messageRec := *msg.Msg
 
 				// Debug: show raw message
-				logger.Log.Debug("Received message", "rawMsg", messageRec)
+				logger.Log.Info("Received message", "rawMsg", messageRec)
 
 				// Debug: show type explicitly
-				logger.Log.Debug("Message type", "Type", messageRec.Type, "IsEmpty?", messageRec.Type == "")
+				logger.Log.Info("Message type", "Type", messageRec.Type, "IsEmpty?", messageRec.Type == "")
 
 				if handler, ok := a.Handlers[messageRec.Type]; ok {
 					logger.Log.Debug("Found handler for message type", "type", messageRec.Type)

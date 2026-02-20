@@ -96,6 +96,7 @@ func (h *WSHub) ReadPump(c *Connection) {
 	}
 }
 
+// TODO: NEED TO MOPDIFY THIS TO SEND AND ACCEPT BYTES/TEXT
 func (h *WSHub) WritePump(c *Connection) {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
@@ -121,14 +122,22 @@ func (h *WSHub) WritePump(c *Connection) {
 			conn := c.Conn
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
 			c.connMutex.RUnlock()
-			data, err := json.Marshal(msg)
-			if err != nil {
-				fmt.Printf("Marshal error for %s: %v\n", c.Id, err)
-				continue
-			}
-			if err := conn.WriteMessage(websocket.TextMessage, data); err != nil {
-				fmt.Printf("Send failed to %s: %v\n", c.Id, err)
-				return
+			if msg.Msg != nil {
+				bytes, err := json.Marshal(*msg.Msg)
+				if err != nil {
+					fmt.Printf("Marshal error for %s: %v\n", c.Id, err)
+					continue
+				}
+				fmt.Printf("Sending to %s: %s\n", c.Id, string(bytes))
+				if err := conn.WriteMessage(websocket.TextMessage, bytes); err != nil {
+					fmt.Printf("TEXT: Send failed to %s: %v\n", c.Id, err)
+					return
+				}
+			} else {
+				if err := conn.WriteMessage(websocket.BinaryMessage, msg.Binary); err != nil {
+					fmt.Printf("BINARY: Send failed to %s: %v\n", c.Id, err)
+					return
+				}
 			}
 		case <-ticker.C:
 			c.connMutex.RLock()
