@@ -139,7 +139,7 @@ func (a *Agent) writePump() {
 }
 
 // dispatchPump dispatches incoming messages to registered handlers
-func (a *Agent) dispatchPump() {
+func (a *Agent) processorPump() {
 	defer func() {
 		logger.Log.Info("Dispatch pump stopped")
 	}()
@@ -300,6 +300,6 @@ func (a *Agent) RunPumps() {
 	a.setupPingPongHandlers()
 	go a.readPump()
 	go a.writePump()
-	go a.dispatchPump()
+	go a.processorPump()
 	logger.Log.Info("All pumps started")
 }
