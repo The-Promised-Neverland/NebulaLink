@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	stun "github.com/The-Promised-Neverland/agent/internal/STUN"
 	"github.com/The-Promised-Neverland/agent/internal/config"
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -16,12 +17,15 @@ import (
 )
 
 type Service struct {
-	cfg *config.Config
+	cfg        *config.Config
+	stunClient *stun.STUNClient
 }
 
 func NewService(cfg *config.Config) *Service {
+	stunClient := stun.NewSTUNserver(cfg)
 	return &Service{
-		cfg: cfg,
+		cfg:        cfg,
+		stunClient: stunClient,
 	}
 }
 
@@ -39,6 +43,14 @@ func (s *Service) GetHostMetrics() *models.HostMetrics {
 		OS:          hostInfo.OS,
 		Uptime:      hostInfo.Uptime,
 	}
+}
+
+func (s *Service) GetSTUNEndpoint() string {
+	return s.stunClient.GetCurrentEndpoint()
+}
+
+func (s *Service) GetSTUNClient() *stun.STUNClient {
+	return s.stunClient
 }
 
 func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan error) {
@@ -69,7 +81,7 @@ func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan 
 				// If targetPath is a file, use its parent directory as base
 				basePath = filepath.Dir(targetPath)
 			}
-			
+
 			if walkErr := filepath.Walk(targetPath, func(filePath string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err

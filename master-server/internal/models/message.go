@@ -32,4 +32,5 @@ type Metrics struct {
 	Hostname    string  `json:"hostname"`
 	OS          string  `json:"os"`
 	Uptime      int64   `json:"uptime"`
+	Endpoint    string  `json:"public_endpoint,omitempty"`
 }

@@ -208,6 +208,19 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 						}
 					}
 				}
+				if msgRecieved.Type == "agent_metrics" {
+					if payloadMap, ok := msgRecieved.Payload.(map[string]interface{}); ok {
+						if endpoint, hasEndpoint := payloadMap["public_endpoint"].(string); hasEndpoint && endpoint != "" {
+							h.Mutex.Lock()
+							c.PublicEndpoint = endpoint
+							h.Mutex.Unlock()
+							 fmt.Printf("Stored endpoint for agent %s: %s\n", c.Id, endpoint)
+							delete(payloadMap, "public_endpoint")
+							delete(payloadMap, "nat_type")
+							msgRecieved.Payload = payloadMap
+						}
+					}
+				}
 				h.SSEHub.Broadcast(msgRecieved) // Broadcasts to all frontend clients via SSE
 			}
 		case <-c.Ctx.Done():

@@ -11,6 +11,7 @@ import (
 
 type ServiceProvider interface {
 	GetHostMetrics() *models.HostMetrics
+	GetSTUNEndpoint() string
 }
 
 type AgentWorker struct {
@@ -29,6 +30,7 @@ func NewAgentWorker(agent *ws.Agent, provider *service.Service, Config *config.C
 
 func (w *AgentWorker) SendHeartbeat() error {
 	metrics := w.Service.GetHostMetrics()
+	endpoint := w.Service.GetSTUNEndpoint()
 	msg := models.Message{
 		Type: models.AgentMsgHeartbeat,
 		Payload: models.Metrics{
@@ -36,6 +38,7 @@ func (w *AgentWorker) SendHeartbeat() error {
 			AgentName:  w.Cfg.AgentName(),
 			SysMetrics: *metrics,
 			Timestamp:  time.Now().Unix(),
+			PublicEndpoint: endpoint,
 		},
 	}
 	return w.Agent.Send(ws.Outbound{Msg: &msg})

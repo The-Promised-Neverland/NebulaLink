@@ -15,20 +15,21 @@ type Outbound struct {
 }
 
 type Connection struct {
-	Name            string
-	Id              string
-	Conn            *websocket.Conn
-	OS              string
-	LastSeen        time.Time
-	SendCh          chan Outbound
-	IncomingCh      chan Outbound
-	StreamCh        chan []byte
-	RelayTo         string // ID of the file system requesting agent. Value set up by read pump
-	InitiatedSent   bool   // Track if we've already sent "initiated" message to avoid duplicates
-	Ctx             context.Context
-	Cancel          context.CancelFunc
-	wg              sync.WaitGroup
-	connMutex       sync.RWMutex
+	Name           string
+	Id             string
+	Conn           *websocket.Conn
+	OS             string
+	LastSeen       time.Time
+	SendCh         chan Outbound
+	IncomingCh     chan Outbound
+	StreamCh       chan []byte
+	RelayTo        string // ID of the file system requesting agent. Value set up by read pump
+	InitiatedSent  bool   // Track if we've already sent "initiated" message to avoid duplicates
+	Ctx            context.Context
+	Cancel         context.CancelFunc
+	wg             sync.WaitGroup
+	connMutex      sync.RWMutex
+	PublicEndpoint string
 }
 
 func NewConnection(name string, id string, os string, conn *websocket.Conn) *Connection {
@@ -44,5 +45,6 @@ func NewConnection(name string, id string, os string, conn *websocket.Conn) *Con
 		StreamCh:   make(chan []byte, 1024*64),
 		Ctx:        ctx,
 		Cancel:     cancel,
+		PublicEndpoint: "",
 	}
 }

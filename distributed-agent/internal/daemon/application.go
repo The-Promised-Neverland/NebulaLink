@@ -116,6 +116,7 @@ func (app *Application) superviseConnection(appCtx context.Context, daemonManage
 		}
 		disconnectCh := app.agent.AgentDisconnected()
 		app.agent.RunPumps()
+		go app.service.GetSTUNClient().StartPeriodicQuery(appCtx, 60 * time.Second)
 		go app.heartbeatLoop(appCtx, disconnectCh)
 		if app.watcher != nil {
 			go app.sendInitialDirectorySnapshot()

@@ -22,6 +22,7 @@ type Config struct {
 	heartbeatTimer     time.Duration
 	binaryPath         string
 	agentName          string
+	stunserverAddr     string
 }
 
 func defaultPaths() string {
@@ -52,6 +53,7 @@ func New(agentName string) *Config {
 	serviceDisplayName := os.Getenv("SERVICE_DISPLAY_NAME")
 	serviceDescription := os.Getenv("SERVICE_DESCRIPTION")
 	heartbeatSec, _ := strconv.Atoi(os.Getenv("HEARTBEAT_TIMER"))
+	stunserverAddr := os.Getenv("STUN_SERVER_ADDR")
 	cfg := &Config{
 		agentID:            idcommands.GenerateAgentID(),
 		masterServerConn:   masterURL,
@@ -60,9 +62,14 @@ func New(agentName string) *Config {
 		serviceDescription: serviceDescription,
 		heartbeatTimer:     time.Duration(heartbeatSec) * time.Second,
 		agentName:          agentName,
+		stunserverAddr:     stunserverAddr,
 	}
 	cfg.binaryPath = defaultPaths()
 	return cfg
+}
+
+func (c *Config) StunServerAddr() string {
+	return c.stunserverAddr
 }
 
 func (c *Config) AgentID() string {

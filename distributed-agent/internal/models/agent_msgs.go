@@ -23,10 +23,11 @@ type FileSystemTransfer struct {
 }
 
 type Metrics struct {
-	AgentID    string      `json:"agent_id"`
-	AgentName  string      `json:"agent_name,omitempty"`
-	SysMetrics HostMetrics `json:"host_metrics"`
-	Timestamp  int64       `json:"timestamp,omitempty"`
+	AgentID        string      `json:"agent_id"`
+	AgentName      string      `json:"agent_name,omitempty"`
+	SysMetrics     HostMetrics `json:"host_metrics"`
+	Timestamp      int64       `json:"timestamp,omitempty"`
+	PublicEndpoint string      `json:"public_endpoint,omitempty"`
 }
 
 type ConnBreak struct {
