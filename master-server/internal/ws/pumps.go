@@ -214,7 +214,6 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 							h.Mutex.Lock()
 							c.PublicEndpoint = endpoint
 							h.Mutex.Unlock()
-							 fmt.Printf("Stored endpoint for agent %s: %s\n", c.Id, endpoint)
 							delete(payloadMap, "public_endpoint")
 							delete(payloadMap, "nat_type")
 							msgRecieved.Payload = payloadMap

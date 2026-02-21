@@ -75,7 +75,6 @@ func (s *STUNClient) QueryEndpoint() (*EndpointInfo, error) {
 	changed := s.currentEndpoint != endpoint
 	if changed {
 		s.currentEndpoint = endpoint
-		logger.Log.Info("STUN endpoint discovered", "endpoint", endpoint)
 	}
 	s.lastQuery = time.Now()
 	s.mu.Unlock()
