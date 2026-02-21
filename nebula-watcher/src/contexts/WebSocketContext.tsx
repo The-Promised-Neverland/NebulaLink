@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
-import { wsService } from "@/services/websocket";
+import { sseService } from "@/services/sse";
 import type {
   ConnectionStatus,
   WebSocketMessage,
@@ -50,13 +50,13 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Connect on mount
-    wsService.connect();
+    sseService.connect();
 
     // Subscribe to status changes
-    const unsubStatus = wsService.onStatusChange(setStatus);
+    const unsubStatus = sseService.onStatusChange(setStatus);
 
     // Subscribe to messages
-    const unsubMessage = wsService.onMessage((message: WebSocketMessage) => {
+    const unsubMessage = sseService.onMessage((message: WebSocketMessage) => {
       console.log("WebSocket message received:", message.type, message.payload);
       
       switch (message.type) {
@@ -108,7 +108,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     return () => {
       unsubStatus();
       unsubMessage();
-      wsService.disconnect();
+      sseService.disconnect();
     };
   }, []);
 
