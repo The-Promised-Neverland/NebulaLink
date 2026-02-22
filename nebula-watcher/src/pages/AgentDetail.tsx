@@ -232,7 +232,11 @@ export default function AgentDetail() {
         </div>
 
         {/* File Browser Section */}
-        <FileTree snapshot={snapshot} />
+        <FileTree 
+          snapshot={snapshot} 
+          sourceAgentId={decodedId}
+          requestingAgentId={decodedId}
+        />
       </div>
     </Layout>
   );

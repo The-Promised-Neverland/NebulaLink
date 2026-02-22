@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, memo } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Folder,
   File,
@@ -7,23 +7,42 @@ import {
   Search,
   HardDrive,
   FileText,
+  Download,
+  Loader2,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import type { FileInfo, DirectorySnapshot, FileTreeNode } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { api } from "@/services/api";
+import { useWebSocket } from "@/contexts/WebSocketContext";
+import { useToast } from "@/hooks/use-toast";
+import type { FileInfo, DirectorySnapshot, FileTreeNode, TransferStatus } from "@/types";
 
 interface FileTreeProps {
   snapshot: DirectorySnapshot | undefined;
+  sourceAgentId: string; // Agent whose files we're viewing
+  requestingAgentId: string; // Agent that will receive the files
 }
 
-export function FileTree({ snapshot }: FileTreeProps) {
+export function FileTree({ snapshot, sourceAgentId, requestingAgentId }: FileTreeProps) {
   const [expandedPaths, setExpandedPaths] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [requestingPaths, setRequestingPaths] = useState<Set<string>>(new Set());
+  const { transfers } = useWebSocket();
+  const { toast } = useToast();
 
   // Build tree structure from flat file list
   const treeData = useMemo(() => {
-    if (!snapshot?.directory?.files) return [];
+    console.log("FileTree - Building tree from snapshot:", snapshot);
+    if (!snapshot?.directory?.files) {
+      console.log("FileTree - No snapshot or files array missing");
+      return [];
+    }
+    console.log("FileTree - Files count:", snapshot.directory.files.length);
 
     const root: FileTreeNode[] = [];
     const nodeMap = new Map<string, FileTreeNode>();
@@ -197,6 +216,51 @@ export function FileTree({ snapshot }: FileTreeProps) {
     });
   };
 
+  const handleRequestFile = useCallback(async (path: string) => {
+    if (!sourceAgentId || !requestingAgentId) {
+      toast({
+        title: "Error",
+        description: "Agent IDs are missing",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setRequestingPaths((prev) => new Set(prev).add(path));
+    try {
+      await api.requestFileSystem(requestingAgentId, sourceAgentId, path);
+      toast({
+        title: "File Request Sent",
+        description: `Requested ${path} from agent. Transfer will begin shortly.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Request Failed",
+        description: error instanceof Error ? error.message : "Failed to request file",
+        variant: "destructive",
+      });
+      setRequestingPaths((prev) => {
+        const next = new Set(prev);
+        next.delete(path);
+        return next;
+      });
+    }
+  }, [sourceAgentId, requestingAgentId, toast]);
+
+  const getTransferStatus = useCallback((path: string): TransferStatus | null => {
+    // Check if there's any transfer for this agent pair
+    // Since we don't have path in the transfer payload, we'll show status for any active transfer
+    const transferKey = `${sourceAgentId}:${requestingAgentId}`;
+    const transfer = transfers.get(transferKey);
+    if (transfer) {
+      // Show status if transfer is active (not completed/failed yet)
+      if (transfer.status === "initiated" || transfer.status === "running") {
+        return transfer.status;
+      }
+    }
+    return null;
+  }, [sourceAgentId, requestingAgentId, transfers]);
+
   if (!snapshot) {
     return (
       <div className="glass-card rounded-xl p-8 text-center">
@@ -258,6 +322,9 @@ export function FileTree({ snapshot }: FileTreeProps) {
                 onToggle={toggleExpand}
                 formatSize={formatSize}
                 formatDate={formatDate}
+                onRequestFile={handleRequestFile}
+                isRequesting={requestingPaths.has(node.path)}
+                transferStatus={getTransferStatus(node.path)}
               />
             ))}
           </div>
@@ -274,6 +341,9 @@ interface TreeNodeProps {
   onToggle: (path: string) => void;
   formatSize: (bytes: number) => string;
   formatDate: (iso: string) => string;
+  onRequestFile: (path: string) => void;
+  isRequesting: boolean;
+  transferStatus: TransferStatus | null;
 }
 
 function TreeNode({
@@ -283,6 +353,9 @@ function TreeNode({
   onToggle,
   formatSize,
   formatDate,
+  onRequestFile,
+  isRequesting,
+  transferStatus,
 }: TreeNodeProps) {
   const isExpanded = expandedPaths.has(node.path);
   const isDirectory = node.type === "directory";
@@ -295,6 +368,48 @@ function TreeNode({
       onToggle(node.path);
     }
   }, [isDirectory, hasChildren, node.path, onToggle]);
+
+  const handleRequestClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onRequestFile(node.path);
+  }, [node.path, onRequestFile]);
+
+  const getStatusBadge = () => {
+    if (isRequesting || transferStatus === "initiated") {
+      return (
+        <Badge variant="outline" className="gap-1">
+          <Loader2 className="h-3 w-3 animate-spin" />
+          <span>Requesting...</span>
+        </Badge>
+      );
+    }
+    if (transferStatus === "running") {
+      return (
+        <Badge variant="default" className="gap-1 bg-blue-500">
+          <Loader2 className="h-3 w-3 animate-spin" />
+          <span>Transferring...</span>
+        </Badge>
+      );
+    }
+    if (transferStatus === "completed") {
+      return (
+        <Badge variant="default" className="gap-1 bg-green-500">
+          <CheckCircle2 className="h-3 w-3" />
+          <span>Completed</span>
+        </Badge>
+      );
+    }
+    if (transferStatus === "failed") {
+      return (
+        <Badge variant="destructive" className="gap-1">
+          <XCircle className="h-3 w-3" />
+          <span>Failed</span>
+        </Badge>
+      );
+    }
+    return null;
+  };
 
   return (
     <div>
@@ -344,6 +459,21 @@ function TreeNode({
         <span className="text-xs text-muted-foreground w-32 text-right hidden md:block">
           {formatDate(node.modified)}
         </span>
+
+        {/* Request Button & Status */}
+        <div className="flex items-center gap-2 ml-2">
+          {getStatusBadge()}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0"
+            onClick={handleRequestClick}
+            disabled={isRequesting || transferStatus === "running"}
+            title={`Request ${node.type === "directory" ? "folder" : "file"}`}
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       {/* Children - render when expanded */}
@@ -358,6 +488,9 @@ function TreeNode({
               onToggle={onToggle}
               formatSize={formatSize}
               formatDate={formatDate}
+              onRequestFile={onRequestFile}
+              isRequesting={false}
+              transferStatus={null}
             />
           ))}
         </div>

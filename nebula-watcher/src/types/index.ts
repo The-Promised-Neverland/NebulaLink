@@ -84,6 +84,15 @@ export interface ActionResponse {
   message: string;
 }
 
+// Transfer Status
+export type TransferStatus = "initiated" | "running" | "completed" | "failed";
+
+export interface TransferStatusPayload {
+  status: TransferStatus;
+  agent_id: string;
+  source_agent_id?: string;
+}
+
 // WebSocket Message Types
 export type WebSocketMessageType = 
   | "ping" 
@@ -92,7 +101,8 @@ export type WebSocketMessageType =
   | "agent_directory_snapshot"
   | "agent_list"
   | "agent_disconnected"
-  | "health_check";
+  | "health_check"
+  | "master_filetransfer_manager";
 
 export interface WebSocketMessage {
   type: WebSocketMessageType;
@@ -129,4 +139,12 @@ export interface EnvConfig {
   wsPongTimeout: number;
   wsReconnectDelay: number;
   wsMaxReconnectAttempts: number;
+}
+
+// Transfer tracking
+export interface TransferInfo {
+  status: TransferStatus;
+  sourceAgentId: string;
+  path: string;
+  timestamp: number;
 }

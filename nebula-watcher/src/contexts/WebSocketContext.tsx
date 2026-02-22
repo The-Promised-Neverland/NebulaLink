@@ -7,6 +7,8 @@ import type {
   DirectorySnapshot,
   AgentWithStatus,
   AgentInfo,
+  TransferInfo,
+  TransferStatusPayload,
 } from "@/types";
 
 interface WebSocketContextValue {
@@ -14,6 +16,7 @@ interface WebSocketContextValue {
   agents: Map<string, AgentWithStatus>;
   metrics: Map<string, MetricsPayload>;
   snapshots: Map<string, DirectorySnapshot>;
+  transfers: Map<string, TransferInfo>; // Key: "sourceAgentId:path"
   updateAgentList: (agents: AgentInfo[]) => void;
 }
 
@@ -24,6 +27,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [agents, setAgents] = useState<Map<string, AgentWithStatus>>(new Map());
   const [metrics, setMetrics] = useState<Map<string, MetricsPayload>>(new Map());
   const [snapshots, setSnapshots] = useState<Map<string, DirectorySnapshot>>(new Map());
+  const [transfers, setTransfers] = useState<Map<string, TransferInfo>>(new Map());
 
   const updateAgentList = useCallback((agentList: AgentInfo[]) => {
     setAgents((prev) => {
@@ -98,8 +102,38 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         }
         case "agent_directory_snapshot": {
           const payload = message.payload as DirectorySnapshot;
-          console.log("Processing directory snapshot for:", payload.agent_id);
+          console.log("Processing directory snapshot for:", payload.agent_id, payload);
           setSnapshots((prev) => new Map(prev).set(payload.agent_id, payload));
+          break;
+        }
+        case "master_filetransfer_manager": {
+          const payload = message.payload as TransferStatusPayload;
+          console.log("Processing transfer status:", payload);
+          if (payload.status && payload.agent_id) {
+            // Use agent_id as the key since we don't have path in the payload
+            // The path will be tracked separately in FileTree component
+            const transferKey = `${payload.source_agent_id || payload.agent_id}:${payload.agent_id}`;
+            setTransfers((prev) => {
+              const updated = new Map(prev);
+              updated.set(transferKey, {
+                status: payload.status,
+                sourceAgentId: payload.source_agent_id || payload.agent_id,
+                path: "", // Path not available in payload, will be tracked in component
+                timestamp: Date.now(),
+              });
+              // Remove completed/failed transfers after 5 seconds
+              if (payload.status === "completed" || payload.status === "failed") {
+                setTimeout(() => {
+                  setTransfers((prev) => {
+                    const next = new Map(prev);
+                    next.delete(transferKey);
+                    return next;
+                  });
+                }, 5000);
+              }
+              return updated;
+            });
+          }
           break;
         }
       }
@@ -114,7 +148,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   return (
     <WebSocketContext.Provider
-      value={{ status, agents, metrics, snapshots, updateAgentList }}
+      value={{ status, agents, metrics, snapshots, transfers, updateAgentList }}
     >
       {children}
     </WebSocketContext.Provider>

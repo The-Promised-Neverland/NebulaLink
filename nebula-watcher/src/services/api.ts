@@ -73,6 +73,29 @@ class ApiService {
       { method: "POST" }
     );
   }
+
+  // Request File/Folder from Agent
+  async requestFileSystem(
+    requestingAgentId: string,
+    sourceAgentId: string,
+    path: string
+  ): Promise<ActionResponse> {
+    // Note: Using GET with body (unusual but matches backend implementation)
+    const url = `/api/v1/agents/${encodeURIComponent(requestingAgentId)}/filesystem/${encodeURIComponent(sourceAgentId)}`;
+    const response = await fetch(`${this.baseUrl}${url}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ path }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  }
 }
 
 export const api = new ApiService();
