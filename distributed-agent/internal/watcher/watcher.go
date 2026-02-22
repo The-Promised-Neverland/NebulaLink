@@ -181,6 +181,9 @@ func (w *Watcher) addSubdirectories(rootPath string) error {
 		if err != nil {
 			return nil // Continue on error
 		}
+		if path == "transfers" { // no need to listen on transfers
+			return nil
+		}
 		if info.IsDir() {
 			if err := w.fsWatcher.Add(path); err != nil {
 				logger.Log.Warn("Failed to watch subdirectory", "path", path, "err", err)

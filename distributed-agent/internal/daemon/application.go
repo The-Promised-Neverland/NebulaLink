@@ -220,6 +220,9 @@ func (app *Application) scanDirectory() (models.DirectorySnapshot, error) {
 			logger.Log.Warn("Error accessing path", "path", path, "err", err)
 			return nil
 		}
+		if path == "transfers" {
+			return nil
+		}
 		relPath, err := filepath.Rel(sharedPath, path)
 		if err != nil {
 			relPath = path
