@@ -166,11 +166,18 @@ func (a *Agent) processorPump() {
 
 // handleBinaryChunk writes binary chunks to the temp file
 func (a *Agent) handleBinaryChunk(chunk []byte) {
-	if a.tempFile == nil {
+	// Check if we have an active P2P connection receiving
+	if a.P2PClient != nil {
+		// Check if there's an active P2P connection
+		// If P2P is active, we should be receiving over TCP, not WebSocket
+		// So this is likely a relay transfer
+	}
+	
+	if a.TempFile == nil {
 		logger.Log.Warn("Received binary chunk but no temp file open, dropping chunk", "size", len(chunk))
 		return
 	}
-	written, err := a.tempFile.Write(chunk)
+	written, err := a.TempFile.Write(chunk)
 	if err != nil {
 		logger.Log.Error("Failed to write chunk to temp file", "err", err, "written", written)
 		return
@@ -180,8 +187,8 @@ func (a *Agent) handleBinaryChunk(chunk []byte) {
 
 // StartTransfer creates a temp file for receiving transfer data
 func (a *Agent) StartTransfer(sourceAgentID string) error {
-	if a.tempFile != nil {
-		a.tempFile.Close()
+	if a.TempFile != nil {
+		a.TempFile.Close()
 		os.Remove(a.tempFilePath)
 	}
 	tempDir := os.TempDir()
@@ -189,7 +196,7 @@ func (a *Agent) StartTransfer(sourceAgentID string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create temp file: %w", err)
 	}
-	a.tempFile = tempFile
+	a.TempFile = tempFile
 	a.tempFilePath = tempFile.Name()
 	a.sourceAgent = sourceAgentID
 	logger.Log.Info("Started transfer", "sourceAgent", sourceAgentID, "tempFile", a.tempFilePath)
@@ -198,15 +205,15 @@ func (a *Agent) StartTransfer(sourceAgentID string) error {
 
 // CompleteTransfer closes the temp file, extracts the tar, and cleans up
 func (a *Agent) CompleteTransfer() error {
-	if a.tempFile == nil {
+	if a.TempFile == nil {
 		return fmt.Errorf("no active transfer to complete")
 	}
-	if err := a.tempFile.Close(); err != nil {
+	if err := a.TempFile.Close(); err != nil {
 		logger.Log.Error("Failed to close temp file", "err", err)
 	}
 	tempPath := a.tempFilePath
 	sourceAgent := a.sourceAgent
-	a.tempFile = nil
+	a.TempFile = nil
 	a.tempFilePath = ""
 	a.sourceAgent = ""
 	if err := a.extractTarToSharedFolder(tempPath, sourceAgent); err != nil {

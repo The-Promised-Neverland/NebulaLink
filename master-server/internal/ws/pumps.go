@@ -32,26 +32,26 @@ func (h *WSHub) DataStreamPump(c *Connection) {
 
 func (h *WSHub) ReadPump(c *Connection) {
 	defer h.closeConnection(c)
-	c.connMutex.RLock()
+	c.ConnMutex.RLock()
 	if c.Conn == nil {
-		c.connMutex.RUnlock()
+		c.ConnMutex.RUnlock()
 		return
 	}
 	c.Conn.SetReadLimit(maxMessageSize)
 	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.connMutex.RUnlock()
+	c.ConnMutex.RUnlock()
 	for {
 		select {
 		case <-c.Ctx.Done():
 			return
 		default:
-			c.connMutex.RLock()
+			c.ConnMutex.RLock()
 			if c.Conn == nil {
-				c.connMutex.RUnlock()
+				c.ConnMutex.RUnlock()
 				return
 			}
 			conn := c.Conn
-			c.connMutex.RUnlock()
+			c.ConnMutex.RUnlock()
 			msgType, msgBytes, err := conn.ReadMessage()
 			if err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
@@ -70,11 +70,11 @@ func (h *WSHub) ReadPump(c *Connection) {
 					return
 				}
 			case websocket.TextMessage:
-				c.connMutex.RLock()
+				c.ConnMutex.RLock()
 				if c.Conn != nil {
 					c.Conn.SetReadDeadline(time.Now().Add(pongWait))
 				}
-				c.connMutex.RUnlock()
+				c.ConnMutex.RUnlock()
 				h.Mutex.Lock()
 				c.LastSeen = time.Now()
 				h.Mutex.Unlock()
@@ -107,21 +107,21 @@ func (h *WSHub) WritePump(c *Connection) {
 		select {
 		case msg, ok := <-c.SendCh:
 			if !ok {
-				c.connMutex.RLock()
+				c.ConnMutex.RLock()
 				if c.Conn != nil {
 					c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				}
-				c.connMutex.RUnlock()
+				c.ConnMutex.RUnlock()
 				return
 			}
-			c.connMutex.RLock()
+			c.ConnMutex.RLock()
 			if c.Conn == nil {
-				c.connMutex.RUnlock()
+				c.ConnMutex.RUnlock()
 				return
 			}
 			conn := c.Conn
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
-			c.connMutex.RUnlock()
+			c.ConnMutex.RUnlock()
 			if msg.Msg != nil {
 				bytes, err := json.Marshal(*msg.Msg)
 				if err != nil {
@@ -139,14 +139,14 @@ func (h *WSHub) WritePump(c *Connection) {
 				}
 			}
 		case <-ticker.C:
-			c.connMutex.RLock()
+			c.ConnMutex.RLock()
 			if c.Conn == nil {
-				c.connMutex.RUnlock()
+				c.ConnMutex.RUnlock()
 				return
 			}
 			conn := c.Conn
 			conn.SetWriteDeadline(time.Now().Add(writeWait))
-			c.connMutex.RUnlock()
+			c.ConnMutex.RUnlock()
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				fmt.Printf("Ping failed to %s: %v\n", c.Id, err)
 				return
@@ -170,16 +170,24 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 				return
 			default:
 				msgRecieved := *msg.Msg
+				if msgRecieved.Type == "agent_metrics" {
+					if payloadMap, ok := msgRecieved.Payload.(map[string]interface{}); ok {
+						if endpoint, hasEndpoint := payloadMap["public_endpoint"].(string); hasEndpoint && endpoint != "" {
+							h.Mutex.Lock()
+							c.PublicEndpoint = endpoint
+							h.Mutex.Unlock()
+							fmt.Printf("Stored endpoint for agent %s: %s\n", c.Id, endpoint)
+							delete(payloadMap, "public_endpoint")
+							delete(payloadMap, "nat_type")
+							msgRecieved.Payload = payloadMap
+						}
+					}
+				}
 				if msgRecieved.Type == models.MasterMsgRelayManager {
 					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
 					if ok {
 						if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {
 							if c.RelayTo != "" {
-								// Don't forward "initiated" if we already sent it from master
-								if status == "initiated" && c.InitiatedSent {
-									fmt.Printf("Skipping duplicate 'initiated' status from source agent %s (already sent by master)\n", c.Id)
-									continue
-								}
 								statusMsg := models.Message{
 									Type: models.MasterMsgRelayManager,
 									Payload: map[string]interface{}{
@@ -188,9 +196,6 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 									},
 								}
 								h.Send(c.RelayTo, Outbound{Msg: &statusMsg})
-								if status == "initiated" {
-									c.InitiatedSent = true
-								}
 								fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s\n", status, c.RelayTo, c.Id)
 							}
 						}
@@ -200,23 +205,47 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
 					if ok {
 						if requestingAgentID, ok2 := payloadMap["requesting_agent_id"].(string); ok2 && requestingAgentID != "" {
-							if c.RelayTo == "" {
-								c.RelayTo = requestingAgentID
-								c.InitiatedSent = false // Reset for new transfer
-								fmt.Printf("Set RelayTo=%s for source agent %s\n", requestingAgentID, c.Id)
+							if h.P2PManager != nil {
+								connectionID, err := h.P2PManager.StartP2PTransfer(requestingAgentID, c.Id)
+								if err != nil {
+									fmt.Printf("P2P initiation failed for %s -> %s: %v, falling back to relay\n", c.Id, requestingAgentID, err)
+									if c.RelayTo == "" {
+										c.RelayTo = requestingAgentID
+										fmt.Printf("Set RelayTo=%s for source agent %s (relay fallback)\n", requestingAgentID, c.Id)
+									}
+								} else {
+									fmt.Printf("Started P2P transfer %s: %s -> %s\n", connectionID, c.Id, requestingAgentID)
+								}
+							} else {
+								if c.RelayTo == "" {
+									c.RelayTo = requestingAgentID
+									fmt.Printf("Set RelayTo=%s for source agent %s (P2P not available)\n", requestingAgentID, c.Id)
+								}
 							}
 						}
 					}
 				}
-				if msgRecieved.Type == "agent_metrics" {
-					if payloadMap, ok := msgRecieved.Payload.(map[string]interface{}); ok {
-						if endpoint, hasEndpoint := payloadMap["public_endpoint"].(string); hasEndpoint && endpoint != "" {
-							h.Mutex.Lock()
-							c.PublicEndpoint = endpoint
-							h.Mutex.Unlock()
-							delete(payloadMap, "public_endpoint")
-							delete(payloadMap, "nat_type")
-							msgRecieved.Payload = payloadMap
+				if msgRecieved.Type == models.MasterMsgP2PSuccess {
+					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
+					if ok {
+						if connectionID, ok2 := payloadMap["connection_id"].(string); ok2 && connectionID != "" {
+							if h.P2PManager != nil {
+								h.P2PManager.HandleP2PSuccess(connectionID)
+							}
+						}
+					}
+				}
+				if msgRecieved.Type == models.MasterMsgP2PFailed {
+					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
+					if ok {
+						if connectionID, ok2 := payloadMap["connection_id"].(string); ok2 && connectionID != "" {
+							reason := "unknown"
+							if r, ok3 := payloadMap["reason"].(string); ok3 {
+								reason = r
+							}
+							if h.P2PManager != nil {
+								h.P2PManager.HandleP2PFailure(connectionID, reason)
+							}
 						}
 					}
 				}

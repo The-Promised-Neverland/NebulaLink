@@ -3,8 +3,13 @@ package models
 import "time"
 
 const (
-	MasterMsgRelayManager     = "master_filetransfer_manager"
-	MasterMsgAgentRequestFile = "master_coordinated_transfer_request"
+	MasterMsgRelayManager       = "master_filetransfer_manager"
+	MasterMsgAgentRequestFile   = "master_coordinated_transfer_request"
+	MasterMsgP2PInitiate        = "master_p2p_initiate"
+	MasterMsgP2PSuccess         = "agent_p2p_success"
+	MasterMsgP2PFailed          = "agent_p2p_failed"
+	MasterMsgSwitchToRelay      = "master_switch_to_relay"
+	MasterMsgRelayModeActivated = "master_relay_mode_activated"
 )
 
 type Message struct {

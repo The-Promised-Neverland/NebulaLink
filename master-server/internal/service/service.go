@@ -105,8 +105,8 @@ func (s *Service) GetAgentFileSystem(agentID string, getFromAgent string, path s
 	req := models.Message{
 		Type: models.MasterMsgAgentRequestFile,
 		Payload: map[string]interface{}{
-			"request_initiator": agentID,
-			"path":              path,
+			"requesting_agent_id": agentID,
+			"path":                path,
 		},
 	}
 	s.WSHub.Send(getFromAgent, ws.Outbound{Msg: &req})

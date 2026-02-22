@@ -58,4 +58,17 @@ func (h *Handlers) RegisterHandlers() {
 	h.Agent.RegisterHandler(models.MasterMsgRelayManager, func(msg *any) error {
 		return h.ReceiveTransfer(msg)
 	})
+
+	// P2P handlers
+	h.Agent.RegisterHandler(models.MasterMsgP2PInitiate, func(msg *any) error {
+		return h.HandleP2PInitiation(msg)
+	})
+
+	h.Agent.RegisterHandler(models.MasterMsgSwitchToRelay, func(msg *any) error {
+		return h.HandleSwitchToRelay(msg)
+	})
+
+	h.Agent.RegisterHandler(models.MasterMsgRelayModeActivated, func(msg *any) error {
+		return h.HandleRelayModeActivated(msg)
+	})
 }

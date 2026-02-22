@@ -24,11 +24,10 @@ type Connection struct {
 	IncomingCh     chan Outbound
 	StreamCh       chan []byte
 	RelayTo        string // ID of the file system requesting agent. Value set up by read pump
-	InitiatedSent  bool   // Track if we've already sent "initiated" message to avoid duplicates
 	Ctx            context.Context
 	Cancel         context.CancelFunc
 	wg             sync.WaitGroup
-	connMutex      sync.RWMutex
+	ConnMutex      sync.RWMutex
 	PublicEndpoint string
 }
 

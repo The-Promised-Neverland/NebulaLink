@@ -8,6 +8,7 @@ import (
 
 	"github.com/The-Promised-Neverland/agent/internal/config"
 	"github.com/The-Promised-Neverland/agent/internal/models"
+	"github.com/The-Promised-Neverland/agent/internal/p2p"
 	"github.com/The-Promised-Neverland/agent/pkg/logger"
 	"github.com/The-Promised-Neverland/agent/pkg/utils"
 	"github.com/gorilla/websocket"
@@ -19,22 +20,22 @@ type Outbound struct {
 }
 
 type Agent struct {
-	Conn       *websocket.Conn
-	Config     *config.Config
-	Handlers   map[string]func(msg *any) error
-	sendCh     chan Outbound
-	incomingCh chan Outbound
-	ctx        context.Context
-	cancel     context.CancelFunc
-	// Simple transfer handling - only one transfer at a time
-	tempFile     *os.File
+	Conn         *websocket.Conn
+	Config       *config.Config
+	Handlers     map[string]func(msg *any) error
+	sendCh       chan Outbound
+	incomingCh   chan Outbound
+	ctx          context.Context
+	cancel       context.CancelFunc
+	TempFile     *os.File
 	tempFilePath string
 	sourceAgent  string
+	P2PClient    *p2p.P2PClient
 }
 
 func NewAgent(cfg *config.Config, parentCtx context.Context) *Agent {
 	ctx, cancel := context.WithCancel(parentCtx)
-	return &Agent{
+	agent := &Agent{
 		Config:     cfg,
 		Handlers:   make(map[string]func(msg *any) error),
 		sendCh:     make(chan Outbound, 256),
@@ -42,6 +43,21 @@ func NewAgent(cfg *config.Config, parentCtx context.Context) *Agent {
 		ctx:        ctx,
 		cancel:     cancel,
 	}
+	agent.P2PClient = p2p.NewP2PClient(cfg.AgentID(), cfg, func(msg interface{}) error {
+		msgMap, ok := msg.(map[string]interface{})
+		if !ok {
+			return errors.New("invalid message format")
+		}
+		msgType, _ := msgMap["type"].(string)
+		delete(msgMap, "type")
+		message := models.Message{
+			Type:    msgType,
+			Payload: msgMap,
+		}
+		return agent.Send(Outbound{Msg: &message})
+	})
+
+	return agent
 }
 
 func (a *Agent) AgentDisconnected() <-chan struct{} {
@@ -87,17 +103,18 @@ func (a *Agent) Send(out Outbound) error {
 }
 
 func (a *Agent) Close() error {
-	// Clean up any open transfer file
-	if a.tempFile != nil {
-		a.tempFile.Close()
+	if a.TempFile != nil {
+		a.TempFile.Close()
 		if a.tempFilePath != "" {
 			os.Remove(a.tempFilePath)
 		}
-		a.tempFile = nil
+		a.TempFile = nil
 		a.tempFilePath = ""
 		a.sourceAgent = ""
 	}
-	
+	if a.P2PClient != nil {
+		a.P2PClient.CloseConnection("")
+	}
 	a.cancel()
 	if a.Conn != nil {
 		return a.Conn.Close()
