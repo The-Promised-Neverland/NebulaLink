@@ -179,10 +179,10 @@ func (w *Watcher) debounceEvent(eventType EventType, filePath string) {
 func (w *Watcher) addSubdirectories(rootPath string) error {
 	return filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return nil // Continue on error
+			return nil
 		}
 		if info.IsDir() && filepath.Base(path) == "transfers" {
-			return filepath.SkipDir // 🔴 stops recursion
+			return filepath.SkipDir
 		}
 		if info.IsDir() {
 			if err := w.fsWatcher.Add(path); err != nil {
