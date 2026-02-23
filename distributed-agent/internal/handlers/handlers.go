@@ -27,7 +27,6 @@ func (h *Handlers) AssignTask(msg *any) error {
 }
 
 func (h *Handlers) RestartAgent() error {
-	logger.Log.Info("Master Triggered Restart")
 	return h.DaemonManagerService.RestartDaemon()
 }
 
@@ -102,9 +101,9 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	if !ok {
 		return fmt.Errorf("path is missing or not a string")
 	}
-	requestInitiator, ok := payloadRaw["request_initiator"].(string)
+	requestInitiator, ok := payloadRaw["requesting_agent_id"].(string)
 	if !ok {
-		return fmt.Errorf("request_initiator is missing or not a string")
+		return fmt.Errorf("requesting_agent_id is missing or not a string")
 	}
 	path = filepath.Clean(path)
 	logger.Log.Info("Requested filePath and requestInitiator", slog.String("filePath", path), slog.String("requestInitiator", requestInitiator))
