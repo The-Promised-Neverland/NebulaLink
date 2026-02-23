@@ -55,20 +55,13 @@ func (h *Handlers) RegisterHandlers() {
 		return h.SendFileSystem(msg)
 	})
 
-	h.Agent.RegisterHandler(models.MasterMsgRelayManager, func(msg *any) error {
+	// Consolidated transfer status handler - handles all transfer-related statuses:
+	// - "initiated": start receiving transfer
+	// - "completed": complete transfer processing
+	// - "switching_to_relay": handle P2P to relay mode switch
+	// - "relay_activated": handle relay mode activation
+	// - "running": progress updates (logged but no action needed)
+	h.Agent.RegisterHandler(models.MasterMsgTransferStatus, func(msg *any) error {
 		return h.ReceiveTransfer(msg)
-	})
-
-	// P2P handlers
-	h.Agent.RegisterHandler(models.MasterMsgP2PInitiate, func(msg *any) error {
-		return h.HandleP2PInitiation(msg)
-	})
-
-	h.Agent.RegisterHandler(models.MasterMsgSwitchToRelay, func(msg *any) error {
-		return h.HandleSwitchToRelay(msg)
-	})
-
-	h.Agent.RegisterHandler(models.MasterMsgRelayModeActivated, func(msg *any) error {
-		return h.HandleRelayModeActivated(msg)
 	})
 }

@@ -16,15 +16,24 @@ type WSHub struct {
 	Mutex       sync.RWMutex
 	SSEHub      *sse.SSEHub
 	P2PManager  *P2PManager
+	Handlers map[string]func(msg *models.Message, connection *Connection) error
 }
 
 func NewWSHub(sseHub *sse.SSEHub) *WSHub {
 	hub := &WSHub{
 		Connections: make(map[string]*Connection),
 		SSEHub:      sseHub,
+		Handlers:    make(map[string]func(msg *models.Message, connection *Connection) error),
 	}
 	hub.P2PManager = NewP2PManager(hub)
 	return hub
+}
+
+// RegisterHandler registers a handler for a specific message type
+func (h *WSHub) RegisterHandler(msgType string, handler func(msg *models.Message, connection *Connection) error) {
+	h.Mutex.Lock()
+	defer h.Mutex.Unlock()
+	h.Handlers[msgType] = handler
 }
 
 // Registers or re-connects an agent
@@ -65,7 +74,7 @@ func (h *WSHub) Connect(name string, id string, os string, conn *websocket.Conn)
 	}()
 	go func() {
 		defer connection.wg.Done()
-		h.BroadcasterPump(connection)
+		h.ProcessorPump(connection)
 	}()
 	go func() {
 		defer connection.wg.Done()
@@ -82,7 +91,7 @@ func (h *WSHub) Send(agentID string, msg Outbound) {
 	}
 	if msg.Msg != nil && msg.Msg.Type == models.MasterMsgAgentRequestFile {
 		if payloadMap, ok := msg.Msg.Payload.(map[string]interface{}); ok {
-			if requestInitiator, ok2 := payloadMap["request_initiator"].(string); ok2 && requestInitiator != "" {
+			if requestInitiator, ok2 := payloadMap["requesting_agent_id"].(string); ok2 && requestInitiator != "" {
 				if c.RelayTo == "" {
 					c.RelayTo = requestInitiator // Set relay target to destination agent
 				}

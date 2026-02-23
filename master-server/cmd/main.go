@@ -17,6 +17,7 @@ func main() {
 	system.InitStartTime()
 	sseHub := sse.NewSSEHub()
 	wsHub := ws.NewWSHub(sseHub)
+	wsHub.RegisterDefaultHandlers()
 	svc := service.NewService(wsHub, sseHub)
 	handler := handlers.NewHandler(svc)
 	wsHandler := handlers.NewWebSocketHandler(wsHub)

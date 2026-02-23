@@ -5,8 +5,6 @@ const (
 	AgentMsgJobStatus         = "agent_job_status"
 	AgentConnBreakNotice      = "agent_conn_break"
 	AgentMsgDirectorySnapshot = "agent_directory_snapshot"
-	AgentMsgP2PSuccess        = "agent_p2p_success"
-	AgentMsgP2PFailed         = "agent_p2p_failed"
 )
 
 type JobStatus struct {

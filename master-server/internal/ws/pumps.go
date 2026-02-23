@@ -157,8 +157,7 @@ func (h *WSHub) WritePump(c *Connection) {
 	}
 }
 
-// Broadcast message from agent to all frontend clients
-func (h *WSHub) BroadcasterPump(c *Connection) {
+func (h *WSHub) ProcessorPump(c *Connection) {
 	for {
 		select {
 		case msg, ok := <-c.IncomingCh:
@@ -169,87 +168,23 @@ func (h *WSHub) BroadcasterPump(c *Connection) {
 			case <-c.Ctx.Done():
 				return
 			default:
-				msgRecieved := *msg.Msg
-				if msgRecieved.Type == "agent_metrics" {
-					if payloadMap, ok := msgRecieved.Payload.(map[string]interface{}); ok {
-						if endpoint, hasEndpoint := payloadMap["public_endpoint"].(string); hasEndpoint && endpoint != "" {
-							h.Mutex.Lock()
-							c.PublicEndpoint = endpoint
-							h.Mutex.Unlock()
-							fmt.Printf("Stored endpoint for agent %s: %s\n", c.Id, endpoint)
-							delete(payloadMap, "public_endpoint")
-							delete(payloadMap, "nat_type")
-							msgRecieved.Payload = payloadMap
-						}
-					}
+				if msg.Msg == nil {
+					continue
 				}
-				if msgRecieved.Type == models.MasterMsgRelayManager {
-					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
-					if ok {
-						if status, hasStatus := payloadMap["status"].(string); hasStatus && status != "" {
-							if c.RelayTo != "" {
-								statusMsg := models.Message{
-									Type: models.MasterMsgRelayManager,
-									Payload: map[string]interface{}{
-										"status":   status,
-										"agent_id": c.Id, // Source agent (the one sending files)
-									},
-								}
-								h.Send(c.RelayTo, Outbound{Msg: &statusMsg})
-								fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s\n", status, c.RelayTo, c.Id)
-							}
-						}
+				msgReceived := *msg.Msg
+				h.Mutex.RLock()
+				handler, hasHandler := h.Handlers[msgReceived.Type]
+				h.Mutex.RUnlock()
+				if hasHandler {
+					if err := handler(&msgReceived, c); err != nil {
+						fmt.Printf("Handler error for message type %s from %s: %v\n", msgReceived.Type, c.Id, err)
 					}
+				} else {
+					fmt.Printf("No handler registered for message type: %s from %s\n", msgReceived.Type, c.Id)
 				}
-				if msgRecieved.Type == models.MasterMsgAgentRequestFile {
-					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
-					if ok {
-						if requestingAgentID, ok2 := payloadMap["requesting_agent_id"].(string); ok2 && requestingAgentID != "" {
-							if h.P2PManager != nil {
-								connectionID, err := h.P2PManager.StartP2PTransfer(requestingAgentID, c.Id)
-								if err != nil {
-									fmt.Printf("P2P initiation failed for %s -> %s: %v, falling back to relay\n", c.Id, requestingAgentID, err)
-									if c.RelayTo == "" {
-										c.RelayTo = requestingAgentID
-										fmt.Printf("Set RelayTo=%s for source agent %s (relay fallback)\n", requestingAgentID, c.Id)
-									}
-								} else {
-									fmt.Printf("Started P2P transfer %s: %s -> %s\n", connectionID, c.Id, requestingAgentID)
-								}
-							} else {
-								if c.RelayTo == "" {
-									c.RelayTo = requestingAgentID
-									fmt.Printf("Set RelayTo=%s for source agent %s (P2P not available)\n", requestingAgentID, c.Id)
-								}
-							}
-						}
-					}
+				if h.SSEHub != nil {
+					h.SSEHub.Broadcast(msgReceived)
 				}
-				if msgRecieved.Type == models.MasterMsgP2PSuccess {
-					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
-					if ok {
-						if connectionID, ok2 := payloadMap["connection_id"].(string); ok2 && connectionID != "" {
-							if h.P2PManager != nil {
-								h.P2PManager.HandleP2PSuccess(connectionID)
-							}
-						}
-					}
-				}
-				if msgRecieved.Type == models.MasterMsgP2PFailed {
-					payloadMap, ok := msgRecieved.Payload.(map[string]interface{})
-					if ok {
-						if connectionID, ok2 := payloadMap["connection_id"].(string); ok2 && connectionID != "" {
-							reason := "unknown"
-							if r, ok3 := payloadMap["reason"].(string); ok3 {
-								reason = r
-							}
-							if h.P2PManager != nil {
-								h.P2PManager.HandleP2PFailure(connectionID, reason)
-							}
-						}
-					}
-				}
-				h.SSEHub.Broadcast(msgRecieved) // Broadcasts to all frontend clients via SSE
 			}
 		case <-c.Ctx.Done():
 			return

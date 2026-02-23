@@ -102,12 +102,15 @@ func (s *Service) UninstallAgent(agentID string) {
 }
 
 func (s *Service) GetAgentFileSystem(agentID string, getFromAgent string, path string) {
+	// Determine transfer mode - will be set by the handler, but initialize as relay
 	req := models.Message{
 		Type: models.MasterMsgAgentRequestFile,
 		Payload: map[string]interface{}{
 			"requesting_agent_id": agentID,
 			"path":                path,
+			"trxf_mode":           "relay", // Default, will be updated by handler if P2P is available
 		},
 	}
+	s.WSHub.Connections[agentID].RelayTo = getFromAgent // set the agent we want to relay to
 	s.WSHub.Send(getFromAgent, ws.Outbound{Msg: &req})
 }

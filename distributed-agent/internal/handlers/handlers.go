@@ -39,6 +39,22 @@ func (h *Handlers) ReceiveTransfer(msg *any) error {
 	if !ok {
 		return errors.New("payload is not a valid map[string]interface{}")
 	}
+	if fallback, ok := payloadRaw["fallback"].(bool); ok && fallback {
+		trxfConnectionID, _ := payloadRaw["trxf_connection_id"].(string)
+		transferMode, _ := payloadRaw["transfer_mode"].(string)
+		requestingAgentID, _ := payloadRaw["requesting_agent_id"].(string)
+		logger.Log.Info("P2P fallback to relay mode",
+			"trxf_connection_id", trxfConnectionID,
+			"transfer_mode", transferMode,
+			"requesting_agent", requestingAgentID)
+		if trxfConnectionID != "" && h.Agent.P2PClient != nil {
+			h.Agent.P2PClient.CloseConnection(trxfConnectionID)
+		}
+		if transferMode == "relay" && requestingAgentID != "" {
+			logger.Log.Info("Prepared to receive transfer over relay mode")
+		}
+		return nil
+	}
 	status, ok := payloadRaw["status"].(string)
 	if !ok {
 		return fmt.Errorf("status is missing or not a string")
@@ -105,26 +121,36 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	if !ok {
 		return fmt.Errorf("requesting_agent_id is missing or not a string")
 	}
+	trxfMode, _ := payloadRaw["transfer_mode"].(string)
 	path = filepath.Clean(path)
-	logger.Log.Info("Requested filePath and requestInitiator", slog.String("filePath", path), slog.String("requestInitiator", requestInitiator))
-	p2pConn := h.Agent.P2PClient.GetActiveConnectionByTarget(requestInitiator)
-	if p2pConn != nil && p2pConn.Status == "connected" {
-		logger.Log.Info("Sending file over P2P", "connection_id", p2pConn.ConnectionID, "target", requestInitiator)
-		dataCh, errCh := h.BusinessService.StreamRequestedFileSystem(path)
-		reader := &channelReader{dataCh: dataCh, errCh: errCh}
-		if err := h.Agent.P2PClient.SendFileOverP2P(p2pConn.ConnectionID, reader); err != nil {
-			logger.Log.Warn("P2P send failed, falling back to relay", "error", err)
-		} else {
-			doneMsg := models.Message{
-				Type: models.MasterMsgRelayManager,
-				Payload: map[string]interface{}{
-					"status":   "completed",
-					"agent_id": h.Config.AgentID(),
-				},
+	logger.Log.Info("Requested filePath and requestInitiator", 
+		slog.String("filePath", path), 
+		slog.String("requestInitiator", requestInitiator),
+		slog.String("trxf_mode", trxfMode))
+	if trxfMode == "p2p" {
+		p2pConn := h.Agent.P2PClient.GetActiveConnectionByTarget(requestInitiator)
+		if p2pConn != nil && p2pConn.Status == "connected" {
+			logger.Log.Info("Sending file over P2P", "connection_id", p2pConn.ConnectionID, "target", requestInitiator)
+			dataCh, errCh := h.BusinessService.StreamRequestedFileSystem(path)
+			reader := &channelReader{dataCh: dataCh, errCh: errCh}
+			if err := h.Agent.P2PClient.SendFileOverP2P(p2pConn.ConnectionID, reader); err != nil {
+				logger.Log.Warn("P2P send failed, falling back to relay", "error", err)
+			} else {
+				doneMsg := models.Message{
+					Type: models.MasterMsgTransferStatus,
+					Payload: map[string]interface{}{
+						"status":   "completed",
+						"agent_id": h.Config.AgentID(),
+					},
+				}
+				h.Agent.Send(ws.Outbound{Msg: &doneMsg})
+				return nil
 			}
-			h.Agent.Send(ws.Outbound{Msg: &doneMsg})
-			return nil
+		} else {
+			logger.Log.Info("P2P connection not available, using relay mode", "target", requestInitiator)
 		}
+	} else {
+		logger.Log.Info("Transfer mode is relay, skipping P2P", "target", requestInitiator)
 	}
 	dataCh, errCh := h.BusinessService.StreamRequestedFileSystem(path)
 	ticker := time.NewTicker(2 * time.Second)
@@ -137,7 +163,7 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 				return
 			case <-ticker.C:
 				statusMsg := models.Message{
-					Type: models.MasterMsgRelayManager,
+					Type: models.MasterMsgTransferStatus,
 					Payload: map[string]interface{}{
 						"status":   "running",
 						"agent_id": h.Config.AgentID(),
@@ -148,7 +174,7 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 		}
 	}()
 	starterMsg := models.Message{
-		Type: models.MasterMsgRelayManager,
+		Type: models.MasterMsgTransferStatus,
 		Payload: map[string]interface{}{
 			"status":   "initiated",
 			"agent_id": h.Config.AgentID(),
@@ -169,7 +195,7 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	default:
 	}
 	doneMsg := models.Message{
-		Type: models.MasterMsgRelayManager,
+		Type: models.MasterMsgTransferStatus,
 		Payload: map[string]interface{}{
 			"status":   "completed",
 			"agent_id": h.Config.AgentID(),
@@ -225,34 +251,6 @@ func (h *Handlers) HandleP2PInitiation(msg *any) error {
 			logger.Log.Error("P2P connection attempt failed", "error", err)
 		}
 	}()
-	return nil
-}
-
-// HandleSwitchToRelay handles switch to relay mode
-func (h *Handlers) HandleSwitchToRelay(msg *any) error {
-	payloadRaw, ok := (*msg).(map[string]interface{})
-	if !ok {
-		return errors.New("payload is not a valid map[string]interface{}")
-	}
-	connectionID, _ := payloadRaw["connection_id"].(string)
-	requestingAgentID, _ := payloadRaw["requesting_agent_id"].(string)
-	logger.Log.Info("Switching to relay mode",
-		"connection_id", connectionID,
-		"requesting_agent", requestingAgentID)
-	if connectionID != "" && h.Agent.P2PClient != nil {
-		h.Agent.P2PClient.CloseConnection(connectionID)
-	}
-	return nil
-}
-
-// HandleRelayModeActivated handles relay mode confirmation
-func (h *Handlers) HandleRelayModeActivated(msg *any) error {
-	payloadRaw, ok := (*msg).(map[string]interface{})
-	if !ok {
-		return errors.New("payload is not a valid map[string]interface{}")
-	}
-	connectionID, _ := payloadRaw["connection_id"].(string)
-	logger.Log.Info("Relay mode activated", "connection_id", connectionID)
 	return nil
 }
 

@@ -1,15 +1,12 @@
 package models
 
 const (
-	MasterMsgMetricsRequest     = "master_metrics_request"
-	MasterMsgTaskAssignment     = "master_task_assigned"
-	MasterMsgRestartAgent       = "master_restart_request"
-	MasterMsgAgentUninstall     = "master_uninstall_initiated"
-	MasterMsgRelayManager       = "master_filetransfer_manager"
-	MasterMsgAgentRequestFile   = "master_coordinated_transfer_request"
-	MasterMsgP2PInitiate        = "master_p2p_initiate"
-	MasterMsgSwitchToRelay      = "master_switch_to_relay"
-	MasterMsgRelayModeActivated = "master_relay_mode_activated"
+	MasterMsgMetricsRequest   = "master_metrics_request"
+	MasterMsgTaskAssignment   = "master_task_assigned"
+	MasterMsgRestartAgent     = "master_restart_request"
+	MasterMsgAgentUninstall   = "master_uninstall_initiated"
+	MasterMsgTransferStatus   = "master_transfer_status"
+	MasterMsgAgentRequestFile = "master_transfer_request"
 )
 
 // TODO: Based on furthur development, shape it up

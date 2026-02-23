@@ -17,12 +17,44 @@ type Connection struct {
 
 type SSEHub struct {
 	Connections map[string]*Connection
+	BroadCastCh chan models.Message
 	Mutex       sync.RWMutex
 }
 
 func NewSSEHub() *SSEHub {
-	return &SSEHub{
+	h := &SSEHub{
 		Connections: make(map[string]*Connection),
+		BroadCastCh: make(chan models.Message, 100),
+	}
+
+	go h.Broadcastpump()
+	return h
+}
+
+func (h *SSEHub) Broadcastpump() {
+	for msg := range h.BroadCastCh {
+		data, err := json.Marshal(msg)
+		if err != nil {
+			fmt.Printf("Failed to marshal SSE message: %v\n", err)
+			continue
+		}
+		h.Mutex.RLock()
+		for _, conn := range h.Connections {
+			select {
+			case conn.SendCh <- data:
+			default:
+				fmt.Printf("SSE send channel full for %s, dropping message\n", conn.ID)
+			}
+		}
+		h.Mutex.RUnlock()
+	}
+}
+
+func (h *SSEHub) Broadcast(msg models.Message) {
+	select {
+	case h.BroadCastCh <- msg:
+	default:
+		fmt.Printf("SSE broadcast channel full, dropping message\n")
 	}
 }
 
@@ -48,27 +80,3 @@ func (h *SSEHub) Disconnect(id string) {
 		fmt.Printf("SSE connection closed: %s\n", id)
 	}
 }
-
-func (h *SSEHub) Broadcast(msg models.Message) {
-	data, err := json.Marshal(msg)
-	if err != nil {
-		fmt.Printf("Failed to marshal SSE message: %v\n", err)
-		return
-	}
-	h.Mutex.RLock()
-	connections := make([]*Connection, 0, len(h.Connections))
-	for _, conn := range h.Connections {
-		connections = append(connections, conn)
-	}
-	h.Mutex.RUnlock()
-	for _, conn := range connections {
-		select {
-		case conn.SendCh <- data:
-		default:
-			fmt.Printf("SSE send channel full for %s, dropping message\n", conn.ID)
-		}
-	}
-}
-
-
-

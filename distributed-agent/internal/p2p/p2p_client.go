@@ -193,29 +193,33 @@ func (p *P2PClient) HasActiveConnection() bool {
 	return p.activeConn != nil && p.activeConn.Status == "connected"
 }
 
-// reportSuccess reports P2P connection success to master
+// reportSuccess reports P2P connection success to master using transfer status
 func (p *P2PClient) reportSuccess(connectionID string) {
 	if p.sendFunc == nil {
 		return
 	}
 	msg := map[string]interface{}{
-		"type":          "agent_p2p_success",
+		"type":          "master_transfer_status",
+		"status":        "p2p_success",
 		"connection_id": connectionID,
+		"agent_id":      p.agentID,
 	}
 	if err := p.sendFunc(msg); err != nil {
 		logger.Log.Error("Failed to report P2P success", "error", err)
 	}
 }
 
-// reportFailure reports P2P connection failure to master
+// reportFailure reports P2P connection failure to master using transfer status
 func (p *P2PClient) reportFailure(connectionID, reason string) {
 	if p.sendFunc == nil {
 		return
 	}
 	msg := map[string]interface{}{
-		"type":          "agent_p2p_failed",
+		"type":          "master_transfer_status",
+		"status":        "p2p_failed",
 		"connection_id": connectionID,
 		"reason":        reason,
+		"agent_id":      p.agentID,
 	}
 	if err := p.sendFunc(msg); err != nil {
 		logger.Log.Error("Failed to report P2P failure", "error", err)
