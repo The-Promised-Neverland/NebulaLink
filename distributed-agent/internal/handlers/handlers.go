@@ -261,29 +261,6 @@ type channelReader struct {
 	buffer []byte
 }
 
-// SendFileSystemOverP2P sends file over P2P if connection is available
-func (h *Handlers) SendFileSystemOverP2P(connectionID, path string) error {
-	if h.Agent.P2PClient == nil {
-		return fmt.Errorf("P2P client not initialized")
-	}
-	conn := h.Agent.P2PClient.GetActiveConnection(connectionID)
-	if conn == nil {
-		return fmt.Errorf("no active P2P connection for %s", connectionID)
-	}
-	conn.Mu.RLock()
-	status := conn.Status
-	conn.Mu.RUnlock()
-	if status != "connected" {
-		return fmt.Errorf("P2P connection not ready: %s", status)
-	}
-	dataCh, errCh := h.BusinessService.StreamRequestedFileSystem(path)
-	reader := &channelReader{dataCh: dataCh, errCh: errCh}
-	if err := h.Agent.P2PClient.SendFileOverP2P(connectionID, reader); err != nil {
-		return fmt.Errorf("failed to send file over P2P: %w", err)
-	}
-	return nil
-}
-
 func (r *channelReader) Read(p []byte) (n int, err error) {
 	if len(r.buffer) > 0 {
 		n = copy(p, r.buffer)

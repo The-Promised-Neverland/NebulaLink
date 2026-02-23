@@ -108,7 +108,7 @@ func (s *Service) GetAgentFileSystem(agentID string, getFromAgent string, path s
 		Payload: map[string]interface{}{
 			"requesting_agent_id": agentID,
 			"path":                path,
-			"trxf_mode":           "relay", // Default, will be updated by handler if P2P is available
+			"transfer_mode":       "relay", // Default, will be updated by handler if P2P is available
 		},
 	}
 	s.WSHub.Connections[agentID].RelayTo = getFromAgent // set the agent we want to relay to
