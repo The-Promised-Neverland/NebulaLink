@@ -101,11 +101,7 @@ func (h *Handlers) tryReceiveOverP2P(sourceAgentID string) {
 		logger.Log.Error("P2P receive failed", "error", err)
 		return
 	}
-	if err := h.Agent.CompleteTransfer(); err != nil {
-		logger.Log.Error("Failed to complete P2P transfer", "error", err)
-	} else {
-		logger.Log.Info("P2P file transfer completed successfully")
-	}
+	logger.Log.Info("P2P file received successfully, waiting for master to send completed status")
 }
 
 func (h *Handlers) SendFileSystem(msg *any) error {
