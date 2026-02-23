@@ -41,7 +41,7 @@ func (rtr *Router) SetupRouter() *gin.Engine {
 			agents.GET("/:id/metrics", rtr.Handler.TriggerAgentMetrics)                 // get agent metrics
 			agents.POST("/:id/restart", rtr.Handler.RestartAgent)                       // restart a agent
 			agents.POST("/:id/uninstall", rtr.Handler.UninstallAgent)                   // uninstall a agent
-			agents.GET("/:id/filesystem/:getFromAgent", rtr.Handler.GetAgentFileSystem) // get agent filesystem data
+			agents.POST("/:id/filesystem/:getFromAgent", rtr.Handler.GetAgentFileSystem) // get agent filesystem data
 		}
 	}
 	router.GET("/ws", rtr.WSHandler.UpgradeHandler)
