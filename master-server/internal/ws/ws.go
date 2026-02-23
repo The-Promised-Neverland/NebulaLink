@@ -8,15 +8,16 @@ import (
 
 	"github.com/The-Promised-Neverland/master-server/internal/models"
 	"github.com/The-Promised-Neverland/master-server/internal/sse"
+	"github.com/The-Promised-Neverland/master-server/internal/transfer"
 	"github.com/gorilla/websocket"
 )
 
 type WSHub struct {
-	Connections map[string]*Connection
-	Mutex       sync.RWMutex
-	SSEHub      *sse.SSEHub
-	P2PManager  *P2PManager
-	Handlers map[string]func(msg *models.Message, connection *Connection) error
+	Connections     map[string]*Connection
+	Mutex           sync.RWMutex
+	SSEHub          *sse.SSEHub
+	TransferManager *transfer.TransferManager
+	Handlers        map[string]func(msg *models.Message, connection *Connection) error
 }
 
 func NewWSHub(sseHub *sse.SSEHub) *WSHub {
@@ -25,11 +26,31 @@ func NewWSHub(sseHub *sse.SSEHub) *WSHub {
 		SSEHub:      sseHub,
 		Handlers:    make(map[string]func(msg *models.Message, connection *Connection) error),
 	}
-	hub.P2PManager = NewP2PManager(hub)
+	hub.TransferManager = transfer.NewTransferManager(hub, hub)
 	return hub
 }
 
-// RegisterHandler registers a handler for a specific message type
+// Send implements transfer.MessageSender interface
+func (h *WSHub) Send(agentID string, msg transfer.Outbound) {
+	h.Mutex.RLock()
+	c := h.Connections[agentID]
+	h.Mutex.RUnlock()
+	if c == nil || c.Conn == nil {
+		return
+	}
+	select {
+	case c.SendCh <- msg:
+	default:
+		fmt.Printf("Send channel full for %s\n", agentID)
+	}
+}
+
+func (h *WSHub) GetConnection(agentID string) transfer.ConnectionInfo {
+	h.Mutex.RLock()
+	defer h.Mutex.RUnlock()
+	return h.Connections[agentID]
+}
+
 func (h *WSHub) RegisterHandler(msgType string, handler func(msg *models.Message, connection *Connection) error) {
 	h.Mutex.Lock()
 	defer h.Mutex.Unlock()
@@ -80,29 +101,6 @@ func (h *WSHub) Connect(name string, id string, os string, conn *websocket.Conn)
 		defer connection.wg.Done()
 		h.DataStreamPump(connection) // Start stream processing
 	}()
-}
-
-func (h *WSHub) Send(agentID string, msg Outbound) {
-	h.Mutex.RLock()
-	c := h.Connections[agentID]
-	h.Mutex.RUnlock()
-	if c == nil || c.Conn == nil {
-		return
-	}
-	if msg.Msg != nil && msg.Msg.Type == models.MasterMsgAgentRequestFile {
-		if payloadMap, ok := msg.Msg.Payload.(map[string]interface{}); ok {
-			if requestInitiator, ok2 := payloadMap["requesting_agent_id"].(string); ok2 && requestInitiator != "" {
-				if c.RelayTo == "" {
-					c.RelayTo = requestInitiator // Set relay target to destination agent
-				}
-			}
-		}
-	}
-	select {
-	case c.SendCh <- msg:
-	default:
-		fmt.Printf("Send channel full for %s\n", agentID)
-	}
 }
 
 func (h *WSHub) closeConnection(c *Connection) {

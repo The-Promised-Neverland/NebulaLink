@@ -3,10 +3,8 @@ package handlers
 import (
 	"errors"
 	"fmt"
-	"io"
 	"log/slog"
 	"path/filepath"
-	"time"
 
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/The-Promised-Neverland/agent/internal/ws"
@@ -39,22 +37,6 @@ func (h *Handlers) ReceiveTransfer(msg *any) error {
 	if !ok {
 		return errors.New("payload is not a valid map[string]interface{}")
 	}
-	if fallback, ok := payloadRaw["fallback"].(bool); ok && fallback {
-		trxfConnectionID, _ := payloadRaw["trxf_connection_id"].(string)
-		transferMode, _ := payloadRaw["transfer_mode"].(string)
-		requestingAgentID, _ := payloadRaw["requesting_agent_id"].(string)
-		logger.Log.Info("P2P fallback to relay mode",
-			"trxf_connection_id", trxfConnectionID,
-			"transfer_mode", transferMode,
-			"requesting_agent", requestingAgentID)
-		if trxfConnectionID != "" && h.Agent.P2PClient != nil {
-			h.Agent.P2PClient.CloseConnection(trxfConnectionID)
-		}
-		if transferMode == "relay" && requestingAgentID != "" {
-			logger.Log.Info("Prepared to receive transfer over relay mode")
-		}
-		return nil
-	}
 	status, ok := payloadRaw["status"].(string)
 	if !ok {
 		return fmt.Errorf("status is missing or not a string")
@@ -63,45 +45,37 @@ func (h *Handlers) ReceiveTransfer(msg *any) error {
 	if !ok {
 		sourceAgentID, _ = payloadRaw["agent_id"].(string)
 	}
+	trxfMode, _ := payloadRaw["transfer_mode"].(string)
+	logger.Log.Info("Received transfer status", "status", status, "source_agent", sourceAgentID, "mode", trxfMode)
 	switch status {
 	case "initiated":
 		if sourceAgentID == "" {
 			return fmt.Errorf("source_agent_id is required to start transfer")
 		}
-		if err := h.Agent.StartTransfer(sourceAgentID); err != nil {
-			return fmt.Errorf("failed to start transfer: %w", err)
+		logger.Log.Info("Transfer initiated - preparing to receive data", "sourceAgent", sourceAgentID, "mode", trxfMode)
+		if err := h.TransferManager.Receive(sourceAgentID, trxfMode); err != nil {
+			return fmt.Errorf("failed to start receive: %w", err)
 		}
-		go h.tryReceiveOverP2P(sourceAgentID)
-		logger.Log.Info("Transfer initiated", "sourceAgent", sourceAgentID)
+		if trxfMode == "relay" {
+			h.Agent.BinaryChunkHandler = func(chunk []byte) error {
+				return h.TransferManager.WriteChunk(chunk)
+			}
+		}
+		logger.Log.Info("Transfer setup complete, waiting for data")
 	case "completed":
-		if err := h.Agent.CompleteTransfer(); err != nil {
+		logger.Log.Info("Received 'completed' status - finalizing transfer")
+		h.Agent.BinaryChunkHandler = nil
+		if err := h.TransferManager.Complete(); err != nil {
 			return fmt.Errorf("failed to complete transfer: %w", err)
 		}
-		logger.Log.Info("Transfer completed")
+		logger.Log.Info("Transfer completed and file extracted successfully")
+	case "running":
+		logger.Log.Info("Transfer in progress", "sourceAgent", sourceAgentID)
 	default:
-		logger.Log.Debug("Transfer status update", "status", status)
+		logger.Log.Info("Transfer status update", "status", status, "sourceAgent", sourceAgentID)
 	}
 
 	return nil
-}
-
-// tryReceiveOverP2P attempts to receive file over P2P connection
-func (h *Handlers) tryReceiveOverP2P(sourceAgentID string) {
-	time.Sleep(1 * time.Second)
-	if h.Agent.P2PClient == nil || h.Agent.TempFile == nil {
-		return
-	}
-	p2pConn := h.Agent.P2PClient.GetActiveConnectionByTarget(sourceAgentID)
-	if p2pConn == nil || p2pConn.Status != "connected" {
-		logger.Log.Debug("No active P2P connection for receiving", "sourceAgent", sourceAgentID)
-		return
-	}
-	logger.Log.Info("Receiving file over P2P", "connection_id", p2pConn.ConnectionID, "sourceAgent", sourceAgentID)
-	if err := h.Agent.P2PClient.ReceiveFileOverP2P(p2pConn.ConnectionID, h.Agent.TempFile); err != nil {
-		logger.Log.Error("P2P receive failed", "error", err)
-		return
-	}
-	logger.Log.Info("P2P file received successfully, waiting for master to send completed status")
 }
 
 func (h *Handlers) SendFileSystem(msg *any) error {
@@ -119,89 +93,27 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	}
 	trxfMode, _ := payloadRaw["transfer_mode"].(string)
 	path = filepath.Clean(path)
-	logger.Log.Info("Requested filePath and requestInitiator", 
-		slog.String("filePath", path), 
-		slog.String("requestInitiator", requestInitiator),
-		slog.String("trxf_mode", trxfMode))
-	if trxfMode == "p2p" {
-		p2pConn := h.Agent.P2PClient.GetActiveConnectionByTarget(requestInitiator)
-		if p2pConn != nil && p2pConn.Status == "connected" {
-			logger.Log.Info("Sending file over P2P", "connection_id", p2pConn.ConnectionID, "target", requestInitiator)
-			dataCh, errCh := h.BusinessService.StreamRequestedFileSystem(path)
-			reader := &channelReader{dataCh: dataCh, errCh: errCh}
-			if err := h.Agent.P2PClient.SendFileOverP2P(p2pConn.ConnectionID, reader); err != nil {
-				logger.Log.Warn("P2P send failed, falling back to relay", "error", err)
-			} else {
-				doneMsg := models.Message{
-					Type: models.MasterMsgTransferStatus,
-					Payload: map[string]interface{}{
-						"status":   "completed",
-						"agent_id": h.Config.AgentID(),
-					},
-				}
-				h.Agent.Send(ws.Outbound{Msg: &doneMsg})
-				return nil
-			}
-		} else {
-			logger.Log.Info("P2P connection not available, using relay mode", "target", requestInitiator)
+	logger.Log.Info("File transfer request received", slog.String("filePath", path), slog.String("requestInitiator", requestInitiator), slog.String("transfer_mode", trxfMode))
+	if err := h.TransferManager.Send(path, requestInitiator, trxfMode); err != nil {
+		logger.Log.Error("Transfer failed, reporting to master", "error", err, "mode", trxfMode)
+		connectionID, _ := payloadRaw["connection_id"].(string)
+		failureMsg := models.Message{
+			Type: models.MasterMsgTransferStatus,
+			Payload: map[string]interface{}{
+				"status":        "transfer_failed",
+				"connection_id": connectionID,
+				"reason":        err.Error(),
+				"agent_id":      h.Config.AgentID(),
+			},
 		}
-	} else {
-		logger.Log.Info("Transfer mode is relay, skipping P2P", "target", requestInitiator)
-	}
-	dataCh, errCh := h.BusinessService.StreamRequestedFileSystem(path)
-	ticker := time.NewTicker(2 * time.Second)
-	done := make(chan struct{})
-	defer ticker.Stop()
-	go func() {
-		for {
-			select {
-			case <-done:
-				return
-			case <-ticker.C:
-				statusMsg := models.Message{
-					Type: models.MasterMsgTransferStatus,
-					Payload: map[string]interface{}{
-						"status":   "running",
-						"agent_id": h.Config.AgentID(),
-					},
-				}
-				h.Agent.Send(ws.Outbound{Msg: &statusMsg})
-			}
+		if sendErr := h.Agent.Send(ws.Outbound{Msg: &failureMsg}); sendErr != nil {
+			logger.Log.Error("Failed to report transfer failure to master", "error", sendErr)
 		}
-	}()
-	starterMsg := models.Message{
-		Type: models.MasterMsgTransferStatus,
-		Payload: map[string]interface{}{
-			"status":   "initiated",
-			"agent_id": h.Config.AgentID(),
-		},
+		return fmt.Errorf("transfer failed: %w", err)
 	}
-	h.Agent.Send(ws.Outbound{Msg: &starterMsg})
-	for chunk := range dataCh {
-		logger.Log.Info("Sending Bytes...", slog.Int("bytes", len(chunk)))
-		h.Agent.Send(ws.Outbound{Binary: chunk})
-	}
-	close(done)
-	select {
-	case err := <-errCh:
-		if err != nil {
-			logger.Log.Info("Stream error", slog.String("error", err.Error()))
-			return err
-		}
-	default:
-	}
-	doneMsg := models.Message{
-		Type: models.MasterMsgTransferStatus,
-		Payload: map[string]interface{}{
-			"status":   "completed",
-			"agent_id": h.Config.AgentID(),
-		},
-	}
-	h.Agent.Send(ws.Outbound{Msg: &doneMsg})
 	return nil
 }
 
-// HandleP2PInitiation handles P2P initiation from master
 func (h *Handlers) HandleP2PInitiation(msg *any) error {
 	payloadRaw, ok := (*msg).(map[string]interface{})
 	if !ok {
@@ -227,17 +139,9 @@ func (h *Handlers) HandleP2PInitiation(msg *any) error {
 	if cs, ok := payloadRaw["countdown_seconds"].(float64); ok {
 		countdownSeconds = int(cs)
 	}
-	logger.Log.Info("P2P initiation received",
-		"connection_id", connectionID,
-		"target_agent", targetAgentID,
-		"target_endpoint", targetEndpoint,
-		"attempt", attemptNumber)
+	logger.Log.Info("P2P initiation received from master", "connection_id", connectionID, "target_agent", targetAgentID, "target_endpoint", targetEndpoint, "attempt", attemptNumber)
 	go func() {
-		if h.Agent.P2PClient == nil {
-			logger.Log.Error("P2P client not initialized")
-			return
-		}
-		if err := h.Agent.P2PClient.AttemptConnection(
+		if err := h.TransferManager.AttemptP2PConnection(
 			connectionID,
 			targetAgentID,
 			targetEndpoint,
@@ -250,35 +154,42 @@ func (h *Handlers) HandleP2PInitiation(msg *any) error {
 	return nil
 }
 
-// channelReader reads from a channel and implements io.Reader
-type channelReader struct {
-	dataCh <-chan []byte
-	errCh  <-chan error
-	buffer []byte
-}
+func (h *Handlers) HandleRelayFallback(msg *any) error {
+	payloadRaw, ok := (*msg).(map[string]interface{})
+	if !ok {
+		return errors.New("payload is not a valid map[string]interface{}")
+	}
+	fallback, _ := payloadRaw["fallback"].(bool)
+	if !fallback {
+		return fmt.Errorf("fallback flag not set")
+	}
+	connectionID, _ := payloadRaw["connection_id"].(string)
+	logger.Log.Info("Relay fallback received from master", "connection_id", connectionID)
+	if connectionID != "" {
+		h.TransferManager.CloseP2PConnection(connectionID)
+		logger.Log.Info("Closed P2P connection due to relay fallback", "connection_id", connectionID)
+	}
+	action, _ := payloadRaw["action"].(string)
+	if action == "" {
+		return fmt.Errorf("action command is missing from relay fallback payload")
+	}
+	switch action {
+	case "send":
+		requestingAgentID, _ := payloadRaw["requesting_agent_id"].(string)
+		logger.Log.Info("Master command: SEND file via relay mode", "action", action, "requesting_agent", requestingAgentID)
+		return h.SendFileSystem(msg)
+	case "receive":
+		sourceAgentID, _ := payloadRaw["source_agent_id"].(string)
+		logger.Log.Info("Master command: RECEIVE file via relay mode", "action", action, "source_agent", sourceAgentID)
+		if err := h.TransferManager.Receive(sourceAgentID, "relay"); err != nil {
+			return fmt.Errorf("failed to prepare receive: %w", err)
+		}
+		h.Agent.BinaryChunkHandler = func(chunk []byte) error {
+			return h.TransferManager.WriteChunk(chunk)
+		}
+	default:
+		return fmt.Errorf("unknown action command: %s", action)
+	}
 
-func (r *channelReader) Read(p []byte) (n int, err error) {
-	if len(r.buffer) > 0 {
-		n = copy(p, r.buffer)
-		r.buffer = r.buffer[n:]
-		return n, nil
-	}
-	select {
-	case chunk, ok := <-r.dataCh:
-		if !ok {
-			select {
-			case err := <-r.errCh:
-				return 0, err
-			default:
-				return 0, io.EOF
-			}
-		}
-		n = copy(p, chunk)
-		if n < len(chunk) {
-			r.buffer = chunk[n:]
-		}
-		return n, nil
-	case err := <-r.errCh:
-		return 0, err
-	}
+	return nil
 }

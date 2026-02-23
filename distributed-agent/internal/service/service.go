@@ -64,34 +64,26 @@ func (s *Service) StreamRequestedFileSystem(path string) (<-chan []byte, <-chan 
 	}
 	targetPath := filepath.Join(sharedPath, path)
 	targetPath = filepath.Clean(targetPath)
-
 	go func() {
 		defer close(dataCh)
 		defer close(errCh)
-
 		pr, pw := io.Pipe()
 		tw := tar.NewWriter(pw)
 		defer tw.Close()
-
 		go func() {
 			defer pw.Close()
-			// Get the base path for relative path calculation
 			basePath := targetPath
 			if info, err := os.Stat(targetPath); err == nil && !info.IsDir() {
-				// If targetPath is a file, use its parent directory as base
 				basePath = filepath.Dir(targetPath)
 			}
-
 			if walkErr := filepath.Walk(targetPath, func(filePath string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
 				}
-				// Calculate relative path from basePath
 				rel, err := filepath.Rel(basePath, filePath)
 				if err != nil {
 					return err
 				}
-				// Skip if relative path is "." or empty (root directory entry)
 				if rel == "." || rel == "" {
 					return nil
 				}

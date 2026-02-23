@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/The-Promised-Neverland/master-server/internal/models"
+	"github.com/The-Promised-Neverland/master-server/internal/transfer"
 )
 
 // RegisterDefaultHandlers registers all default message handlers for the WSHub
@@ -34,17 +35,25 @@ func (h *WSHub) RegisterDefaultHandlers() {
 		switch status {
 		case "p2p_success":
 			connectionID, ok2 := payloadMap["connection_id"].(string)
-			if ok2 && connectionID != "" && h.P2PManager != nil {
-				h.P2PManager.HandleP2PSuccess(connectionID)
+			if ok2 && connectionID != "" && h.TransferManager != nil && h.TransferManager.GetP2PCoordinator() != nil {
+				h.TransferManager.GetP2PCoordinator().HandleP2PSuccess(connectionID, c.Id)
 			}
 		case "p2p_failed":
 			connectionID, ok2 := payloadMap["connection_id"].(string)
-			if ok2 && connectionID != "" && h.P2PManager != nil {
+			if ok2 && connectionID != "" && h.TransferManager != nil && h.TransferManager.GetP2PCoordinator() != nil {
 				reason := "unknown"
 				if r, ok3 := payloadMap["reason"].(string); ok3 {
 					reason = r
 				}
-				h.P2PManager.HandleP2PFailure(connectionID, reason)
+				h.TransferManager.GetP2PCoordinator().HandleP2PFailure(connectionID, reason)
+				// Check if P2P failed after retries and trigger relay fallback
+				h.TransferManager.HandleP2PFailureFallback(connectionID)
+			}
+		case "completed", "transfer_failed":
+			connectionID, ok2 := payloadMap["connection_id"].(string)
+			if ok2 && connectionID != "" && h.TransferManager != nil && h.TransferManager.GetP2PCoordinator() != nil {
+				fmt.Printf("Transfer %s completed, cleaning up P2P state for %s\n", status, connectionID)
+				h.TransferManager.GetP2PCoordinator().RemoveTransfer(connectionID)
 			}
 		}
 		if c.RelayTo != "" {
@@ -61,26 +70,17 @@ func (h *WSHub) RegisterDefaultHandlers() {
 			if reason, ok := payloadMap["reason"].(string); ok && reason != "" {
 				statusMsg.Payload.(map[string]interface{})["reason"] = reason
 			}
-			h.Send(c.RelayTo, Outbound{Msg: &statusMsg})
+			h.Send(c.RelayTo, transfer.Outbound{Msg: &statusMsg})
 			fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s\n", status, c.RelayTo, c.Id)
 		}
 		return nil
 	})
 
 	h.RegisterHandler(models.MasterMsgAgentRequestFile, func(msg *models.Message, c *Connection) error {
-		payloadMap, ok := msg.Payload.(map[string]interface{})
-		if !ok {
-			return nil
+		if h.TransferManager == nil {
+			return fmt.Errorf("transfer manager not initialized")
 		}
-		requestingAgentID, ok2 := payloadMap["requesting_agent_id"].(string)
-		if !ok2 || requestingAgentID == "" {
-			return nil
-		}
-		_, err := h.P2PManager.StartTransfer(requestingAgentID, c.Id)
-		if err != nil {
-			return err
-		}
-		return nil
+		return h.TransferManager.HandleAgentRequestFile(msg, c.Id)
 	})
 
 }

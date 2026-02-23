@@ -4,6 +4,7 @@ import (
 	"github.com/The-Promised-Neverland/agent/internal/config"
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/The-Promised-Neverland/agent/internal/service"
+	"github.com/The-Promised-Neverland/agent/internal/transfer"
 	"github.com/The-Promised-Neverland/agent/internal/ws"
 )
 
@@ -18,19 +19,17 @@ type Handlers struct {
 	BusinessService      *service.Service
 	Config               *config.Config
 	DaemonManagerService DaemonManagerService
+	TransferManager      *transfer.TransferManager
 }
 
-func NewHandler(
-	agent *ws.Agent,
-	businessService *service.Service,
-	cfg *config.Config,
-	daemonManagerService DaemonManagerService,
-) *Handlers {
+func NewHandler(agent *ws.Agent, businessService *service.Service, cfg *config.Config, daemonManagerService DaemonManagerService) *Handlers {
+	transferManager := transfer.NewTransferManager(cfg, businessService, agent)
 	return &Handlers{
 		Agent:                agent,
 		BusinessService:      businessService,
 		Config:               cfg,
 		DaemonManagerService: daemonManagerService,
+		TransferManager:      transferManager,
 	}
 }
 
@@ -54,14 +53,16 @@ func (h *Handlers) RegisterHandlers() {
 	h.Agent.RegisterHandler(models.MasterMsgAgentRequestFile, func(msg *any) error {
 		return h.SendFileSystem(msg)
 	})
-
-	// Consolidated transfer status handler - handles all transfer-related statuses:
-	// - "initiated": start receiving transfer
-	// - "completed": complete transfer processing
-	// - "switching_to_relay": handle P2P to relay mode switch
-	// - "relay_activated": handle relay mode activation
-	// - "running": progress updates (logged but no action needed)
+	
 	h.Agent.RegisterHandler(models.MasterMsgTransferStatus, func(msg *any) error {
 		return h.ReceiveTransfer(msg)
+	})
+	
+	h.Agent.RegisterHandler(models.MasterMsgP2PInitiate, func(msg *any) error {
+		return h.HandleP2PInitiation(msg)
+	})
+	
+	h.Agent.RegisterHandler(models.MasterMsgRelayFallback, func(msg *any) error {
+		return h.HandleRelayFallback(msg)
 	})
 }

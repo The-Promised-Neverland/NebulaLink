@@ -7,6 +7,8 @@ const (
 	MasterMsgAgentUninstall   = "master_uninstall_initiated"
 	MasterMsgTransferStatus   = "master_transfer_status"
 	MasterMsgAgentRequestFile = "master_transfer_request"
+	MasterMsgP2PInitiate      = "master_p2p_initiate"
+	MasterMsgRelayFallback    = "master_relay_fallback"
 )
 
 // TODO: Based on furthur development, shape it up

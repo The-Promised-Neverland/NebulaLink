@@ -3,8 +3,11 @@ package models
 import "time"
 
 const (
-	MasterMsgTransferStatus    = "master_transfer_status"
-	MasterMsgAgentRequestFile  = "master_transfer_request"
+	MasterMsgTransferStatus     = "master_transfer_status"
+	MasterMsgAgentRequestFile   = "master_transfer_request"
+	MasterMsgP2PInitiate        = "master_p2p_initiate"
+	MasterMsgP2PStartConnection = "master_p2p_start"
+	MasterMsgRelayFallback      = "master_relay_fallback"
 )
 
 type Message struct {

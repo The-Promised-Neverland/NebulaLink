@@ -5,6 +5,7 @@ import (
 
 	"github.com/The-Promised-Neverland/master-server/internal/models"
 	"github.com/The-Promised-Neverland/master-server/internal/sse"
+	"github.com/The-Promised-Neverland/master-server/internal/transfer"
 	"github.com/The-Promised-Neverland/master-server/internal/ws"
 )
 
@@ -44,7 +45,7 @@ func (s *Service) TriggerAgentforMetrics(agentID string) {
 		Type:    "master_metrics_request",
 		Payload: nil,
 	}
-	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
+	s.WSHub.Send(agentID, transfer.Outbound{Msg: &req})
 }
 
 func (s *Service) IsAgentOnline(agentID string) (bool, error) {
@@ -90,7 +91,7 @@ func (s *Service) RestartAgent(agentID string) {
 		Type:    "master_restart_request",
 		Payload: nil,
 	}
-	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
+	s.WSHub.Send(agentID, transfer.Outbound{Msg: &req})
 }
 
 func (s *Service) UninstallAgent(agentID string) {
@@ -98,19 +99,16 @@ func (s *Service) UninstallAgent(agentID string) {
 		Type:    "master_uninstall_initiated",
 		Payload: nil,
 	}
-	s.WSHub.Send(agentID, ws.Outbound{Msg: &req})
+	s.WSHub.Send(agentID, transfer.Outbound{Msg: &req})
 }
 
 func (s *Service) GetAgentFileSystem(agentID string, getFromAgent string, path string) {
-	// Determine transfer mode - will be set by the handler, but initialize as relay
 	req := models.Message{
 		Type: models.MasterMsgAgentRequestFile,
 		Payload: map[string]interface{}{
 			"requesting_agent_id": agentID,
 			"path":                path,
-			"transfer_mode":       "relay", // Default, will be updated by handler if P2P is available
 		},
 	}
-	s.WSHub.Connections[agentID].RelayTo = getFromAgent // set the agent we want to relay to
-	s.WSHub.Send(getFromAgent, ws.Outbound{Msg: &req})
+	s.WSHub.Send(agentID, transfer.Outbound{Msg: &req})
 }

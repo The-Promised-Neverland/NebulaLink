@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/The-Promised-Neverland/master-server/internal/models"
+	"github.com/The-Promised-Neverland/master-server/internal/transfer"
 	"github.com/gorilla/websocket"
 )
 
@@ -16,14 +17,25 @@ const (
 	writeWait      = 10 * time.Second
 )
 
-// TODO: Pass on the chunks to the requesting agent
 func (h *WSHub) DataStreamPump(c *Connection) {
 	for {
 		select {
 		case chunk := <-c.StreamCh:
+			if c.RelayTo == "" {
+				continue
+			}
 			fmt.Printf("Transfer in progress... %s -> %s: %d bytes\n", c.Id, c.RelayTo, len(chunk))
-			sendToAgent := h.Connections[c.RelayTo].Id
-			h.Send(sendToAgent, Outbound{Binary: chunk})
+			h.Mutex.RLock()
+			destConn := h.Connections[c.RelayTo]
+			h.Mutex.RUnlock()
+			if destConn == nil {
+				continue
+			}
+			select {
+			case destConn.SendCh <- transfer.Outbound{Binary: chunk}:
+			default:
+				fmt.Printf("Send channel full for %s\n", c.RelayTo)
+			}
 		case <-c.Ctx.Done():
 			return
 		}
@@ -84,7 +96,7 @@ func (h *WSHub) ReadPump(c *Connection) {
 					continue
 				}
 				select {
-				case c.IncomingCh <- Outbound{Msg: &msg}:
+				case c.IncomingCh <- transfer.Outbound{Msg: &msg}:
 				case <-c.Ctx.Done():
 					return
 				default:
