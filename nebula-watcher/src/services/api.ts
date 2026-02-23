@@ -80,10 +80,9 @@ class ApiService {
     sourceAgentId: string,
     path: string
   ): Promise<ActionResponse> {
-    // Note: Using GET with body (unusual but matches backend implementation)
     const url = `/api/v1/agents/${encodeURIComponent(requestingAgentId)}/filesystem/${encodeURIComponent(sourceAgentId)}`;
     const response = await fetch(`${this.baseUrl}${url}`, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
