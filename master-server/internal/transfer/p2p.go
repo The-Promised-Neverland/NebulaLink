@@ -82,18 +82,20 @@ func (p *P2PCoordinator) GetMode() TransferMode {
 }
 
 func (p *P2PCoordinator) AttemptP2PConnection(requestingAgentID, sourceAgentID, path string) (string, bool) {
+	fmt.Printf("[P2P] Attempting P2P connection: requesting_agent=%s <-> source_agent=%s, path=%s\n", requestingAgentID, sourceAgentID, path)
 	_, err1 := p.GetAgentEndpoint(requestingAgentID)
 	_, err2 := p.GetAgentEndpoint(sourceAgentID)
 	if err1 != nil || err2 != nil {
-		fmt.Printf("P2P connection attempt failed: endpoints not available: requesting=%v, source=%v\n", err1, err2)
+		fmt.Printf("[P2P] FAILED: Endpoints not available, requesting_agent=%s (err=%v), source_agent=%s (err=%v)\n", requestingAgentID, err1, sourceAgentID, err2)
 		return "", false
 	}
+	fmt.Printf("[P2P] Endpoints available, starting P2P connection test...\n")
 	connectionID, err := p.StartP2PConnectionTest(requestingAgentID, sourceAgentID, path)
 	if err != nil {
-		fmt.Printf("P2P connection attempt failed to start: %v\n", err)
+		fmt.Printf("[P2P] FAILED: P2P connection test failed to start: %v\n", err)
 		return "", false
 	}
-	fmt.Printf("P2P connection attempt started: connection_id=%s, %s -> %s\n", connectionID, sourceAgentID, requestingAgentID)
+	fmt.Printf("[P2P] P2P connection test started, connection_id=%s, source_agent=%s -> requesting_agent=%s\n", connectionID, sourceAgentID, requestingAgentID)
 	return connectionID, true
 }
 
@@ -160,7 +162,7 @@ func (p *P2PCoordinator) testConnectionWithRetries(ctx context.Context, connecti
 				return
 			}
 		case err := <-state.failureCh:
-			fmt.Printf("P2P connection %s failed on attempt %d: %v\n", connectionID, attemptNum, err)
+			fmt.Printf("[P2P] P2P connection failed on attempt %d, connection_id=%s, error=%v\n", attemptNum, connectionID, err)
 			retryCount++
 			attemptNum++
 			state.mu.Lock()
@@ -176,7 +178,7 @@ func (p *P2PCoordinator) testConnectionWithRetries(ctx context.Context, connecti
 				return
 			}
 		case <-time.After(ConnectionTimeout):
-			fmt.Printf("P2P connection %s timed out on attempt %d\n", connectionID, attemptNum)
+			fmt.Printf("[P2P] P2P connection timed out on attempt %d, connection_id=%s (timeout=%v)\n", attemptNum, connectionID, ConnectionTimeout)
 			retryCount++
 			attemptNum++
 			state.mu.Lock()
@@ -195,7 +197,7 @@ func (p *P2PCoordinator) testConnectionWithRetries(ctx context.Context, connecti
 			return
 		}
 	}
-	fmt.Printf("P2P transfer %s failed after %d attempts\n", connectionID, MaxRetries)
+	fmt.Printf("[P2P] FAILED: P2P connection failed after %d attempts, connection_id=%s\n", MaxRetries, connectionID)
 	p.mu.RLock()
 	state = p.activeTransfers[connectionID]
 	p.mu.RUnlock()
@@ -228,7 +230,8 @@ func (p *P2PCoordinator) testConnectionWithRetries(ctx context.Context, connecti
 }
 
 func (p *P2PCoordinator) sendP2PInitiation(connectionID, requestingAgent, sourceAgent, requestingEndpoint, sourceEndpoint string, attemptNumber int) error {
-	fmt.Printf("Sending P2P initiation to both agents (attempt %d)\n", attemptNumber)
+	fmt.Printf("[P2P] Attempt %d: Sending P2P initiation to requesting_agent=%s (target=%s:%s) and source_agent=%s (target=%s:%s), connection_id=%s\n",
+		attemptNumber, requestingAgent, sourceAgent, sourceEndpoint, sourceAgent, requestingAgent, requestingEndpoint, connectionID)
 	requestingMsg := models.Message{
 		Type: models.MasterMsgP2PInitiate,
 		Payload: map[string]interface{}{
@@ -241,6 +244,7 @@ func (p *P2PCoordinator) sendP2PInitiation(connectionID, requestingAgent, source
 		},
 	}
 	p.messageSender.Send(requestingAgent, Outbound{Msg: &requestingMsg})
+	fmt.Printf("[P2P] P2P initiation sent to requesting_agent=%s, connection_id=%s, attempt=%d\n", requestingAgent, connectionID, attemptNumber)
 	sourceMsg := models.Message{
 		Type: models.MasterMsgP2PInitiate,
 		Payload: map[string]interface{}{
@@ -253,7 +257,8 @@ func (p *P2PCoordinator) sendP2PInitiation(connectionID, requestingAgent, source
 		},
 	}
 	p.messageSender.Send(sourceAgent, Outbound{Msg: &sourceMsg})
-	fmt.Printf("P2P initiation messages sent to both agents\n")
+	fmt.Printf("[P2P] P2P initiation sent to source_agent=%s, connection_id=%s, attempt=%d\n", sourceAgent, connectionID, attemptNumber)
+	fmt.Printf("[P2P] Both agents notified, waiting for P2P connection confirmation...\n")
 	return nil
 }
 
@@ -270,13 +275,13 @@ func (p *P2PCoordinator) HandleP2PSuccess(connectionID string, agentID string) {
 	switch agentID {
 	case state.RequestingAgent:
 		state.requestingConfirmed = true
-		fmt.Printf("Requesting agent %s confirmed P2P connection for %s\n", agentID, connectionID)
+		fmt.Printf("[P2P] Requesting agent=%s confirmed P2P connection, connection_id=%s\n", agentID, connectionID)
 	case state.SourceAgent:
 		state.sourceConfirmed = true
-		fmt.Printf("Source agent %s confirmed P2P connection for %s\n", agentID, connectionID)
+		fmt.Printf("[P2P] Source agent=%s confirmed P2P connection, connection_id=%s\n", agentID, connectionID)
 	default:
 		state.mu.Unlock()
-		fmt.Printf("Unknown agent %s confirmed P2P for connection %s\n", agentID, connectionID)
+		fmt.Printf("[P2P] Unknown agent=%s confirmed P2P for connection_id=%s\n", agentID, connectionID)
 		return
 	}
 	bothConfirmed := state.requestingConfirmed && state.sourceConfirmed
@@ -290,7 +295,8 @@ func (p *P2PCoordinator) HandleP2PSuccess(connectionID string, agentID string) {
 		case state.successCh <- true:
 		default:
 		}
-		fmt.Printf("Both agents confirmed P2P connection for %s - notifying TransferManager\n", connectionID)
+		fmt.Printf("[P2P] SUCCESS: Both agents confirmed P2P connection, connection_id=%s, source_agent=%s -> requesting_agent=%s\n",
+			connectionID, sourceAgent, requestingAgent)
 		if p.connectionConfirmed != nil {
 			select {
 			case p.connectionConfirmed <- P2PConnectionConfirmed{
@@ -305,7 +311,7 @@ func (p *P2PCoordinator) HandleP2PSuccess(connectionID string, agentID string) {
 		}
 	} else {
 		state.mu.Unlock()
-		fmt.Printf("Waiting for other agent to confirm P2P connection for %s (requesting: %v, source: %v)\n",
+		fmt.Printf("[P2P] Waiting for other agent to confirm P2P connection, connection_id=%s (requesting_confirmed=%v, source_confirmed=%v)\n",
 			connectionID, state.requestingConfirmed, state.sourceConfirmed)
 	}
 }

@@ -64,20 +64,17 @@ func (p *P2PClient) AttemptConnection(connectionID, targetAgentID, targetEndpoin
 	}
 	p.activeConn = conn
 	p.mu.Unlock()
-	logger.Log.Info("P2P connection attempt", "connection_id", connectionID, "target", targetEndpoint, "attempt", attemptNumber, "countdown", countdownSeconds)
 	time.Sleep(time.Duration(countdownSeconds) * time.Second)
 	conn.Mu.Lock()
 	conn.Status = "connecting"
 	conn.Mu.Unlock()
+	logger.Log.Info("[P2P] Attempting P2P connection...", "connection_id", connectionID, "target", targetEndpoint, "attempt", attemptNumber, "countdown", countdownSeconds)
 	tcpConn, err := net.DialTimeout("tcp", targetEndpoint, P2PConnectionTimeout)
 	if err != nil {
 		conn.Mu.Lock()
 		conn.Status = "failed"
 		conn.Mu.Unlock()
-		logger.Log.Warn("P2P connection failed",
-			"connection_id", connectionID,
-			"target", targetEndpoint,
-			"error", err)
+		logger.Log.Warn("[P2P] P2P connection failed", "connection_id", connectionID, "target", targetEndpoint, "error", err)
 		p.reportFailure(connectionID, fmt.Sprintf("connection failed: %v", err))
 		p.mu.Lock()
 		if p.activeConn != nil && p.activeConn.ConnectionID == connectionID {
@@ -90,7 +87,7 @@ func (p *P2PClient) AttemptConnection(connectionID, targetAgentID, targetEndpoin
 	conn.Conn = tcpConn
 	conn.Status = "connected"
 	conn.Mu.Unlock()
-	logger.Log.Info("P2P connection established", "connection_id", connectionID, "target", targetEndpoint)
+	logger.Log.Info("[P2P] SUCCESS: P2P connection established", "connection_id", connectionID, "target", targetEndpoint)
 	p.reportSuccess(connectionID)
 	return nil
 }
@@ -110,14 +107,14 @@ func (p *P2PClient) SendFileOverP2P(connectionID string, fileReader io.Reader) e
 	if status != "connected" || tcpConn == nil {
 		return fmt.Errorf("P2P connection not ready: %s", status)
 	}
-	logger.Log.Info("Starting P2P file transfer", "connection_id", connectionID)
+	logger.Log.Info("[P2P] Starting P2P file transfer (sending bytes)", "connection_id", connectionID)
 	written, err := io.Copy(tcpConn, fileReader)
 	if err != nil {
-		logger.Log.Error("P2P file transfer error", "error", err, "bytes_written", written)
+		logger.Log.Error("[P2P] P2P file transfer FAILED", "connection_id", connectionID, "error", err, "bytes_written", written)
 		p.CloseConnection(connectionID) // Close connection on error
 		return fmt.Errorf("failed to send file: %w", err)
 	}
-	logger.Log.Info("P2P file transfer completed", "connection_id", connectionID, "bytes", written)
+	logger.Log.Info("[P2P] P2P file transfer SUCCESS: completed sending", "connection_id", connectionID, "bytes_sent", written)
 	p.CloseConnection(connectionID) // Close connection on success
 	return nil
 }
@@ -137,14 +134,14 @@ func (p *P2PClient) ReceiveFileOverP2P(connectionID string, fileWriter io.Writer
 	if status != "connected" || tcpConn == nil {
 		return fmt.Errorf("P2P connection not ready: %s", status)
 	}
-	logger.Log.Info("Starting P2P file receive", "connection_id", connectionID)
+	logger.Log.Info("[P2P] Starting P2P file receive (receiving bytes)", "connection_id", connectionID)
 	received, err := io.Copy(fileWriter, tcpConn)
 	if err != nil && err != io.EOF {
-		logger.Log.Error("P2P file receive error", "error", err, "bytes_received", received)
+		logger.Log.Error("[P2P] P2P file receive FAILED", "connection_id", connectionID, "error", err, "bytes_received", received)
 		p.CloseConnection(connectionID) // Close connection on error
 		return fmt.Errorf("failed to receive file: %w", err)
 	}
-	logger.Log.Info("P2P file receive completed", "connection_id", connectionID, "bytes", received)
+	logger.Log.Info("[P2P] P2P file receive SUCCESS: completed receiving", "connection_id", connectionID, "bytes_received", received)
 	p.CloseConnection(connectionID) // Close connection on success
 	return nil
 }
@@ -283,23 +280,23 @@ func (p *P2PTransfer) GetMode() TransferMode {
 }
 
 func (p *P2PTransfer) Send(path string, requestingAgentID string) error {
-	logger.Log.Info("Starting P2P transfer", "path", path, "target", requestingAgentID)
+	logger.Log.Info("[P2P] Starting P2P transfer", "path", path, "target", requestingAgentID)
 	p2pConn := p.p2pClient.GetActiveConnectionByTarget(requestingAgentID)
 	if p2pConn == nil || p2pConn.Status != "connected" {
-		return fmt.Errorf("P2P connection not available: status=%v", func() string {
-			if p2pConn == nil {
-				return "no_connection"
-			}
-			return p2pConn.Status
-		}())
+		status := "no_connection"
+		if p2pConn != nil {
+			status = p2pConn.Status
+		}
+		logger.Log.Error("[P2P] P2P connection not available", "status", status, "target", requestingAgentID)
+		return fmt.Errorf("P2P connection not available: status=%v", status)
 	}
-	logger.Log.Info("P2P connection available, sending file", "connection_id", p2pConn.ConnectionID, "target", requestingAgentID)
+	logger.Log.Info("[P2P] P2P connection available, starting file transfer", "connection_id", p2pConn.ConnectionID, "target", requestingAgentID, "path", path)
 	dataCh, errCh := p.businessService.StreamRequestedFileSystem(path)
 	reader := &channelReader{dataCh: dataCh, errCh: errCh}
 	if err := p.p2pClient.SendFileOverP2P(p2pConn.ConnectionID, reader); err != nil {
 		return fmt.Errorf("P2P send failed: %w", err)
 	}
-	logger.Log.Info("P2P transfer completed successfully")
+	logger.Log.Info("[P2P] P2P transfer completed successfully, reporting to master")
 	doneMsg := models.Message{
 		Type: models.MasterMsgTransferStatus,
 		Payload: map[string]interface{}{
@@ -308,20 +305,22 @@ func (p *P2PTransfer) Send(path string, requestingAgentID string) error {
 		},
 	}
 	p.agent.Send(ws.Outbound{Msg: &doneMsg})
+	logger.Log.Info("[P2P] Reported 'completed' status to master")
 	return nil
 }
 
 func (p *P2PTransfer) Receive(sourceAgentID string) error {
-	logger.Log.Info("Preparing to receive P2P transfer", "sourceAgent", sourceAgentID)
+	logger.Log.Info("[P2P] Preparing to receive P2P transfer", "sourceAgent", sourceAgentID)
 	if err := p.createTempFile(sourceAgentID); err != nil {
 		return fmt.Errorf("failed to create temp file: %w", err)
 	}
 	time.Sleep(1 * time.Second) // give some time for file creation. OS delay expected
 	p2pConn := p.p2pClient.GetActiveConnectionByTarget(sourceAgentID)
 	if p2pConn == nil || p2pConn.Status != "connected" {
+		logger.Log.Error("[P2P] P2P connection not available for receiving", "sourceAgent", sourceAgentID)
 		return fmt.Errorf("P2P connection not available for receiving")
 	}
-	logger.Log.Info("Receiving file over P2P", "connection_id", p2pConn.ConnectionID, "sourceAgent", sourceAgentID)
+	logger.Log.Info("[P2P] P2P connection ready, starting to receive file", "connection_id", p2pConn.ConnectionID, "sourceAgent", sourceAgentID)
 	if err := p.p2pClient.ReceiveFileOverP2P(p2pConn.ConnectionID, p.ctx.TempFile); err != nil {
 		return fmt.Errorf("P2P receive failed: %w", err)
 	}

@@ -5,8 +5,6 @@ import (
 	"os"
 	"time"
 
-	"log/slog"
-
 	"github.com/The-Promised-Neverland/agent/internal/config"
 	"github.com/The-Promised-Neverland/agent/internal/models"
 	"github.com/The-Promised-Neverland/agent/internal/service"
@@ -37,7 +35,7 @@ func (r *RelayTransfer) GetMode() TransferMode {
 }
 
 func (r *RelayTransfer) Send(path string, requestingAgentID string) error {
-	logger.Log.Info("Starting relay mode transfer", "path", path, "target", requestingAgentID)
+	logger.Log.Info("[RELAY] Starting relay mode transfer", "path", path, "target", requestingAgentID)
 	dataCh, errCh := r.businessService.StreamRequestedFileSystem(path)
 	starterMsg := models.Message{
 		Type: models.MasterMsgTransferStatus,
@@ -47,7 +45,7 @@ func (r *RelayTransfer) Send(path string, requestingAgentID string) error {
 		},
 	}
 	r.agent.Send(ws.Outbound{Msg: &starterMsg})
-	logger.Log.Info("Sent 'initiated' status, starting to send binary chunks")
+	logger.Log.Info("[RELAY] Sent 'initiated' status to master, starting to send binary chunks via relay")
 	ticker := time.NewTicker(2 * time.Second)
 	done := make(chan struct{})
 	defer ticker.Stop()
@@ -73,19 +71,21 @@ func (r *RelayTransfer) Send(path string, requestingAgentID string) error {
 	for chunk := range dataCh {
 		totalBytes += len(chunk)
 		chunkCount++
-		logger.Log.Debug("Sending binary chunk", slog.Int("chunk_number", chunkCount), slog.Int("bytes", len(chunk)), slog.Int("total_bytes", totalBytes))
+		if chunkCount%100 == 0 || chunkCount == 1 {
+			logger.Log.Info("[RELAY] Sending binary chunks via relay", "chunk_number", chunkCount, "chunk_bytes", len(chunk), "total_bytes", totalBytes)
+		}
 		r.agent.Send(ws.Outbound{Binary: chunk})
 	}
 	close(done)
 	select {
 	case err := <-errCh:
 		if err != nil {
-			logger.Log.Error("Stream error occurred", slog.String("error", err.Error()))
+			logger.Log.Error("[RELAY] Stream error occurred", "error", err)
 			return err
 		}
 	default:
 	}
-	logger.Log.Info("All binary chunks sent, waiting before sending completed status", slog.Int("total_chunks", chunkCount), slog.Int("total_bytes", totalBytes))
+	logger.Log.Info("[RELAY] All binary chunks sent via relay", "total_chunks", chunkCount, "total_bytes", totalBytes)
 	doneMsg := models.Message{
 		Type: models.MasterMsgTransferStatus,
 		Payload: map[string]interface{}{
@@ -94,16 +94,16 @@ func (r *RelayTransfer) Send(path string, requestingAgentID string) error {
 		},
 	}
 	r.agent.Send(ws.Outbound{Msg: &doneMsg})
-	logger.Log.Info("Sent 'completed' status", slog.Int("total_bytes_sent", totalBytes))
+	logger.Log.Info("[RELAY] Sent 'completed' status to master", "total_bytes_sent", totalBytes)
 	return nil
 }
 
 func (r *RelayTransfer) Receive(sourceAgentID string) error {
-	logger.Log.Info("Preparing to receive relay transfer", "sourceAgent", sourceAgentID)
+	logger.Log.Info("[RELAY] Preparing to receive relay transfer", "sourceAgent", sourceAgentID)
 	if err := r.createTempFile(sourceAgentID); err != nil {
 		return fmt.Errorf("failed to create temp file: %w", err)
 	}
-	logger.Log.Info("Ready to receive binary chunks via relay", "sourceAgent", sourceAgentID)
+	logger.Log.Info("[RELAY] Ready to receive binary chunks via relay", "sourceAgent", sourceAgentID)
 	return nil
 }
 
@@ -114,10 +114,15 @@ func (r *RelayTransfer) WriteChunk(chunk []byte) error {
 	}
 	written, err := r.ctx.TempFile.Write(chunk)
 	if err != nil {
-		logger.Log.Error("Failed to write chunk to temp file", "err", err, "written", written, "chunk_size", len(chunk), "source_agent", r.ctx.SourceAgentID)
+		logger.Log.Error("[RELAY] Failed to write chunk to temp file", "err", err, "written", written, "chunk_size", len(chunk), "source_agent", r.ctx.SourceAgentID)
 		return fmt.Errorf("failed to write chunk: %w", err)
 	}
-	logger.Log.Debug("Received and wrote binary chunk (relay mode)", "bytes", written,"chunk_size", len(chunk), "source_agent", r.ctx.SourceAgentID)
+	r.ctx.ChunkCount++
+	r.ctx.TotalBytes += int64(written)
+	// Log every 100 chunks or first chunk
+	if r.ctx.ChunkCount%100 == 0 || r.ctx.ChunkCount == 1 {
+		logger.Log.Info("[RELAY] Receiving binary chunks via relay", "chunk_number", r.ctx.ChunkCount, "chunk_bytes", len(chunk), "total_bytes", r.ctx.TotalBytes, "source_agent", r.ctx.SourceAgentID)
+	}
 	return nil
 }
 
@@ -161,6 +166,7 @@ func (r *RelayTransfer) completeTransfer() error {
 	if err := os.Remove(tempPath); err != nil {
 		logger.Log.Warn("Failed to remove temp file", "path", tempPath, "err", err)
 	}
-	logger.Log.Info("Relay transfer completed and file extracted", "sourceAgent", sourceAgent)
+	logger.Log.Info("[RELAY] Relay transfer completed and file extracted", "sourceAgent", sourceAgent, "total_bytes", r.ctx.TotalBytes)
 	return nil
 }
+

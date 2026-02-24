@@ -23,15 +23,18 @@ func (r *RelayCoordinator) GetMode() TransferMode {
 }
 
 func (r *RelayCoordinator) InitiateTransfer(requestingAgentID, sourceAgentID string, payload map[string]interface{}) (TransferMode, error) {
+	fmt.Printf("[RELAY] Initiating relay transfer: source_agent=%s -> requesting_agent=%s\n", sourceAgentID, requestingAgentID)
 	if r.connGetter == nil {
 		return ModeRelay, fmt.Errorf("connection getter not initialized")
 	}
 	requestingConn := r.connGetter.GetConnection(requestingAgentID)
 	sourceConn := r.connGetter.GetConnection(sourceAgentID)
 	if requestingConn == nil {
+		fmt.Printf("[RELAY] FAILED: Requesting agent=%s not connected\n", requestingAgentID)
 		return ModeRelay, fmt.Errorf("requesting agent %s not connected", requestingAgentID)
 	}
 	if sourceConn == nil {
+		fmt.Printf("[RELAY] FAILED: Source agent=%s not connected\n", sourceAgentID)
 		return ModeRelay, fmt.Errorf("source agent %s not connected", sourceAgentID)
 	}
 	sourceConn.SetRelayTo(requestingAgentID)
@@ -41,7 +44,7 @@ func (r *RelayCoordinator) InitiateTransfer(requestingAgentID, sourceAgentID str
 		Payload: payload,
 	}
 	r.messageSender.Send(sourceAgentID, Outbound{Msg: &transferMsg})
-	fmt.Printf("Relay mode transfer request sent: %s -> %s\n", sourceAgentID, requestingAgentID)
+	fmt.Printf("[RELAY] Relay transfer request sent to source_agent=%s, requesting_agent=%s\n", sourceAgentID, requestingAgentID)
 	return ModeRelay, nil
 }
 

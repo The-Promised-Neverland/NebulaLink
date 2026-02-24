@@ -17,6 +17,8 @@ type TransferContext struct {
 	TempFilePath     string
 	Mode             TransferMode
 	ConnectionID     string
+	ChunkCount       int
+	TotalBytes       int64
 }
 
 type Transferer interface {
@@ -31,4 +33,5 @@ type Transferer interface {
 type Extractor interface {
 	ExtractTar(tarPath string, sourceAgentID string) error
 }
+
 
