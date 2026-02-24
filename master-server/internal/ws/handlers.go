@@ -59,8 +59,10 @@ func (h *WSHub) RegisterDefaultHandlers() {
 			statusMsg := models.Message{
 				Type: models.MasterMsgTransferStatus,
 				Payload: map[string]interface{}{
-					"status":   status,
-					"agent_id": c.Id, // Source agent (the one sending files)
+					"status":          status,
+					"agent_id":        c.Id,
+					"source_agent_id": c.Id,
+					"transfer_mode":   "relay",
 				},
 			}
 			if connectionID, ok := payloadMap["connection_id"].(string); ok && connectionID != "" {
@@ -70,7 +72,7 @@ func (h *WSHub) RegisterDefaultHandlers() {
 				statusMsg.Payload.(map[string]interface{})["reason"] = reason
 			}
 			h.Send(c.RelayTo, transfer.Outbound{Msg: &statusMsg})
-			fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s\n", status, c.RelayTo, c.Id)
+			fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s (relay mode)\n", status, c.RelayTo, c.Id)
 		}
 		return nil
 	})

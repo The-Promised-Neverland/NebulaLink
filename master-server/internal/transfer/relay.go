@@ -44,7 +44,21 @@ func (r *RelayCoordinator) InitiateTransfer(requestingAgentID, sourceAgentID str
 		Payload: payload,
 	}
 	r.messageSender.Send(sourceAgentID, Outbound{Msg: &transferMsg})
-	fmt.Printf("[RELAY] Relay transfer start command sent to source_agent=%s, requesting_agent=%s\n", sourceAgentID, requestingAgentID)
+	fmt.Printf("[RELAY] Relay transfer start command sent to source_agent=%s (SEND)\n", sourceAgentID)
+	receivePayload := map[string]interface{}{
+		"status":        "initiated",
+		"source_agent_id": sourceAgentID,
+		"transfer_mode":   "relay",
+	}
+	if connectionID, ok := payload["connection_id"].(string); ok && connectionID != "" {
+		receivePayload["connection_id"] = connectionID
+	}
+	receiveMsg := models.Message{
+		Type:    models.MasterMsgTransferStatus,
+		Payload: receivePayload,
+	}
+	r.messageSender.Send(requestingAgentID, Outbound{Msg: &receiveMsg})
+	fmt.Printf("[RELAY] Relay receive preparation sent to requesting_agent=%s (RECEIVE)\n", requestingAgentID)
 	return ModeRelay, nil
 }
 
