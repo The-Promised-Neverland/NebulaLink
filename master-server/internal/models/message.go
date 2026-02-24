@@ -4,9 +4,11 @@ import "time"
 
 const (
 	MasterMsgTransferStatus     = "master_transfer_status"
-	MasterMsgAgentRequestFile   = "master_transfer_request"
+	MasterMsgTransferIntent     = "master_transfer_intent"
 	MasterMsgP2PInitiate        = "master_p2p_initiate"
 	MasterMsgP2PStartConnection = "master_p2p_start"
+	MasterMsgP2PTransferStart   = "master_p2p_transfer_start"
+	MasterMsgRelayTransferStart = "master_relay_transfer_start"
 	MasterMsgRelayFallback      = "master_relay_fallback"
 )
 

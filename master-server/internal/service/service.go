@@ -102,13 +102,16 @@ func (s *Service) UninstallAgent(agentID string) {
 	s.WSHub.Send(agentID, transfer.Outbound{Msg: &req})
 }
 
-func (s *Service) GetAgentFileSystem(agentID string, getFromAgent string, path string) {
+func (s *Service) GetAgentFileSystem(requestingAgentID string, sourceAgentID string, path string) {
+	if s.WSHub.TransferManager == nil {
+		return
+	}
 	req := models.Message{
-		Type: models.MasterMsgAgentRequestFile,
+		Type: models.MasterMsgTransferIntent,
 		Payload: map[string]interface{}{
-			"requesting_agent_id": agentID,
+			"requesting_agent_id": requestingAgentID,
 			"path":                path,
 		},
 	}
-	s.WSHub.Send(agentID, transfer.Outbound{Msg: &req})
+	s.WSHub.TransferManager.HandleAgentRequestFile(&req, sourceAgentID) // Trigger the transfer logic
 }

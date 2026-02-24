@@ -41,7 +41,7 @@ func NewTransferManager(cfg *config.Config, businessService *service.Service, ag
 func (m *TransferManager) GetTransferer(mode string) (Transferer, error) {
 	transferMode := TransferMode(mode)
 	if transferMode == "" {
-		transferMode = ModeP2P
+		return nil, fmt.Errorf("transfer mode not specified - master must coordinate first")
 	}
 	m.ctx.Mode = transferMode
 	switch transferMode {

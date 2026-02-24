@@ -46,7 +46,6 @@ func (h *WSHub) RegisterDefaultHandlers() {
 					reason = r
 				}
 				h.TransferManager.GetP2PCoordinator().HandleP2PFailure(connectionID, reason)
-				// Check if P2P failed after retries and trigger relay fallback
 				h.TransferManager.HandleP2PFailureFallback(connectionID)
 			}
 		case "completed", "transfer_failed":
@@ -74,13 +73,6 @@ func (h *WSHub) RegisterDefaultHandlers() {
 			fmt.Printf("Forwarded '%s' status to destination agent %s from source agent %s\n", status, c.RelayTo, c.Id)
 		}
 		return nil
-	})
-
-	h.RegisterHandler(models.MasterMsgAgentRequestFile, func(msg *models.Message, c *Connection) error {
-		if h.TransferManager == nil {
-			return fmt.Errorf("transfer manager not initialized")
-		}
-		return h.TransferManager.HandleAgentRequestFile(msg, c.Id)
 	})
 
 }

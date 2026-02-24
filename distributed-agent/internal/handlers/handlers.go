@@ -94,10 +94,18 @@ func (h *Handlers) SendFileSystem(msg *any) error {
 	path = filepath.Clean(path)
 	connectionID, _ := payloadRaw["connection_id"].(string)
 	logger.Log.Info("[TRANSFER] File transfer request received from master", "filePath", path, "requestInitiator", requestInitiator, "transfer_mode", trxfMode, "connection_id", connectionID)
-	if trxfMode == "p2p" {
-		logger.Log.Info("[TRANSFER] Master gave green signal - starting P2P file transfer", "connection_id", connectionID, "path", path, "target", requestInitiator)
-	} else {
+	if trxfMode == "" {
+		logger.Log.Error("[TRANSFER] Transfer mode not specified by master - rejecting transfer request", "connection_id", connectionID)
+		return fmt.Errorf("transfer mode not specified - master must coordinate first")
+	}
+	switch trxfMode {
+	case "p2p":
+		logger.Log.Info("[TRANSFER] Starting P2P file transfer", "connection_id", connectionID, "path", path, "target", requestInitiator)
+	case "relay":
 		logger.Log.Info("[TRANSFER] Starting relay file transfer", "path", path, "target", requestInitiator)
+	default:
+		logger.Log.Error("[TRANSFER] Unknown transfer mode specified", "transfer_mode", trxfMode, "connection_id", connectionID)
+		return fmt.Errorf("unknown transfer mode: %s", trxfMode)
 	}
 	if err := h.TransferManager.Send(path, requestInitiator, trxfMode); err != nil {
 		logger.Log.Error("[TRANSFER] Transfer failed, reporting to master", "error", err, "mode", trxfMode, "connection_id", connectionID)
@@ -146,7 +154,6 @@ func (h *Handlers) HandleP2PInitiation(msg *any) error {
 	}
 	logger.Log.Info("[P2P] P2P initiation received from master", "connection_id", connectionID, "target_agent", targetAgentID, "target_endpoint", targetEndpoint, "attempt", attemptNumber)
 	go func() {
-		logger.Log.Info("[P2P] Starting P2P connection attempt", "connection_id", connectionID, "target", targetEndpoint, "attempt", attemptNumber, "countdown", countdownSeconds)
 		if err := h.TransferManager.AttemptP2PConnection(
 			connectionID,
 			targetAgentID,
@@ -159,6 +166,17 @@ func (h *Handlers) HandleP2PInitiation(msg *any) error {
 			logger.Log.Info("[P2P] P2P connection attempt completed", "connection_id", connectionID)
 		}
 	}()
+	return nil
+}
+
+func (h *Handlers) LogTransferIntent(msg *any) error {
+	if payloadMap, ok := (*msg).(map[string]interface{}); ok {
+		requestingAgentID, _ := payloadMap["requesting_agent_id"].(string)
+		sourceAgentID, _ := payloadMap["source_agent_id"].(string)
+		path, _ := payloadMap["path"].(string)
+		connectionID, _ := payloadMap["connection_id"].(string)
+		logger.Log.Info("[AUDIT] Transfer intent received from master", "requesting_agent", requestingAgentID, "source_agent", sourceAgentID, "path", path, "connection_id", connectionID)
+	}
 	return nil
 }
 

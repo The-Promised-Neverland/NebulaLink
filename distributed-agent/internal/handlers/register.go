@@ -50,18 +50,26 @@ func (h *Handlers) RegisterHandlers() {
 		return h.UninstallAgent()
 	})
 
-	h.Agent.RegisterHandler(models.MasterMsgAgentRequestFile, func(msg *any) error {
+	h.Agent.RegisterHandler(models.MasterMsgTransferIntent, func(msg *any) error {
+		return h.LogTransferIntent(msg)
+	})
+
+	h.Agent.RegisterHandler(models.MasterMsgP2PTransferStart, func(msg *any) error {
 		return h.SendFileSystem(msg)
 	})
-	
+
+	h.Agent.RegisterHandler(models.MasterMsgRelayTransferStart, func(msg *any) error {
+		return h.SendFileSystem(msg)
+	})
+
 	h.Agent.RegisterHandler(models.MasterMsgTransferStatus, func(msg *any) error {
 		return h.ReceiveTransfer(msg)
 	})
-	
+
 	h.Agent.RegisterHandler(models.MasterMsgP2PInitiate, func(msg *any) error {
 		return h.HandleP2PInitiation(msg)
 	})
-	
+
 	h.Agent.RegisterHandler(models.MasterMsgRelayFallback, func(msg *any) error {
 		return h.HandleRelayFallback(msg)
 	})

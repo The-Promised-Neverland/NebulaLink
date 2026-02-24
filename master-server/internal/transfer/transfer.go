@@ -33,19 +33,17 @@ func NewTransferManager(messageSender MessageSender, connGetter ConnectionGetter
 
 func (m *TransferManager) handleP2PConfirmations() {
 	for confirmed := range m.p2pConfirmedChannel {
-		fmt.Printf("[TRANSFER] Step 1 COMPLETE: P2P connection confirmed by both agents, connection_id=%s, source_agent=%s -> requesting_agent=%s\n",
-			confirmed.ConnectionID, confirmed.SourceAgent, confirmed.RequestingAgent)
-		fmt.Printf("[TRANSFER] Step 2: Master giving green signal to transfer - sending file transfer request to source_agent=%s\n", confirmed.SourceAgent)
-		m.initiateP2PTransfer(confirmed)
+		fmt.Printf("[TRANSFER] COMPLETE: P2P connection confirmed by both agents, connection_id=%s, source_agent=%s -> requesting_agent=%s\n", confirmed.ConnectionID, confirmed.SourceAgent, confirmed.RequestingAgent)
+		fmt.Printf("[TRANSFER] Master giving green signal to transfer - sending file transfer request to source_agent=%s\n", confirmed.SourceAgent)
+		m.InitiateP2PTransfer(confirmed)
 	}
 }
 
 func (m *TransferManager) handleP2PFailures() {
 	for failed := range m.p2pFailedChannel {
-		fmt.Printf("[TRANSFER] Step 1 FAILED: P2P connection failed, connection_id=%s, source_agent=%s -> requesting_agent=%s, reason=%s\n",
+		fmt.Printf("[TRANSFER] FAILED: P2P connection failed, connection_id=%s, source_agent=%s -> requesting_agent=%s, reason=%s\n",
 			failed.ConnectionID, failed.SourceAgent, failed.RequestingAgent, failed.Reason)
-		fmt.Printf("[TRANSFER] Step 2: Falling back to relay mode, connection_id=%s\n", failed.ConnectionID)
-		// Reconstruct payload for relay fallback
+		fmt.Printf("[TRANSFER] Falling back to relay mode, connection_id=%s\n", failed.ConnectionID)
 		payloadMap := map[string]interface{}{
 			"requesting_agent_id": failed.RequestingAgent,
 			"connection_id":       failed.ConnectionID,
@@ -54,31 +52,31 @@ func (m *TransferManager) handleP2PFailures() {
 			payloadMap["path"] = failed.Path
 		}
 		if _, err := m.relayCoordinator.InitiateTransfer(failed.RequestingAgent, failed.SourceAgent, payloadMap); err != nil {
-			fmt.Printf("[TRANSFER] Step 2 FAILED: Relay fallback initiation failed: %v\n", err)
+			fmt.Printf("[TRANSFER] FAILED: Relay fallback initiation failed: %v\n", err)
 		} else {
-			fmt.Printf("[TRANSFER] Step 2 SUCCESS: Relay fallback initiated successfully\n")
+			fmt.Printf("[TRANSFER] SUCCESS: Relay fallback initiated successfully\n")
 		}
 	}
 }
 
-// initiateP2PTransfer sends the file transfer request to source agent after P2P is confirmed
-func (m *TransferManager) initiateP2PTransfer(confirmed P2PConnectionConfirmed) {
-	fmt.Printf("[TRANSFER] Master sending file transfer request to source_agent=%s (P2P confirmed, connection_id=%s, path=%s)\n",
-		confirmed.SourceAgent, confirmed.ConnectionID, confirmed.Path)
-	transferPayload := map[string]interface{}{
-		"requesting_agent_id": confirmed.RequestingAgent,
-		"connection_id":       confirmed.ConnectionID,
-		"transfer_mode":       "p2p",
+// NotifyTransferIntent sends transfer intent notification to both agents
+func (m *TransferManager) NotifyTransferIntent(requestingAgentID, sourceAgentID, path, connectionID string) {
+	intentPayload := map[string]interface{}{
+		"requesting_agent_id": requestingAgentID,
+		"source_agent_id":     sourceAgentID,
+		"path":                path,
 	}
-	if confirmed.Path != "" {
-		transferPayload["path"] = confirmed.Path
+	if connectionID != "" {
+		intentPayload["connection_id"] = connectionID
 	}
-	transferMsg := models.Message{
-		Type:    models.MasterMsgAgentRequestFile,
-		Payload: transferPayload,
+	intentMsg := models.Message{
+		Type:    models.MasterMsgTransferIntent,
+		Payload: intentPayload,
 	}
-	m.messageSender.Send(confirmed.SourceAgent, Outbound{Msg: &transferMsg})
-	fmt.Printf("[TRANSFER] File transfer request sent to source_agent=%s, connection_id=%s - waiting for transfer to start\n", confirmed.SourceAgent, confirmed.ConnectionID)
+	m.messageSender.Send(requestingAgentID, Outbound{Msg: &intentMsg})
+	m.messageSender.Send(sourceAgentID, Outbound{Msg: &intentMsg})
+	fmt.Printf("[AUDIT] Transfer intent sent to requesting_agent=%s\n", requestingAgentID)
+	fmt.Printf("[AUDIT] Transfer intent sent to source_agent=%s\n", sourceAgentID)
 }
 
 func (m *TransferManager) HandleAgentRequestFile(msg *models.Message, sourceAgentID string) error {
@@ -92,22 +90,25 @@ func (m *TransferManager) HandleAgentRequestFile(msg *models.Message, sourceAgen
 	}
 	path, _ := payloadMap["path"].(string)
 	fmt.Printf("[TRANSFER] File transfer request received: requesting_agent=%s wants file from source_agent=%s, path=%s\n", requestingAgentID, sourceAgentID, path)
-	
-	// Step 1: Attempt P2P connection
-	fmt.Printf("[TRANSFER] Step 1: Attempting P2P connection between requesting_agent=%s and source_agent=%s\n", requestingAgentID, sourceAgentID)
+	connectionID := ""
+	if id, ok := payloadMap["connection_id"].(string); ok && id != "" {
+		connectionID = id
+	}
+	m.NotifyTransferIntent(requestingAgentID, sourceAgentID, path, connectionID)
+	fmt.Printf("[TRANSFER] Attempting P2P connection between requesting_agent=%s and source_agent=%s\n", requestingAgentID, sourceAgentID)
 	connectionID, connectionOK := m.p2pCoordinator.AttemptP2PConnection(requestingAgentID, sourceAgentID, path)
 	if !connectionOK {
-		fmt.Printf("[TRANSFER] Step 1 FAILED: P2P connection attempt failed (endpoints not available), falling back to relay mode\n")
-		fmt.Printf("[TRANSFER] Step 2: Initiating relay transfer: source_agent=%s -> requesting_agent=%s\n", sourceAgentID, requestingAgentID)
+		fmt.Printf("[TRANSFER] FAILED: P2P connection attempt failed (endpoints not available), falling back to relay mode\n")
+		fmt.Printf("[TRANSFER] Initiating relay transfer: source_agent=%s -> requesting_agent=%s\n", sourceAgentID, requestingAgentID)
 		_, relayErr := m.relayCoordinator.InitiateTransfer(requestingAgentID, sourceAgentID, payloadMap)
 		if relayErr != nil {
-			fmt.Printf("[TRANSFER] Step 2 FAILED: Relay transfer initiation failed: %v\n", relayErr)
+			fmt.Printf("[TRANSFER] FAILED: Relay transfer initiation failed: %v\n", relayErr)
 		} else {
-			fmt.Printf("[TRANSFER] Step 2 SUCCESS: Relay transfer initiated successfully\n")
+			fmt.Printf("[TRANSFER] SUCCESS: Relay transfer initiated successfully\n")
 		}
 		return relayErr
 	}
-	fmt.Printf("[TRANSFER] Step 1 SUCCESS: P2P connection attempt started, connection_id=%s, waiting for both agents to confirm...\n", connectionID)
+	fmt.Printf("[TRANSFER] SUCCESS: P2P connection attempt started, connection_id=%s, waiting for both agents to confirm...\n", connectionID)
 	return nil
 }
 
@@ -122,14 +123,13 @@ func (m *TransferManager) GetRelayCoordinator() *RelayCoordinator {
 func (m *TransferManager) HandleP2PFailureFallback(connectionID string) {
 	failedTransfer := m.p2pCoordinator.GetFailedTransfer(connectionID)
 	if failedTransfer == nil {
-		return // Not a failed transfer or already handled
+		return
 	}
 	fmt.Printf("P2P transfer %s failed, initiating relay fallback\n", connectionID)
 	if err := m.initiateRelayFallback(failedTransfer.ConnectionID, failedTransfer.RequestingAgent, failedTransfer.SourceAgent); err != nil {
 		fmt.Printf("Failed to initiate relay fallback: %v\n", err)
 		return
 	}
-	// Remove the failed transfer from P2P coordinator
 	m.p2pCoordinator.RemoveTransfer(connectionID)
 }
 
@@ -174,4 +174,3 @@ func (m *TransferManager) initiateRelayFallback(connectionID, requestingAgentID,
 	fmt.Printf("[TRANSFER] Relay mode activated: source_agent=%s -> requesting_agent=%s\n", sourceAgentID, requestingAgentID)
 	return nil
 }
-

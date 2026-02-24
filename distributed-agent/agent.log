@@ -417,3 +417,19 @@
 {"time":"2026-02-24T10:34:27.9010107+05:30","level":"ERROR","msg":"Transfer failed, reporting to master","error":"P2P connection not available: status=no_connection","mode":""}
 {"time":"2026-02-24T10:34:27.9119281+05:30","level":"ERROR","msg":"Handler error","type":"master_transfer_request","err":"transfer failed: P2P connection not available: status=no_connection"}
 {"time":"2026-02-24T10:48:49.5037876+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}
+{"time":"2026-02-24T10:55:49.4663826+05:30","level":"INFO","msg":"NebulaLink Agent starting","os":"windows","arch":"amd64"}
+{"time":"2026-02-24T10:55:49.4695795+05:30","level":"INFO","msg":"Agent identity","agent_id":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3","agent_name":"Abhijit"}
+{"time":"2026-02-24T10:55:49.479165+05:30","level":"INFO","msg":"File watcher started","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-24T10:55:49.4798467+05:30","level":"INFO","msg":"File watcher initialized","path":"C:\\Users\\sovajit\\Desktop\\NebulaLink-shared"}
+{"time":"2026-02-24T10:55:49.4803798+05:30","level":"INFO","msg":"Kardianos starting service","service":"NebulaLink Agent","platform":"windows-service"}
+{"time":"2026-02-24T10:55:49.48123+05:30","level":"INFO","msg":"Attempting connection","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-24T10:55:49.5557103+05:30","level":"INFO","msg":"Connected to master","url":"ws://16.112.43.203:8081/ws?name=Abhijit&id=e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3&os=Windows"}
+{"time":"2026-02-24T10:55:49.5576857+05:30","level":"INFO","msg":"All pumps started"}
+{"time":"2026-02-24T10:55:50.5605396+05:30","level":"INFO","msg":"Initial directory snapshot sent","files":4}
+{"time":"2026-02-24T10:59:08.3342228+05:30","level":"INFO","msg":"[TRANSFER] File transfer request received from master","filePath":"maa tax file","requestInitiator":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3","transfer_mode":"","connection_id":""}
+{"time":"2026-02-24T10:59:08.347563+05:30","level":"INFO","msg":"[TRANSFER] Starting relay file transfer","path":"maa tax file","target":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3"}
+{"time":"2026-02-24T10:59:08.3987724+05:30","level":"INFO","msg":"[P2P] Starting P2P transfer","path":"maa tax file","target":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3"}
+{"time":"2026-02-24T10:59:08.4649046+05:30","level":"ERROR","msg":"[P2P] P2P connection not available","status":"no_connection","target":"e6456e698c18d0bbcbffd55b5cdf3d724121105abdc56b8614d4485f53c787a3"}
+{"time":"2026-02-24T10:59:08.4778466+05:30","level":"ERROR","msg":"[TRANSFER] Transfer failed, reporting to master","error":"P2P connection not available: status=no_connection","mode":"","connection_id":""}
+{"time":"2026-02-24T10:59:08.4829123+05:30","level":"ERROR","msg":"Handler error","type":"master_transfer_request","err":"transfer failed: P2P connection not available: status=no_connection"}
+{"time":"2026-02-24T11:34:29.4236417+05:30","level":"INFO","msg":"Kardianos stopping service","service":"NebulaLink Agent"}

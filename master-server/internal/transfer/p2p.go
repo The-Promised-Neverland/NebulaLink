@@ -81,6 +81,25 @@ func (p *P2PCoordinator) GetMode() TransferMode {
 	return ModeP2P
 }
 
+// initiateP2PTransfer sends the file transfer request to source agent after P2P is confirmed
+func (m *TransferManager) InitiateP2PTransfer(confirmed P2PConnectionConfirmed) {
+	fmt.Printf("[P2P] Master sending file transfer request to source_agent=%s (P2P confirmed, connection_id=%s, path=%s)\n", confirmed.SourceAgent, confirmed.ConnectionID, confirmed.Path)
+	transferPayload := map[string]interface{}{
+		"requesting_agent_id": confirmed.RequestingAgent,
+		"connection_id":       confirmed.ConnectionID,
+		"transfer_mode":       "p2p",
+	}
+	if confirmed.Path != "" {
+		transferPayload["path"] = confirmed.Path
+	}
+	transferMsg := models.Message{
+		Type:    models.MasterMsgP2PTransferStart,
+		Payload: transferPayload,
+	}
+	m.messageSender.Send(confirmed.SourceAgent, Outbound{Msg: &transferMsg})
+	fmt.Printf("[P2P] P2P transfer start command sent to source_agent=%s, connection_id=%s - waiting for transfer to start\n", confirmed.SourceAgent, confirmed.ConnectionID)
+}
+
 func (p *P2PCoordinator) AttemptP2PConnection(requestingAgentID, sourceAgentID, path string) (string, bool) {
 	fmt.Printf("[P2P] Attempting P2P connection: requesting_agent=%s <-> source_agent=%s, path=%s\n", requestingAgentID, sourceAgentID, path)
 	_, err1 := p.GetAgentEndpoint(requestingAgentID)
@@ -212,7 +231,6 @@ func (p *P2PCoordinator) testConnectionWithRetries(ctx context.Context, connecti
 		p.mu.Lock()
 		delete(p.activeTransfers, connectionID)
 		p.mu.Unlock()
-		// Notify TransferManager that P2P connection failed
 		if p.connectionFailed != nil {
 			select {
 			case p.connectionFailed <- P2PConnectionFailed{
@@ -328,7 +346,6 @@ func (p *P2PCoordinator) HandleP2PFailure(connectionID string, reason string) {
 	select {
 	case state.failureCh <- errors.New(reason):
 	default:
-		// TODO: Channel full
 	}
 	fmt.Printf("P2P transfer %s reported failure: %s\n", connectionID, reason)
 }

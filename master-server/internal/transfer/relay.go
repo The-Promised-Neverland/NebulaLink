@@ -40,11 +40,11 @@ func (r *RelayCoordinator) InitiateTransfer(requestingAgentID, sourceAgentID str
 	sourceConn.SetRelayTo(requestingAgentID)
 	payload["transfer_mode"] = "relay"
 	transferMsg := models.Message{
-		Type:    models.MasterMsgAgentRequestFile,
+		Type:    models.MasterMsgRelayTransferStart,
 		Payload: payload,
 	}
 	r.messageSender.Send(sourceAgentID, Outbound{Msg: &transferMsg})
-	fmt.Printf("[RELAY] Relay transfer request sent to source_agent=%s, requesting_agent=%s\n", sourceAgentID, requestingAgentID)
+	fmt.Printf("[RELAY] Relay transfer start command sent to source_agent=%s, requesting_agent=%s\n", sourceAgentID, requestingAgentID)
 	return ModeRelay, nil
 }
 
